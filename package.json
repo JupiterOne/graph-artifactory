@@ -1,7 +1,7 @@
 {
-  "name": "@jupiterone/integration-template",
-  "version": "1.0.0",
-  "description": "A JupiterOne Integration",
+  "name": "@jupiterone/graph-artifactory",
+  "version": "0.0.1",
+  "description": "A graph conversion tool for https://jfrog.com/artifactory",
   "license": "MPL-2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,11 +24,16 @@
     "prepack": "yarn build"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^2.6.0"
+    "@jupiterone/integration-sdk-core": "^2.10.0"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^2.8.0",
-    "@jupiterone/integration-sdk-dev-tools": "^2.8.0",
-    "@jupiterone/integration-sdk-testing": "^2.8.0"
+    "@jupiterone/integration-sdk-core": "^2.10.0",
+    "@jupiterone/integration-sdk-dev-tools": "^2.10.0",
+    "@jupiterone/integration-sdk-testing": "^2.10.0",
+    "@types/node-fetch": "^2.5.7"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.0",
+    "type-fest": "^0.16.0"
   }
 }

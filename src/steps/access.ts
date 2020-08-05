@@ -6,10 +6,20 @@ import {
   IntegrationStep,
   IntegrationStepExecutionContext,
 } from '@jupiterone/integration-sdk-core';
-
 import { createAPIClient } from '../client';
 import { IntegrationConfig } from '../types';
-import { ACCOUNT_ENTITY_KEY } from './account';
+import { ACCOUNT_ENTITY_KEY, ACCOUNT_ENTITY_TYPE } from './account';
+
+const USER_ENTITY_TYPE = 'artifactory_user';
+const GROUP_ENTITY_TYPE = 'artifactory_group';
+
+function getUserKey(name: string): string {
+  return `artifactory_user:${name}`;
+}
+
+function getGroupKey(name: string): string {
+  return `artifactory_group:${name}`;
+}
 
 export async function fetchUsers({
   instance,
@@ -24,16 +34,41 @@ export async function fetchUsers({
       entityData: {
         source: user,
         assign: {
-          _type: 'acme_user',
+          _type: USER_ENTITY_TYPE,
+          _key: getUserKey(user.name),
           _class: 'User',
-          username: 'testusername',
-          email: 'test@test.com',
-          // This is a custom property that is not a part of the data model class
-          // hierarchy. See: https://github.com/JupiterOne/data-model/blob/master/src/schemas/User.json
-          firstName: 'John',
+          webLink: user.uri,
+          displayName: user.name,
+          username: user.name,
+          email: user.email,
+          policyManager: user.policyManager,
+          watchManager: user.watchManager,
+          reportsManager: user.reportsManager,
+          profileUpdatable: user.profileUpdatable,
+          internalPasswordDisable: user.internalPasswordDisabled,
+          realm: user.realm,
+          disableUIAccess: user.disableUIAccess,
+          mfaStatus: user.mfaStatus !== 'NONE',
         },
       },
     });
+
+    if (user.groups) {
+      for (const groupName of user.groups) {
+        const groupEntity = await jobState.getEntity({
+          _key: getGroupKey(groupName),
+          _type: GROUP_ENTITY_TYPE,
+        });
+
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: 'HAS',
+            from: groupEntity,
+            to: userEntity,
+          }),
+        );
+      }
+    }
 
     await Promise.all([
       jobState.addEntity(userEntity),
@@ -61,12 +96,20 @@ export async function fetchGroups({
       entityData: {
         source: group,
         assign: {
-          _type: 'acme_group',
-          _class: 'UserGroup',
-          email: 'testgroup@test.com',
-          // This is a custom property that is not a part of the data model class
-          // hierarchy. See: https://github.com/JupiterOne/data-model/blob/master/src/schemas/UserGroup.json
-          logoLink: 'https://test.com/logo.png',
+          _type: GROUP_ENTITY_TYPE,
+          _key: getGroupKey(group.name),
+          _class: 'Group',
+          webLink: group.uri,
+          displayName: group.name,
+          name: group.name,
+          description: group.description,
+          autoJoin: group.autoJoin,
+          adminPrivileges: group.adminPrivileges,
+          realm: group.realm,
+          realmAttributes: group.realmAttributes,
+          policyManager: group.policyManager,
+          watchManager: group.watchManager,
+          reportsManager: group.reportsManager,
         },
       },
     });
@@ -81,34 +124,29 @@ export async function fetchGroups({
         }),
       ),
     ]);
-
-    for (const user of group.users || []) {
-      const userEntity = await jobState.getEntity({
-        _type: 'acme_user',
-        _key: user.id,
-      });
-      await jobState.addRelationship(
-        createDirectRelationship({
-          _class: 'HAS',
-          from: groupEntity,
-          to: userEntity,
-        }),
-      );
-    }
   });
 }
 
 export const accessSteps: IntegrationStep<IntegrationConfig>[] = [
   {
+    id: 'fetch-groups',
+    name: 'Fetch Groups',
+    types: [
+      GROUP_ENTITY_TYPE,
+      generateRelationshipType('HAS', ACCOUNT_ENTITY_TYPE, GROUP_ENTITY_TYPE),
+    ],
+    dependsOn: ['fetch-account'],
+    executionHandler: fetchGroups,
+  },
+  {
     id: 'fetch-users',
     name: 'Fetch Users',
     types: [
-      'acme_user',
-      generateRelationshipType('HAS', 'acme_account', 'acme_user'),
-      generateRelationshipType('HAS', 'acme_account', 'acme_group'),
-      generateRelationshipType('HAS', 'acme_group', 'acme_user'),
+      USER_ENTITY_TYPE,
+      generateRelationshipType('HAS', ACCOUNT_ENTITY_TYPE, USER_ENTITY_TYPE),
+      generateRelationshipType('HAS', GROUP_ENTITY_TYPE, USER_ENTITY_TYPE),
     ],
-    dependsOn: ['fetch-account'],
+    dependsOn: ['fetch-account', 'fetch-groups'],
     executionHandler: fetchUsers,
   },
 ];
