@@ -19,7 +19,7 @@ Object {
               "readers",
             ],
             "internalPasswordDisabled": false,
-            "lastLoggedIn": "2020-08-24T13:03:10.075Z",
+            "lastLoggedIn": "2020-09-03T16:39:55.657Z",
             "lastLoggedInMillis": 0,
             "mfaStatus": "NONE",
             "name": "viragsf@gmail.com",
@@ -203,6 +203,50 @@ Object {
       "_class": Array [
         "User",
       ],
+      "_key": "artifactory_user:normal-user",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "admin": false,
+            "disableUIAccess": false,
+            "email": "normal-user@creativice.com",
+            "groups": Array [
+              "readers",
+            ],
+            "internalPasswordDisabled": false,
+            "lastLoggedInMillis": 0,
+            "mfaStatus": "NONE",
+            "name": "normal-user",
+            "offlineMode": false,
+            "policyManager": false,
+            "profileUpdatable": true,
+            "realm": "internal",
+            "reportsManager": false,
+            "watchManager": false,
+          },
+        },
+      ],
+      "_type": "artifactory_user",
+      "createdOn": undefined,
+      "disableUIAccess": false,
+      "displayName": "normal-user",
+      "email": "normal-user@creativice.com",
+      "internalPasswordDisable": false,
+      "mfaStatus": false,
+      "name": "normal-user",
+      "policyManager": false,
+      "profileUpdatable": true,
+      "realm": "internal",
+      "reportsManager": false,
+      "username": "normal-user",
+      "watchManager": false,
+      "webLink": undefined,
+    },
+    Object {
+      "_class": Array [
+        "User",
+      ],
       "_key": "artifactory_user:anonymous",
       "_rawData": Array [
         Object {
@@ -255,7 +299,7 @@ Object {
               "readers",
             ],
             "internalPasswordDisabled": false,
-            "lastLoggedIn": "2020-08-24T13:03:10.075Z",
+            "lastLoggedIn": "2020-09-03T16:39:55.657Z",
             "lastLoggedInMillis": 0,
             "mfaStatus": "NONE",
             "name": "viragsf@gmail.com",
@@ -283,6 +327,1369 @@ Object {
       "username": "viragsf@gmail.com",
       "watchManager": false,
       "webLink": undefined,
+    },
+    Object {
+      "_class": Array [
+        "Key",
+        "AccessKey",
+      ],
+      "_key": "artifactory_api_token:ad667cc7-54a5-42b1-bed5-0c92c0fe0fa8",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "expiry": 1601555179,
+            "issued_at": 1599135979,
+            "issuer": "jfrt@01eg8hb1g2dqb01cdtms0e0bv1",
+            "refreshable": false,
+            "subject": "jfrt@01eg8hb1g2dqb01cdtms0e0bv1/users/viragsf@gmail.com",
+            "token_id": "ad667cc7-54a5-42b1-bed5-0c92c0fe0fa8",
+          },
+        },
+      ],
+      "_type": "artifactory_access_token",
+      "createdOn": undefined,
+      "displayName": "ad667cc7-54a5-42b1-bed5-0c92c0fe0fa8",
+      "name": "ad667cc7-54a5-42b1-bed5-0c92c0fe0fa8",
+    },
+    Object {
+      "_class": Array [
+        "Repository",
+      ],
+      "_key": "artifactory_repository:docker-repo",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "key": "docker-repo",
+            "packageType": "Docker",
+            "type": "LOCAL",
+            "url": "https://codeworkr.jfrog.io/artifactory/docker-repo",
+          },
+        },
+      ],
+      "_type": "artifactory_repository",
+      "createdOn": undefined,
+      "description": undefined,
+      "displayName": "docker-repo",
+      "name": "docker-repo",
+      "packageType": "Docker",
+      "type": "LOCAL",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo",
+    },
+    Object {
+      "_class": Array [
+        "Repository",
+      ],
+      "_key": "artifactory_repository:example-repo-local",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "description": "Example artifactory repository",
+            "key": "example-repo-local",
+            "packageType": "Generic",
+            "type": "LOCAL",
+            "url": "https://codeworkr.jfrog.io/artifactory/example-repo-local",
+          },
+        },
+      ],
+      "_type": "artifactory_repository",
+      "createdOn": undefined,
+      "description": "Example artifactory repository",
+      "displayName": "example-repo-local",
+      "name": "example-repo-local",
+      "packageType": "Generic",
+      "type": "LOCAL",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/example-repo-local",
+    },
+    Object {
+      "_class": Array [
+        "Repository",
+      ],
+      "_key": "artifactory_repository:jfrogpipelines",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "description": "",
+            "key": "jfrogpipelines",
+            "packageType": "Generic",
+            "type": "LOCAL",
+            "url": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines",
+          },
+        },
+      ],
+      "_type": "artifactory_repository",
+      "createdOn": undefined,
+      "description": "",
+      "displayName": "jfrogpipelines",
+      "name": "jfrogpipelines",
+      "packageType": "Generic",
+      "type": "LOCAL",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines",
+    },
+    Object {
+      "_class": Array [
+        "Repository",
+      ],
+      "_key": "artifactory_repository:maven-repo",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "key": "maven-repo",
+            "packageType": "Maven",
+            "type": "LOCAL",
+            "url": "https://codeworkr.jfrog.io/artifactory/maven-repo",
+          },
+        },
+      ],
+      "_type": "artifactory_repository",
+      "createdOn": undefined,
+      "description": undefined,
+      "displayName": "maven-repo",
+      "name": "maven-repo",
+      "packageType": "Maven",
+      "type": "LOCAL",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo",
+    },
+    Object {
+      "_class": Array [
+        "Repository",
+      ],
+      "_key": "artifactory_repository:ANY",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "description": "ANY",
+            "key": "ANY",
+            "packageType": "Generic",
+            "type": "ANY",
+            "url": "https://codeworkr.jfrog.io/artifactory/*",
+          },
+        },
+      ],
+      "_type": "artifactory_repository",
+      "createdOn": undefined,
+      "description": "ANY",
+      "displayName": "ANY",
+      "name": "ANY",
+      "packageType": "Generic",
+      "type": "ANY",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/*",
+    },
+    Object {
+      "_class": Array [
+        "Repository",
+      ],
+      "_key": "artifactory_repository:ANY LOCAL",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "description": "ANY LOCAL",
+            "key": "ANY LOCAL",
+            "packageType": "Generic",
+            "type": "LOCAL",
+            "url": "https://codeworkr.jfrog.io/artifactory/*?type=local",
+          },
+        },
+      ],
+      "_type": "artifactory_repository",
+      "createdOn": undefined,
+      "description": "ANY LOCAL",
+      "displayName": "ANY LOCAL",
+      "name": "ANY LOCAL",
+      "packageType": "Generic",
+      "type": "LOCAL",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/*?type=local",
+    },
+    Object {
+      "_class": Array [
+        "Repository",
+      ],
+      "_key": "artifactory_repository:ANY REMOTE",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "description": "ANY REMOTE",
+            "key": "ANY REMOTE",
+            "packageType": "Generic",
+            "type": "REMOTE",
+            "url": "https://codeworkr.jfrog.io/artifactory/*?type=remote",
+          },
+        },
+      ],
+      "_type": "artifactory_repository",
+      "createdOn": undefined,
+      "description": "ANY REMOTE",
+      "displayName": "ANY REMOTE",
+      "name": "ANY REMOTE",
+      "packageType": "Generic",
+      "type": "REMOTE",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/*?type=remote",
+    },
+    Object {
+      "_class": Array [
+        "CodeRepo",
+      ],
+      "_key": "artifactory_pipeline_source:1",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "branch": "master",
+            "branchExcludePattern": null,
+            "branchIncludePattern": null,
+            "createdAt": "2020-08-28T08:28:14.012Z",
+            "createdBy": 3,
+            "fileFilter": "pipelines.yml",
+            "id": "1",
+            "isInternal": null,
+            "isMultiBranch": false,
+            "isSyncing": false,
+            "lastSyncEndedAt": "2020-08-28T08:39:56.217Z",
+            "lastSyncLogs": "Successfully synced pipeline source
+
+SUMMARY:
+
+Updated 1 pipelines
+
+DETAILS:
+
+pipelines.yml: successfully updated pipeline: pipeline_hello_world",
+            "lastSyncStartedAt": "2020-08-28T08:39:52.325Z",
+            "lastSyncStatusCode": 4002,
+            "projectId": 1,
+            "projectIntegrationId": 3,
+            "repositoryFullName": "neurovelho/integration-artifactory",
+            "resourceId": 1,
+            "updatedAt": "2020-08-28T08:39:56.230Z",
+            "updatedBy": 1,
+          },
+        },
+      ],
+      "_type": "artifactory_pipeline_source",
+      "createdOn": 1598603294012,
+      "displayName": "artifactory_pipeline_source:1",
+      "id": "1",
+      "name": "artifactory_pipeline_source:1",
+    },
+    Object {
+      "_class": Array [
+        "Image",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/manifest.json",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/manifest.json",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_image",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/manifest.json",
+      "name": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/manifest.json",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/manifest.json",
+    },
+    Object {
+      "_class": Array [
+        "Image",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_image",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "name": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+    },
+    Object {
+      "_class": Array [
+        "Image",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_image",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "name": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+    },
+    Object {
+      "_class": Array [
+        "Image",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_image",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "name": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+    },
+    Object {
+      "_class": Array [
+        "Image",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_image",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "name": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+    },
+    Object {
+      "_class": Array [
+        "Image",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/manifest.json",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/manifest.json",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_image",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/manifest.json",
+      "name": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/manifest.json",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/manifest.json",
+    },
+    Object {
+      "_class": Array [
+        "Image",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_image",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "name": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+    },
+    Object {
+      "_class": Array [
+        "Image",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_image",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "name": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/example-repo-local//download.jpeg",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/example-repo-local//download.jpeg",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/example-repo-local//download.jpeg",
+      "name": "https://codeworkr.jfrog.io/artifactory/example-repo-local//download.jpeg",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/example-repo-local//download.jpeg",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/1.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/1.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/1.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/1.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/1.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.1.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.1.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.1.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.1.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.1.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.2.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.2.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.2.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.2.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.2.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.3.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.3.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.3.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.3.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.3.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.4.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.4.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.4.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.4.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.4.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/2.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/2.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/2.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/2.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/2.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.5.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.5.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.5.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.5.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.5.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.6.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.6.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.6.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.6.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.6.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.7.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.7.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.7.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.7.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.7.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.8.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.8.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.8.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.8.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.8.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_1_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_1_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_1_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_1_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_1_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_5_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_5_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_5_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_5_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_5_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_1_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_1_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_1_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_1_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_1_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_5_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_5_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_5_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_5_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_5_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_3_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_3_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_3_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_3_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_3_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_7_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_7_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_7_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_7_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_7_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_3_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_3_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_3_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_3_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_3_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_7_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_7_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_7_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_7_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_7_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_2_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_2_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_2_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_2_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_2_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_6_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_6_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_6_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_6_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_6_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_2_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_2_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_2_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_2_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_2_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_6_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_6_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_6_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_6_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_6_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_4_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_4_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_4_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_4_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_4_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_8_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_8_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_8_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_8_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_8_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_4_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_4_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_4_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_4_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_4_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_8_consoles.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_8_consoles.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_8_consoles.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_8_consoles.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_8_consoles.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/4.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/4.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/4.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/4.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/4.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/8.tar.gz",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/8.tar.gz",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/8.tar.gz",
+      "name": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/8.tar.gz",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/8.tar.gz",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/maven-metadata.xml",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/maven-metadata.xml",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/maven-metadata.xml",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/maven-metadata.xml",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/maven-metadata.xml",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/multi-3.7-20200827.083402-1.pom",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/multi-3.7-20200827.083402-1.pom",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/multi-3.7-20200827.083402-1.pom",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/multi-3.7-20200827.083402-1.pom",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/multi-3.7-20200827.083402-1.pom",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/maven-metadata.xml",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/maven-metadata.xml",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/maven-metadata.xml",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/maven-metadata.xml",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/maven-metadata.xml",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/maven-metadata.xml",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/maven-metadata.xml",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/maven-metadata.xml",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/maven-metadata.xml",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/maven-metadata.xml",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-sources.jar",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-sources.jar",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-sources.jar",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-sources.jar",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-sources.jar",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-tests.jar",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-tests.jar",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-tests.jar",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-tests.jar",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-tests.jar",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.jar",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.jar",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.jar",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.jar",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.jar",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.pom",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.pom",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.pom",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.pom",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.pom",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/maven-metadata.xml",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/maven-metadata.xml",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/maven-metadata.xml",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/maven-metadata.xml",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/maven-metadata.xml",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/maven-metadata.xml",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/maven-metadata.xml",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/maven-metadata.xml",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/maven-metadata.xml",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/maven-metadata.xml",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.jar",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.jar",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.jar",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.jar",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.jar",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.pom",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.pom",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.pom",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.pom",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.pom",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/maven-metadata.xml",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/maven-metadata.xml",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/maven-metadata.xml",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/maven-metadata.xml",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/maven-metadata.xml",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/maven-metadata.xml",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/maven-metadata.xml",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/maven-metadata.xml",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/maven-metadata.xml",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/maven-metadata.xml",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.pom",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.pom",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.pom",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.pom",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.pom",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.war",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.war",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.war",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.war",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.war",
+    },
+    Object {
+      "_class": Array [
+        "CodeModule",
+      ],
+      "_key": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/maven-metadata.xml",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "folder": false,
+            "uri": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/maven-metadata.xml",
+          },
+        },
+      ],
+      "_type": "artifactory_artifact_codemodule",
+      "createdOn": undefined,
+      "displayName": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/maven-metadata.xml",
+      "name": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/maven-metadata.xml",
+      "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/maven-metadata.xml",
+    },
+    Object {
+      "_class": Array [
+        "Configuration",
+      ],
+      "_key": "artifactory_build:gitlabci-maven-artifactory",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "artifacts": Array [
+              "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.pom",
+              "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/multi-3.7-20200827.083402-1.pom",
+              "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-tests.jar",
+              "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-sources.jar",
+              "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.war",
+              "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.pom",
+              "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.pom",
+              "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.jar",
+              "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.jar",
+            ],
+            "name": "gitlabci-maven-artifactory",
+            "number": "706202363",
+            "repository": "maven-repo",
+            "uri": "https://codeworkr.jfrog.io/ui/builds/gitlabci-maven-artifactory",
+          },
+        },
+      ],
+      "_type": "artifactory_build",
+      "createdOn": undefined,
+      "displayName": "gitlabci-maven-artifactory",
+      "name": "gitlabci-maven-artifactory",
+      "webLink": "https://codeworkr.jfrog.io/ui/builds/gitlabci-maven-artifactory",
     },
   ],
   "collectedRelationships": Array [
@@ -328,6 +1735,22 @@ Object {
     },
     Object {
       "_class": "HAS",
+      "_fromEntityKey": "artifactory_group:readers",
+      "_key": "artifactory_group:readers|has|artifactory_user:normal-user",
+      "_toEntityKey": "artifactory_user:normal-user",
+      "_type": "artifactory_group_has_user",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_user:normal-user",
+      "_toEntityKey": "artifactory_user:normal-user",
+      "_type": "artifactory_account_has_user",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
       "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
       "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_user:anonymous",
       "_toEntityKey": "artifactory_user:anonymous",
@@ -350,6 +1773,582 @@ Object {
       "_type": "artifactory_account_has_user",
       "displayName": "HAS",
     },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_api_token:ad667cc7-54a5-42b1-bed5-0c92c0fe0fa8",
+      "_toEntityKey": "artifactory_api_token:ad667cc7-54a5-42b1-bed5-0c92c0fe0fa8",
+      "_type": "artifactory_account_has_access_token",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_repository:docker-repo",
+      "_toEntityKey": "artifactory_repository:docker-repo",
+      "_type": "artifactory_account_has_repository",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_repository:example-repo-local",
+      "_toEntityKey": "artifactory_repository:example-repo-local",
+      "_type": "artifactory_account_has_repository",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_repository:jfrogpipelines",
+      "_toEntityKey": "artifactory_repository:jfrogpipelines",
+      "_type": "artifactory_account_has_repository",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_repository:maven-repo",
+      "_toEntityKey": "artifactory_repository:maven-repo",
+      "_type": "artifactory_account_has_repository",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_repository:ANY",
+      "_toEntityKey": "artifactory_repository:ANY",
+      "_type": "artifactory_account_has_repository",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_repository:ANY LOCAL",
+      "_toEntityKey": "artifactory_repository:ANY LOCAL",
+      "_type": "artifactory_account_has_repository",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_repository:ANY REMOTE",
+      "_toEntityKey": "artifactory_repository:ANY REMOTE",
+      "_type": "artifactory_account_has_repository",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_pipeline_source:1",
+      "_toEntityKey": "artifactory_pipeline_source:1",
+      "_type": "artifactory_account_has_pipeline_source",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:docker-repo",
+      "_key": "artifactory_repository:docker-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/manifest.json",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/manifest.json",
+      "_type": "artifactory_repository_has_artifact_image",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:docker-repo",
+      "_key": "artifactory_repository:docker-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "_type": "artifactory_repository_has_artifact_image",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:docker-repo",
+      "_key": "artifactory_repository:docker-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/1.1.1/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "_type": "artifactory_repository_has_artifact_image",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:docker-repo",
+      "_key": "artifactory_repository:docker-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "_type": "artifactory_repository_has_artifact_image",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:docker-repo",
+      "_key": "artifactory_repository:docker-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/_uploads/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "_type": "artifactory_repository_has_artifact_image",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:docker-repo",
+      "_key": "artifactory_repository:docker-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/manifest.json",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/manifest.json",
+      "_type": "artifactory_repository_has_artifact_image",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:docker-repo",
+      "_key": "artifactory_repository:docker-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__0e03bdcc26d7a9a57ef3b6f1bf1a210cff6239bff7c8cac72435984032851689",
+      "_type": "artifactory_repository_has_artifact_image",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:docker-repo",
+      "_key": "artifactory_repository:docker-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/docker-repo/hello-world/latest/sha256__bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b",
+      "_type": "artifactory_repository_has_artifact_image",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:example-repo-local",
+      "_key": "artifactory_repository:example-repo-local|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/example-repo-local//download.jpeg",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/example-repo-local//download.jpeg",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/1.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/1.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.1.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.1.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.2.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.2.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.3.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.3.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.4.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/1/inputStep.4.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/2.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/2.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.5.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.5.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.6.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.6.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.7.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.7.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.8.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/runs/2/inputStep.8.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_1_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_1_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_5_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/step_5_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_1_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_1_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_5_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/1/steplet_5_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_3_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_3_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_7_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/step_7_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_3_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_3_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_7_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/2/steplet_7_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_2_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_2_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_6_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/step_6_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_2_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_2_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_6_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/3/steplet_6_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_4_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_4_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_8_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/step_8_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_4_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_4_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_8_consoles.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/stepConsoles/4/steplet_8_consoles.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/4.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/4.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:jfrogpipelines",
+      "_key": "artifactory_repository:jfrogpipelines|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/8.tar.gz",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/jfrogpipelines/projects/1/pipelines/1/8.tar.gz",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/maven-metadata.xml",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/maven-metadata.xml",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/multi-3.7-20200827.083402-1.pom",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/multi-3.7-20200827.083402-1.pom",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/maven-metadata.xml",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/maven-metadata.xml",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/maven-metadata.xml",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/maven-metadata.xml",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-sources.jar",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-sources.jar",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-tests.jar",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-tests.jar",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.jar",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.jar",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.pom",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.pom",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/maven-metadata.xml",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/maven-metadata.xml",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/maven-metadata.xml",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/maven-metadata.xml",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.jar",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.jar",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.pom",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.pom",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/maven-metadata.xml",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/maven-metadata.xml",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/maven-metadata.xml",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/maven-metadata.xml",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.pom",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.pom",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.war",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.war",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "artifactory_repository:maven-repo",
+      "_key": "artifactory_repository:maven-repo|has|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/maven-metadata.xml",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/maven-metadata.xml",
+      "_type": "artifactory_repository_has_artifact_codemodule",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "CREATED",
+      "_fromEntityKey": "artifactory_build:gitlabci-maven-artifactory",
+      "_key": "artifactory_build:gitlabci-maven-artifactory|created|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.pom",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.pom",
+      "_type": "artifactory_build_created_artifact_codemodule",
+      "displayName": "CREATED",
+    },
+    Object {
+      "_class": "CREATED",
+      "_fromEntityKey": "artifactory_build:gitlabci-maven-artifactory",
+      "_key": "artifactory_build:gitlabci-maven-artifactory|created|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/multi-3.7-20200827.083402-1.pom",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/multi-3.7-20200827.083402-1.pom",
+      "_type": "artifactory_build_created_artifact_codemodule",
+      "displayName": "CREATED",
+    },
+    Object {
+      "_class": "CREATED",
+      "_fromEntityKey": "artifactory_build:gitlabci-maven-artifactory",
+      "_key": "artifactory_build:gitlabci-maven-artifactory|created|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-tests.jar",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-tests.jar",
+      "_type": "artifactory_build_created_artifact_codemodule",
+      "displayName": "CREATED",
+    },
+    Object {
+      "_class": "CREATED",
+      "_fromEntityKey": "artifactory_build:gitlabci-maven-artifactory",
+      "_key": "artifactory_build:gitlabci-maven-artifactory|created|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-sources.jar",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-sources.jar",
+      "_type": "artifactory_build_created_artifact_codemodule",
+      "displayName": "CREATED",
+    },
+    Object {
+      "_class": "CREATED",
+      "_fromEntityKey": "artifactory_build:gitlabci-maven-artifactory",
+      "_key": "artifactory_build:gitlabci-maven-artifactory|created|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.war",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.war",
+      "_type": "artifactory_build_created_artifact_codemodule",
+      "displayName": "CREATED",
+    },
+    Object {
+      "_class": "CREATED",
+      "_fromEntityKey": "artifactory_build:gitlabci-maven-artifactory",
+      "_key": "artifactory_build:gitlabci-maven-artifactory|created|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.pom",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.pom",
+      "_type": "artifactory_build_created_artifact_codemodule",
+      "displayName": "CREATED",
+    },
+    Object {
+      "_class": "CREATED",
+      "_fromEntityKey": "artifactory_build:gitlabci-maven-artifactory",
+      "_key": "artifactory_build:gitlabci-maven-artifactory|created|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.pom",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.pom",
+      "_type": "artifactory_build_created_artifact_codemodule",
+      "displayName": "CREATED",
+    },
+    Object {
+      "_class": "CREATED",
+      "_fromEntityKey": "artifactory_build:gitlabci-maven-artifactory",
+      "_key": "artifactory_build:gitlabci-maven-artifactory|created|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.jar",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.jar",
+      "_type": "artifactory_build_created_artifact_codemodule",
+      "displayName": "CREATED",
+    },
+    Object {
+      "_class": "CREATED",
+      "_fromEntityKey": "artifactory_build:gitlabci-maven-artifactory",
+      "_key": "artifactory_build:gitlabci-maven-artifactory|created|artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.jar",
+      "_toEntityKey": "artifactory_artifact:https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.jar",
+      "_type": "artifactory_build_created_artifact_codemodule",
+      "displayName": "CREATED",
+    },
   ],
   "encounteredTypes": Array [
     "artifactory_account",
@@ -358,8 +2357,20 @@ Object {
     "artifactory_group_has_user",
     "artifactory_user",
     "artifactory_account_has_user",
+    "artifactory_access_token",
+    "artifactory_account_has_access_token",
+    "artifactory_repository",
+    "artifactory_account_has_repository",
+    "artifactory_pipeline_source",
+    "artifactory_account_has_pipeline_source",
+    "artifactory_artifact_image",
+    "artifactory_repository_has_artifact_image",
+    "artifactory_artifact_codemodule",
+    "artifactory_repository_has_artifact_codemodule",
+    "artifactory_build",
+    "artifactory_build_created_artifact_codemodule",
   ],
-  "numCollectedEntities": 7,
-  "numCollectedRelationships": 8,
+  "numCollectedEntities": 72,
+  "numCollectedRelationships": 82,
 }
 `;

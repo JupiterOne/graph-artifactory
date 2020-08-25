@@ -36,6 +36,7 @@ it('auth error', async () => {
     instanceConfig: {
       clientNamespace: 'INVALID',
       clientAccessToken: 'INVALID',
+      clientPipelineAccessToken: 'INVALID',
       clientAdminName: 'INVALID',
     },
   });

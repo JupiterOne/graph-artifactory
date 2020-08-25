@@ -11,6 +11,17 @@ import {
   ArtifactoryRepository,
   ArtifactoryPermission,
   ArtifactoryPermissionRef,
+  ArtifactoryAccessToken,
+  ArtifactoryBuild,
+  ArtifactoryBuildRef,
+  ArtifactoryBuildResponse,
+  ArtifactoryArtifactRef,
+  ArtifactoryArtifactResponse,
+  ArtifactoryBuildArtifactsResponse,
+  ArtifactoryPipelineSource,
+  ArtifactoryBuildDetailsResponse,
+  ArtifactoryAccessTokenResponse,
+  ArtifactoryRepositoryName,
 } from './types';
 
 /**
@@ -25,11 +36,13 @@ export class APIClient {
   private readonly clientNamespace: string;
   private readonly clientAccessToken: string;
   private readonly clientAdminName: string;
+  private readonly clientPipelineAccessToken: string;
 
   constructor(readonly config: IntegrationConfig) {
     this.clientNamespace = config.clientNamespace;
     this.clientAccessToken = config.clientAccessToken;
     this.clientAdminName = config.clientAdminName;
+    this.clientPipelineAccessToken = config.clientPipelineAccessToken;
   }
 
   private withBaseUri(path: string): string {
@@ -38,13 +51,18 @@ export class APIClient {
 
   private async request(
     uri: string,
-    method: 'GET' | 'HEAD' = 'GET',
+    method: 'GET' | 'HEAD' | 'POST' = 'GET',
+    body?,
+    headers = {},
   ): Promise<Response> {
     return fetch(uri, {
       method,
       headers: {
         Authorization: `Bearer ${this.clientAccessToken}`,
+        'Content-Type': 'application/json',
+        ...headers,
       },
+      body,
     });
   }
 
@@ -146,8 +164,31 @@ export class APIClient {
     );
 
     const repositories: ArtifactoryRepository[] = await response.json();
+    const wildcardRepositories: ArtifactoryRepository[] = [
+      {
+        url: this.withBaseUri('artifactory/*'),
+        description: 'ANY',
+        key: 'ANY' as ArtifactoryRepositoryName,
+        packageType: 'Generic',
+        type: 'ANY',
+      },
+      {
+        url: this.withBaseUri('artifactory/*?type=local'),
+        description: 'ANY LOCAL',
+        key: 'ANY LOCAL' as ArtifactoryRepositoryName,
+        packageType: 'Generic',
+        type: 'LOCAL',
+      },
+      {
+        url: this.withBaseUri('artifactory/*?type=remote'),
+        description: 'ANY REMOTE',
+        key: 'ANY REMOTE' as ArtifactoryRepositoryName,
+        packageType: 'Generic',
+        type: 'REMOTE',
+      },
+    ];
 
-    for (const repository of repositories) {
+    for (const repository of [...repositories, ...wildcardRepositories]) {
       await iteratee(repository);
     }
   }
@@ -161,14 +202,174 @@ export class APIClient {
     iteratee: ResourceIteratee<ArtifactoryPermission>,
   ): Promise<void> {
     const response = await this.request(
-      this.withBaseUri('artifactory/api/security/permissions'),
+      this.withBaseUri('artifactory/api/v2/security/permissions'),
     );
 
     const permissionRefs: ArtifactoryPermissionRef[] = await response.json();
 
     for (const permission of permissionRefs) {
       const resp = await this.request(permission.uri);
+
       await iteratee(await resp.json());
+    }
+  }
+
+  /**
+   * Iterates each access token in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   */
+  public async iterateAccessTokens(
+    iteratee: ResourceIteratee<ArtifactoryAccessToken>,
+  ): Promise<void> {
+    const response = await this.request(
+      this.withBaseUri('artifactory/api/security/token'),
+    );
+
+    const accessTokens: ArtifactoryAccessTokenResponse = await response.json();
+
+    for (const accessToken of accessTokens.tokens || []) {
+      await iteratee(accessToken);
+    }
+  }
+
+  /**
+   * Iterates each repository artifact in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   */
+  public async iterateRepositoryArtifacts(
+    key: string,
+    iteratee: ResourceIteratee<ArtifactoryArtifactRef>,
+  ): Promise<void> {
+    if (['ANY', 'ANY LOCAL', 'ANY REMOTE'].includes(key)) {
+      return;
+    }
+
+    const response = await this.request(
+      this.withBaseUri(`artifactory/api/storage/${key}`),
+    );
+
+    await this.recurseArtifacts(await response.json(), iteratee);
+  }
+
+  private async recurseArtifacts(
+    response: ArtifactoryArtifactResponse,
+    iteratee: ResourceIteratee<ArtifactoryArtifactRef>,
+  ): Promise<void> {
+    for (const artifact of response.children || []) {
+      if (artifact.folder) {
+        const nextUri = `${response.uri}${artifact.uri}`;
+        const nextResponse = await this.request(nextUri);
+
+        await this.recurseArtifacts(await nextResponse.json(), iteratee);
+      } else {
+        await iteratee({
+          ...artifact,
+          uri: this.withBaseUri(
+            `artifactory/${response.repo}${response.path}${artifact.uri}`,
+          ),
+        });
+      }
+    }
+  }
+
+  /**
+   * Iterates each build in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   */
+  public async iterateBuilds(
+    iteratee: ResourceIteratee<ArtifactoryBuild>,
+  ): Promise<void> {
+    const response = await this.request(
+      this.withBaseUri('artifactory/api/build'),
+    );
+
+    const jsonResponse: ArtifactoryBuildResponse = await response.json();
+
+    // A list of artifactory/api/build/<name>
+    for (const build of jsonResponse.builds || []) {
+      const buildList = await this.getBuildList(build);
+
+      // A list of artifactory/api/build/<name>/<number>
+      for (const buildUri of buildList) {
+        const name = build.uri.split('/')[1];
+        const number = buildUri.split('/')[1];
+        const artifacts = await this.getBuildArtifacts(name, number);
+
+        if (artifacts.length === 0) {
+          return;
+        }
+
+        const repository = artifacts[0]
+          .split(this.withBaseUri('artifactory'))[1]
+          .split('/')[1];
+
+        await iteratee({
+          name,
+          number,
+          repository,
+          artifacts,
+          uri: this.withBaseUri(`ui/builds${build.uri}`),
+        });
+      }
+    }
+  }
+
+  private async getBuildList(buildRef: ArtifactoryBuildRef): Promise<string[]> {
+    const response = await this.request(
+      this.withBaseUri(`artifactory/api/build${buildRef.uri}`),
+    );
+
+    const jsonResponse: ArtifactoryBuildDetailsResponse = await response.json();
+
+    return (jsonResponse.buildsNumbers || []).map((b) => b.uri);
+  }
+
+  private async getBuildArtifacts(
+    name: string,
+    number: string,
+  ): Promise<string[]> {
+    const response = await this.request(
+      this.withBaseUri('artifactory/api/search/buildArtifacts'),
+      'POST',
+      JSON.stringify({
+        buildName: name,
+        buildNumber: number,
+      }),
+    );
+
+    const jsonResponse: ArtifactoryBuildArtifactsResponse = await response.json();
+
+    if (jsonResponse.errors) {
+      return [];
+    }
+
+    return jsonResponse.results.map((r) => r.downloadUri);
+  }
+
+  /**
+   * Iterates each pipeline source in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   */
+  public async iteratePipelineSources(
+    iteratee: ResourceIteratee<ArtifactoryPipelineSource>,
+  ): Promise<void> {
+    const response = await this.request(
+      this.withBaseUri('pipelines/api/v1/pipelinesources'),
+      'GET',
+      null,
+      {
+        Authorization: `Bearer ${this.clientPipelineAccessToken}`,
+      },
+    );
+
+    const sources: ArtifactoryPipelineSource[] = await response.json();
+
+    for (const source of sources || []) {
+      await iteratee(source);
     }
   }
 }

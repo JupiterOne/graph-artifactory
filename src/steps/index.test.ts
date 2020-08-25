@@ -5,16 +5,21 @@ import {
 } from '@jupiterone/integration-sdk-testing';
 
 import { IntegrationConfig } from '../types';
-import { fetchUsers, fetchGroups } from './access';
+import { fetchUsers, fetchGroups, fetchAccessTokens } from './access';
 import { fetchAccountDetails } from './account';
+import { fetchBuilds } from './builds';
+import { fetchPipelineSources } from './pipelineSources';
+import { fetchArtifacts, fetchRepositories } from './repositories';
 
 const integrationConfig: IntegrationConfig = {
   clientNamespace: process.env.CLIENT_NAMESPACE || 'codeworkr',
   clientAccessToken: process.env.CLIENT_ACCESS_TOKEN || 'codeworkr',
+  clientPipelineAccessToken:
+    process.env.CLIENT_PIPELINE_ACCESS_TOKEN || 'codeworkr',
   clientAdminName: process.env.CLIENT_ADMIN_NAME || 'viragsf@gmail.com',
 };
 
-jest.setTimeout(10000 * 2);
+jest.setTimeout(10000 * 5);
 
 describe('JFrog Arrifactory', () => {
   let recording: Recording;
@@ -23,6 +28,9 @@ describe('JFrog Arrifactory', () => {
     recording = setupRecording({
       directory: __dirname,
       name: 'jfrog_recordings',
+      options: {
+        recordFailedRequests: true,
+      },
     });
   });
 
@@ -38,6 +46,11 @@ describe('JFrog Arrifactory', () => {
     await fetchAccountDetails(context);
     await fetchGroups(context);
     await fetchUsers(context);
+    await fetchAccessTokens(context);
+    await fetchRepositories(context);
+    await fetchPipelineSources(context);
+    await fetchArtifacts(context);
+    await fetchBuilds(context);
 
     expect({
       numCollectedEntities: context.jobState.collectedEntities.length,
@@ -246,6 +259,120 @@ describe('JFrog Arrifactory', () => {
             type: 'string',
           },
           type: {
+            type: 'string',
+          },
+        },
+        required: [],
+      },
+    });
+
+    expect(
+      context.jobState.collectedEntities.filter((e) =>
+        e._class.includes('AccessKey'),
+      ),
+    ).toMatchGraphObjectSchema({
+      _class: ['Key', 'AccessKey'],
+      schema: {
+        additionalProperties: true,
+        properties: {
+          _type: { const: 'artifactory_access_token' },
+          _rawData: {
+            type: 'array',
+            items: { type: 'object' },
+          },
+          name: {
+            type: 'string',
+          },
+        },
+        required: [],
+      },
+    });
+
+    expect(
+      context.jobState.collectedEntities.filter((e) =>
+        e._class.includes('CodeRepo'),
+      ),
+    ).toMatchGraphObjectSchema({
+      _class: ['CodeRepo'],
+      schema: {
+        additionalProperties: true,
+        properties: {
+          _type: { const: 'artifactory_pipeline_source' },
+          _rawData: {
+            type: 'array',
+            items: { type: 'object' },
+          },
+          name: {
+            type: 'string',
+          },
+        },
+        required: [],
+      },
+    });
+
+    expect(
+      context.jobState.collectedEntities.filter(
+        (e) =>
+          e._class.includes('CodeModule') &&
+          e._type === 'artifactory_artifact_codemodule',
+      ),
+    ).toMatchGraphObjectSchema({
+      _class: ['CodeModule'],
+      schema: {
+        additionalProperties: true,
+        properties: {
+          _type: { const: 'artifactory_artifact_codemodule' },
+          _rawData: {
+            type: 'array',
+            items: { type: 'object' },
+          },
+          name: {
+            type: 'string',
+          },
+        },
+        required: [],
+      },
+    });
+
+    expect(
+      context.jobState.collectedEntities.filter(
+        (e) =>
+          e._class.includes('Image') &&
+          e._type === 'artifactory_artifact_image',
+      ),
+    ).toMatchGraphObjectSchema({
+      _class: ['Image'],
+      schema: {
+        additionalProperties: true,
+        properties: {
+          _type: { const: 'artifactory_artifact_image' },
+          _rawData: {
+            type: 'array',
+            items: { type: 'object' },
+          },
+          name: {
+            type: 'string',
+          },
+        },
+        required: [],
+      },
+    });
+
+    expect(
+      context.jobState.collectedEntities.filter((e) =>
+        e._class.includes('Configuration'),
+      ),
+    ).toMatchGraphObjectSchema({
+      _class: ['Configuration'],
+      schema: {
+        additionalProperties: true,
+        properties: {
+          _type: { const: 'artifactory_build' },
+          _rawData: {
+            type: 'array',
+            items: { type: 'object' },
+          },
+          name: {
             type: 'string',
           },
         },
