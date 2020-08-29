@@ -5,10 +5,8 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
-import { IntegrationConfig, ArtifactoryUsername } from '../types';
-
-export const ACCOUNT_ENTITY_KEY = 'entity:account';
-export const ACCOUNT_ENTITY_TYPE = 'artifactory_account';
+import { ACCOUNT_ENTITY_DATA_KEY, entities } from '../constants';
+import { ArtifactoryUsername, IntegrationConfig } from '../types';
 
 export function getAccountKey(name: ArtifactoryUsername): string {
   return `artifactory_account:${name}`;
@@ -26,9 +24,9 @@ export async function fetchAccountDetails({
     entityData: {
       source: account,
       assign: {
-        _type: ACCOUNT_ENTITY_TYPE,
         _key: getAccountKey(account.name),
-        _class: 'Account',
+        _type: entities.ACCOUNT._type,
+        _class: entities.ACCOUNT._class,
         webLink: account.uri,
         displayName: account.name,
         username: account.name,
@@ -47,7 +45,7 @@ export async function fetchAccountDetails({
 
   await Promise.all([
     jobState.addEntity(accountEntity),
-    jobState.setData(ACCOUNT_ENTITY_KEY, accountEntity),
+    jobState.setData(ACCOUNT_ENTITY_DATA_KEY, accountEntity),
   ]);
 }
 
@@ -55,7 +53,8 @@ export const accountSteps: IntegrationStep<IntegrationConfig>[] = [
   {
     id: 'fetch-account',
     name: 'Fetch Account Details',
-    types: [ACCOUNT_ENTITY_TYPE],
+    entities: [entities.ACCOUNT],
+    relationships: [],
     dependsOn: [],
     executionHandler: fetchAccountDetails,
   },
