@@ -1,19 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`JFrog should collect data 1`] = `
+exports[`JFrog Arrifactory should collect data 1`] = `
 Object {
   "collectedEntities": Array [
     Object {
       "_class": Array [
         "Account",
       ],
-      "_key": "artifactory-account-viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com",
       "_rawData": Array [
         Object {
           "name": "default",
           "rawData": Object {
-            "id": "artifactory-account-viragsf@gmail.com",
+            "admin": true,
+            "disableUIAccess": false,
+            "email": "viragsf@gmail.com",
+            "groups": Array [
+              "readers",
+            ],
+            "internalPasswordDisabled": false,
+            "lastLoggedIn": "2020-08-24T13:03:10.075Z",
+            "lastLoggedInMillis": 0,
+            "mfaStatus": "NONE",
             "name": "viragsf@gmail.com",
+            "offlineMode": false,
+            "policyManager": false,
+            "profileUpdatable": true,
+            "realm": "internal",
+            "reportsManager": false,
+            "watchManager": false,
           },
         },
       ],
@@ -22,7 +37,6 @@ Object {
       "disableUIAccess": false,
       "displayName": "viragsf@gmail.com",
       "email": "viragsf@gmail.com",
-      "id": "artifactory-account-viragsf@gmail.com",
       "internalPasswordDisable": false,
       "mfaStatus": false,
       "name": "viragsf@gmail.com",
@@ -274,16 +288,16 @@ Object {
   "collectedRelationships": Array [
     Object {
       "_class": "HAS",
-      "_fromEntityKey": "artifactory-account-viragsf@gmail.com",
-      "_key": "artifactory-account-viragsf@gmail.com|has|artifactory_group:new-empty-group",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_group:new-empty-group",
       "_toEntityKey": "artifactory_group:new-empty-group",
       "_type": "artifactory_account_has_group",
       "displayName": "HAS",
     },
     Object {
       "_class": "HAS",
-      "_fromEntityKey": "artifactory-account-viragsf@gmail.com",
-      "_key": "artifactory-account-viragsf@gmail.com|has|artifactory_group:readers",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_group:readers",
       "_toEntityKey": "artifactory_group:readers",
       "_type": "artifactory_account_has_group",
       "displayName": "HAS",
@@ -298,24 +312,24 @@ Object {
     },
     Object {
       "_class": "HAS",
-      "_fromEntityKey": "artifactory-account-viragsf@gmail.com",
-      "_key": "artifactory-account-viragsf@gmail.com|has|artifactory_user:nick",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_user:nick",
       "_toEntityKey": "artifactory_user:nick",
       "_type": "artifactory_account_has_user",
       "displayName": "HAS",
     },
     Object {
       "_class": "HAS",
-      "_fromEntityKey": "artifactory-account-viragsf@gmail.com",
-      "_key": "artifactory-account-viragsf@gmail.com|has|artifactory_user:xray",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_user:xray",
       "_toEntityKey": "artifactory_user:xray",
       "_type": "artifactory_account_has_user",
       "displayName": "HAS",
     },
     Object {
       "_class": "HAS",
-      "_fromEntityKey": "artifactory-account-viragsf@gmail.com",
-      "_key": "artifactory-account-viragsf@gmail.com|has|artifactory_user:anonymous",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_user:anonymous",
       "_toEntityKey": "artifactory_user:anonymous",
       "_type": "artifactory_account_has_user",
       "displayName": "HAS",
@@ -330,8 +344,8 @@ Object {
     },
     Object {
       "_class": "HAS",
-      "_fromEntityKey": "artifactory-account-viragsf@gmail.com",
-      "_key": "artifactory-account-viragsf@gmail.com|has|artifactory_user:viragsf@gmail.com",
+      "_fromEntityKey": "artifactory_account:viragsf@gmail.com",
+      "_key": "artifactory_account:viragsf@gmail.com|has|artifactory_user:viragsf@gmail.com",
       "_toEntityKey": "artifactory_user:viragsf@gmail.com",
       "_type": "artifactory_account_has_user",
       "displayName": "HAS",

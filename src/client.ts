@@ -3,14 +3,14 @@ import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-
 import {
   IntegrationConfig,
   StatusError,
-  JFrogUser,
-  JFrogGroup,
+  ArtifactoryUser,
+  ArtifactoryGroup,
   ResourceIteratee,
-  JFrogGroupRef,
-  JFrogUserRef,
-  JFrogRepository,
-  JFrogPermission,
-  JFrogPermissionRef,
+  ArtifactoryGroupRef,
+  ArtifactoryUserRef,
+  ArtifactoryRepository,
+  ArtifactoryPermission,
+  ArtifactoryPermissionRef,
 } from './types';
 
 /**
@@ -75,18 +75,18 @@ export class APIClient {
   /**
    * Returns the account (name = admin) which is auto-generated once cloud-based account is made.
    */
-  public async getAccount(): Promise<JFrogUser> {
+  public async getAccount(): Promise<ArtifactoryUser> {
     const response = await this.request(
       this.withBaseUri('artifactory/api/security/users'),
     );
 
-    const users: JFrogUser[] = await response.json();
+    const users: ArtifactoryUser[] = await response.json();
 
     const adminUser = users.find((user) => user.name === this.clientAdminName);
 
     if (adminUser) {
       const resp = await this.request(adminUser.uri);
-      const accountData: JFrogUser = await resp.json();
+      const accountData: ArtifactoryUser = await resp.json();
 
       return accountData;
     } else {
@@ -100,13 +100,13 @@ export class APIClient {
    * @param iteratee receives each resource to produce entities/relationships
    */
   public async iterateUsers(
-    iteratee: ResourceIteratee<JFrogUser>,
+    iteratee: ResourceIteratee<ArtifactoryUser>,
   ): Promise<void> {
     const response = await this.request(
       this.withBaseUri('artifactory/api/security/users'),
     );
 
-    const userRefs: JFrogUserRef[] = await response.json();
+    const userRefs: ArtifactoryUserRef[] = await response.json();
 
     for (const user of userRefs) {
       const resp = await this.request(user.uri);
@@ -120,12 +120,12 @@ export class APIClient {
    * @param iteratee receives each resource to produce entities/relationships
    */
   public async iterateGroups(
-    iteratee: ResourceIteratee<JFrogGroup>,
+    iteratee: ResourceIteratee<ArtifactoryGroup>,
   ): Promise<void> {
     const response = await this.request(
       this.withBaseUri('artifactory/api/security/groups'),
     );
-    const groupRefs: JFrogGroupRef[] = await response.json();
+    const groupRefs: ArtifactoryGroupRef[] = await response.json();
 
     for (const group of groupRefs) {
       const resp = await this.request(group.uri);
@@ -139,13 +139,13 @@ export class APIClient {
    * @param iteratee receives each resource to produce entities/relationships
    */
   public async iterateRepositories(
-    iteratee: ResourceIteratee<JFrogRepository>,
+    iteratee: ResourceIteratee<ArtifactoryRepository>,
   ): Promise<void> {
     const response = await this.request(
       this.withBaseUri('artifactory/api/repositories'),
     );
 
-    const repositories: JFrogRepository[] = await response.json();
+    const repositories: ArtifactoryRepository[] = await response.json();
 
     for (const repository of repositories) {
       await iteratee(repository);
@@ -158,13 +158,13 @@ export class APIClient {
    * @param iteratee receives each resource to produce entities/relationships
    */
   public async iteratePermissions(
-    iteratee: ResourceIteratee<JFrogPermission>,
+    iteratee: ResourceIteratee<ArtifactoryPermission>,
   ): Promise<void> {
     const response = await this.request(
       this.withBaseUri('artifactory/api/security/permissions'),
     );
 
-    const permissionRefs: JFrogPermissionRef[] = await response.json();
+    const permissionRefs: ArtifactoryPermissionRef[] = await response.json();
 
     for (const permission of permissionRefs) {
       const resp = await this.request(permission.uri);

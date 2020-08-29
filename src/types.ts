@@ -38,22 +38,25 @@ export class StatusError extends Error {
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
-export type JFrogGroupName = Opaque<string, 'JFrogGroupName'>;
-export type JFrogRealm = Opaque<string, 'JFrogRealm'>;
-export type JFrogUsername = Opaque<string, 'JFrogUsername'>;
-export type JFrogEmail = Opaque<string, 'JFrogEmail'>;
-export type JFrogRepositoryName = Opaque<string, 'JFrogRepositoryName'>;
+export type ArtifactoryGroupName = Opaque<string, 'ArtifactoryGroupName'>;
+export type ArtifactoryRealm = Opaque<string, 'ArtifactoryRealm'>;
+export type ArtifactoryUsername = Opaque<string, 'ArtifactoryUsername'>;
+export type ArtifactoryEmail = Opaque<string, 'ArtifactoryEmail'>;
+export type ArtifactoryRepositoryName = Opaque<
+  string,
+  'ArtifactoryRepositoryName'
+>;
 
-export type JFrogUser = {
-  name: JFrogUsername;
-  email: JFrogEmail;
+export type ArtifactoryUser = {
+  name: ArtifactoryUsername;
+  email: ArtifactoryEmail;
   admin: boolean;
   profileUpdatable: boolean;
   disableUIAccess: boolean;
   internalPasswordDisabled: boolean;
   lastLoggedIn: Date;
-  realm: JFrogRealm;
-  groups: JFrogGroupName[];
+  realm: ArtifactoryRealm;
+  groups: ArtifactoryGroupName[];
   watchManager: boolean;
   reportsManager: boolean;
   policyManager: boolean;
@@ -61,16 +64,16 @@ export type JFrogUser = {
   uri: string;
 };
 
-export type JFrogUserRef = {
+export type ArtifactoryUserRef = {
   uri: string;
 };
 
-export type JFrogGroup = {
-  name: JFrogGroupName;
+export type ArtifactoryGroup = {
+  name: ArtifactoryGroupName;
   description: string;
   autoJoin: boolean;
   adminPrivileges: boolean;
-  realm: JFrogRealm;
+  realm: ArtifactoryRealm;
   realmAttributes: string;
   policyManager: boolean;
   watchManager: boolean;
@@ -78,19 +81,19 @@ export type JFrogGroup = {
   uri: string;
 };
 
-export type JFrogGroupRef = {
+export type ArtifactoryGroupRef = {
   uri: string;
 };
 
-export type JFrogRepository = {
-  key: JFrogRepositoryName;
+export type ArtifactoryRepository = {
+  key: ArtifactoryRepositoryName;
   description: string;
   type: string;
   url: string;
   packageType: string;
 };
 
-export type JFrogPermission = {
+export type ArtifactoryPermission = {
   name: string;
   repositories: string[];
   principals: {
@@ -104,6 +107,6 @@ export type JFrogPermission = {
   uri: string;
 };
 
-export type JFrogPermissionRef = {
+export type ArtifactoryPermissionRef = {
   uri: string;
 };

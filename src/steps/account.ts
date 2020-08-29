@@ -5,13 +5,13 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
-import { IntegrationConfig, JFrogUsername } from '../types';
+import { IntegrationConfig, ArtifactoryUsername } from '../types';
 
 export const ACCOUNT_ENTITY_KEY = 'entity:account';
 export const ACCOUNT_ENTITY_TYPE = 'artifactory_account';
 
-export function accountEntityId(name: JFrogUsername): string {
-  return `artifactory-account-${name}`;
+export function getAccountKey(name: ArtifactoryUsername): string {
+  return `artifactory_account:${name}`;
 }
 
 export async function fetchAccountDetails({
@@ -24,12 +24,10 @@ export async function fetchAccountDetails({
 
   const accountEntity = createIntegrationEntity({
     entityData: {
-      source: {
-        id: accountEntityId(account.name),
-        name: account.name,
-      },
+      source: account,
       assign: {
         _type: ACCOUNT_ENTITY_TYPE,
+        _key: getAccountKey(account.name),
         _class: 'Account',
         webLink: account.uri,
         displayName: account.name,

@@ -7,13 +7,13 @@ import {
   Entity,
 } from '@jupiterone/integration-sdk-core';
 import { createAPIClient } from '../client';
-import { IntegrationConfig, JFrogRepositoryName } from '../types';
+import { IntegrationConfig, ArtifactoryRepositoryName } from '../types';
 import { ACCOUNT_ENTITY_TYPE, ACCOUNT_ENTITY_KEY } from './account';
 
 const REPOSITORY_ENTITY_TYPE = 'artifactory_repository';
 
-function repositoryEntityId(name: JFrogRepositoryName): string {
-  return `artifactory-repository-${name}`;
+function getRepositoryKey(name: ArtifactoryRepositoryName): string {
+  return `artifactory_repository:${name}`;
 }
 
 export async function fetchRepositories({
@@ -25,12 +25,10 @@ export async function fetchRepositories({
   await apiClient.iterateRepositories(async (repository) => {
     const repositoryEntity = createIntegrationEntity({
       entityData: {
-        source: {
-          ...repository,
-          id: repositoryEntityId(repository.key),
-        },
+        source: repository,
         assign: {
           _type: REPOSITORY_ENTITY_TYPE,
+          _key: getRepositoryKey(repository.key),
           _class: 'Repository',
           webLink: repository.url,
           displayName: repository.key,

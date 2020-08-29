@@ -16,7 +16,7 @@ const integrationConfig: IntegrationConfig = {
 
 jest.setTimeout(10000 * 2);
 
-describe('JFrog', () => {
+describe('JFrog Arrifactory', () => {
   let recording: Recording;
 
   beforeEach(() => {
