@@ -4,27 +4,43 @@ import {
   IntegrationStepExecutionContext,
 } from '@jupiterone/integration-sdk-core';
 
-import { IntegrationConfig } from '../types';
+import { createAPIClient } from '../client';
+import { IntegrationConfig, ArtifactoryUsername } from '../types';
 
 export const ACCOUNT_ENTITY_KEY = 'entity:account';
+export const ACCOUNT_ENTITY_TYPE = 'artifactory_account';
+
+export function getAccountKey(name: ArtifactoryUsername): string {
+  return `artifactory_account:${name}`;
+}
 
 export async function fetchAccountDetails({
+  instance,
   jobState,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
+  const apiClient = createAPIClient(instance.config);
+
+  const account = await apiClient.getAccount();
+
   const accountEntity = createIntegrationEntity({
     entityData: {
-      source: {
-        id: 'acme-unique-account-id',
-        name: 'Example Co. Acme Account',
-      },
+      source: account,
       assign: {
-        _key: 'acme-unique-account-id',
-        _type: 'acme_account',
+        _type: ACCOUNT_ENTITY_TYPE,
+        _key: getAccountKey(account.name),
         _class: 'Account',
-        mfaEnabled: true,
-        // This is a custom property that is not a part of the data model class
-        // hierarchy. See: https://github.com/JupiterOne/data-model/blob/master/src/schemas/Account.json
-        manager: 'Manager Name',
+        webLink: account.uri,
+        displayName: account.name,
+        username: account.name,
+        email: account.email,
+        policyManager: account.policyManager,
+        watchManager: account.watchManager,
+        reportsManager: account.reportsManager,
+        profileUpdatable: account.profileUpdatable,
+        internalPasswordDisable: account.internalPasswordDisabled,
+        realm: account.realm,
+        disableUIAccess: account.disableUIAccess,
+        mfaStatus: account.mfaStatus !== 'NONE',
       },
     },
   });
@@ -39,7 +55,7 @@ export const accountSteps: IntegrationStep<IntegrationConfig>[] = [
   {
     id: 'fetch-account',
     name: 'Fetch Account Details',
-    types: ['acme_account'],
+    types: [ACCOUNT_ENTITY_TYPE],
     dependsOn: [],
     executionHandler: fetchAccountDetails,
   },

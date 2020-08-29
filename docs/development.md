@@ -1,28 +1,59 @@
 # Development
 
-Add details here to give a brief overview of how to work with the provider APIs.
-Please reference any SDKs or API docs used to help build the integration here.
-
-## Prerequisites
-
-Supply details about software or tooling (like maybe Docker or Terraform) that
-is needed for development here.
-
-Please supply references to documentation that details how to install those
-dependencies here.
-
-Tools like Node.js and NPM are already covered in the [README](../README.md) so
-don't bother documenting that here.
+This integration focuses on [JFrog Artifactory](https://jfrog.com/artifactory/)
+and is using
+[JFrog Artifactory REST API](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API)
+for interacting with the JFrog Artifactory platform.
 
 ## Provider account setup
 
-Please provide information about the steps needed to create an account with a
-provider. Images and references to a provider's documentation is very helpful
-for new developers picking up your work.
+### Cloud JFrog Artifactory Setup
+
+To set up a JFrog Artifactory account, please follow these steps:
+
+1. Visit the [JFrog Sign Up](https://jfrog.com/artifactory/start-free/) page,
+   select "Cloud" and submit the form/follow through with the procedure.
+2. Once done, you will receive an email containing your account information and
+   a link ([your organization].jfrog.io) to the dashboard for your organization.
 
 ## Authentication
 
-Supply details here for information on how to authenticate with a provider so
-that developers have an idea of what's needed to hit APIs. It may be useful to
-provide explanations for each value specified in
-[../src/instanceConfigFields.json](../src/instanceConfigFields.json).
+1. Once logged in, navigate to the "Administrator" section by clicking on the
+   cog looking button on the top left side.
+
+![Administrator section](images/administrator.png)
+
+2. Next you need to select "Identity And Access" panel and select the "Access
+   Tokens" sub-menu item.
+
+![Access tokens](images/access_tokens.png)
+
+3. To create an access token you need to click "+ Generate Admin Token" button
+   found on the top right. After a new modal appears, make sure Artifactory is
+   selected and set the expiration based on your needs. Then click "Generate".
+
+![Generate admin token](images/generate_admin_token.png)
+
+4. A new modal will appear containing the access token. It is shown only once,
+   so make sure to save it somewhere or you'll need to re-create it again later.
+
+5. Copy the API Key, create a .env file at the root of this project, and set the
+   CLIENT_ACCESS_TOKEN variable with the copied value.
+
+```bash
+CLIENT_ACCESS_TOKEN="paste the access token value here"
+```
+
+6. The final step is to also include the hostname in the `.env` file. Put the
+   host part of the URL that you received from the email that you received from
+   JFrog ([this part].jfrog.io).
+
+```bash
+CLIENT_ACCESS_TOKEN="paste the access token value here"
+CLIENT_NAMESPACE="your organization name"
+```
+
+After following the above steps, you should now be able to start contributing to
+this integration. The integration will pull in the `CLIENT_ACCESS_TOKEN` and
+`CLIENT_NAMESPACE` variables from the `.env` file and use them when making
+requests.

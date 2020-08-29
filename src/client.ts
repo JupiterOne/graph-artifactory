@@ -1,36 +1,17 @@
-import http from 'http';
-
+import fetch, { Response } from 'node-fetch';
 import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-sdk-core';
-
-import { IntegrationConfig } from './types';
-
-export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
-
-// Providers often supply types with their API libraries.
-
-type AcmeUser = {
-  id: string;
-  name: string;
-};
-
-type AcmeGroup = {
-  id: string;
-  name: string;
-  users?: Pick<AcmeUser, 'id'>[];
-};
-
-// Those can be useful to a degree, but often they're just full of optional
-// values. Understanding the response data may be more reliably accomplished by
-// reviewing the API response recordings produced by testing the wrapper client
-// (below). However, when there are no types provided, it is necessary to define
-// opaque types for each resource, to communicate the records that are expected
-// to come from an endpoint and are provided to iterating functions.
-
-/*
-import { Opaque } from 'type-fest';
-export type AcmeUser = Opaque<any, 'AcmeUser'>;
-export type AcmeGroup = Opaque<any, 'AcmeGroup'>;
-*/
+import {
+  IntegrationConfig,
+  StatusError,
+  ArtifactoryUser,
+  ArtifactoryGroup,
+  ResourceIteratee,
+  ArtifactoryGroupRef,
+  ArtifactoryUserRef,
+  ArtifactoryRepository,
+  ArtifactoryPermission,
+  ArtifactoryPermissionRef,
+} from './types';
 
 /**
  * An APIClient maintains authentication state and provides an interface to
@@ -41,40 +22,75 @@ export type AcmeGroup = Opaque<any, 'AcmeGroup'>;
  * resources.
  */
 export class APIClient {
-  constructor(readonly config: IntegrationConfig) {}
+  private readonly clientNamespace: string;
+  private readonly clientAccessToken: string;
+  private readonly clientAdminName: string;
+
+  constructor(readonly config: IntegrationConfig) {
+    this.clientNamespace = config.clientNamespace;
+    this.clientAccessToken = config.clientAccessToken;
+    this.clientAdminName = config.clientAdminName;
+  }
+
+  private withBaseUri(path: string): string {
+    return `https://${this.clientNamespace}.jfrog.io/${path}`;
+  }
+
+  private async request(
+    uri: string,
+    method: 'GET' | 'HEAD' = 'GET',
+  ): Promise<Response> {
+    return fetch(uri, {
+      method,
+      headers: {
+        Authorization: `Bearer ${this.clientAccessToken}`,
+      },
+    });
+  }
 
   public async verifyAuthentication(): Promise<void> {
-    // TODO make the most light-weight request possible to validate
-    // authentication works with the provided credentials, throw an err if
-    // authentication fails
-    const request = new Promise((resolve, reject) => {
-      http.get(
-        {
-          hostname: 'localhost',
-          port: 443,
-          path: '/api/v1/some/endpoint?limit=1',
-          agent: false,
-          timeout: 10,
-        },
-        (res) => {
-          if (res.statusCode !== 200) {
-            reject(new Error('Provider authentication failed'));
-          } else {
-            resolve();
-          }
-        },
-      );
-    });
-
     try {
-      await request;
+      const response = await this.request(
+        this.withBaseUri('artifactory/api/security/users'),
+        'GET',
+      );
+
+      if (response.status !== 200) {
+        throw new StatusError({
+          message: 'Provider authentication failed',
+          statusCode: response.status,
+          statusText: response.statusText,
+        });
+      }
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint: 'https://localhost/api/v1/some/endpoint?limit=1',
-        status: err.status,
-        statusText: err.statusText,
+        endpoint: `https://${this.clientNamespace}.jfrog.io/artifactory/api/security/users`,
+        status: err.options ? err.options.statusCode : -1,
+        statusText: err.options ? err.options.statusText : '',
       });
+    }
+  }
+
+  /**
+   * Returns the account (name = admin) which is auto-generated once cloud-based account is made.
+   */
+  public async getAccount(): Promise<ArtifactoryUser> {
+    const response = await this.request(
+      this.withBaseUri('artifactory/api/security/users'),
+    );
+
+    const users: ArtifactoryUser[] = await response.json();
+
+    const adminUser = users.find((user) => user.name === this.clientAdminName);
+
+    if (adminUser) {
+      const resp = await this.request(adminUser.uri);
+      const accountData: ArtifactoryUser = await resp.json();
+
+      return accountData;
+    } else {
+      throw new Error('Unable to find admin user from users response');
     }
   }
 
@@ -84,29 +100,17 @@ export class APIClient {
    * @param iteratee receives each resource to produce entities/relationships
    */
   public async iterateUsers(
-    iteratee: ResourceIteratee<AcmeUser>,
+    iteratee: ResourceIteratee<ArtifactoryUser>,
   ): Promise<void> {
-    // TODO paginate an endpoint, invoke the iteratee with each record in the
-    // page
-    //
-    // The provider API will hopefully support pagination. Functions like this
-    // should maintain pagination state, and for each page, for each record in
-    // the page, invoke the `ResourceIteratee`. This will encourage a pattern
-    // where each resource is processed and dropped from memory.
+    const response = await this.request(
+      this.withBaseUri('artifactory/api/security/users'),
+    );
 
-    const users: AcmeUser[] = [
-      {
-        id: 'acme-user-1',
-        name: 'User One',
-      },
-      {
-        id: 'acme-user-2',
-        name: 'User Two',
-      },
-    ];
+    const userRefs: ArtifactoryUserRef[] = await response.json();
 
-    for (const user of users) {
-      await iteratee(user);
+    for (const user of userRefs) {
+      const resp = await this.request(user.uri);
+      await iteratee(await resp.json());
     }
   }
 
@@ -116,30 +120,55 @@ export class APIClient {
    * @param iteratee receives each resource to produce entities/relationships
    */
   public async iterateGroups(
-    iteratee: ResourceIteratee<AcmeGroup>,
+    iteratee: ResourceIteratee<ArtifactoryGroup>,
   ): Promise<void> {
-    // TODO paginate an endpoint, invoke the iteratee with each record in the
-    // page
-    //
-    // The provider API will hopefully support pagination. Functions like this
-    // should maintain pagination state, and for each page, for each record in
-    // the page, invoke the `ResourceIteratee`. This will encourage a pattern
-    // where each resource is processed and dropped from memory.
+    const response = await this.request(
+      this.withBaseUri('artifactory/api/security/groups'),
+    );
+    const groupRefs: ArtifactoryGroupRef[] = await response.json();
 
-    const groups: AcmeGroup[] = [
-      {
-        id: 'acme-group-1',
-        name: 'Group One',
-        users: [
-          {
-            id: 'acme-user-1',
-          },
-        ],
-      },
-    ];
+    for (const group of groupRefs) {
+      const resp = await this.request(group.uri);
+      await iteratee(await resp.json());
+    }
+  }
 
-    for (const group of groups) {
-      await iteratee(group);
+  /**
+   * Iterates each repository in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   */
+  public async iterateRepositories(
+    iteratee: ResourceIteratee<ArtifactoryRepository>,
+  ): Promise<void> {
+    const response = await this.request(
+      this.withBaseUri('artifactory/api/repositories'),
+    );
+
+    const repositories: ArtifactoryRepository[] = await response.json();
+
+    for (const repository of repositories) {
+      await iteratee(repository);
+    }
+  }
+
+  /**
+   * Iterates each repository in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   */
+  public async iteratePermissions(
+    iteratee: ResourceIteratee<ArtifactoryPermission>,
+  ): Promise<void> {
+    const response = await this.request(
+      this.withBaseUri('artifactory/api/security/permissions'),
+    );
+
+    const permissionRefs: ArtifactoryPermissionRef[] = await response.json();
+
+    for (const permission of permissionRefs) {
+      const resp = await this.request(permission.uri);
+      await iteratee(await resp.json());
     }
   }
 }
