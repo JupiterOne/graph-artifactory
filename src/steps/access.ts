@@ -2,16 +2,14 @@ import {
   createDirectRelationship,
   createIntegrationEntity,
   Entity,
-  generateRelationshipType,
   IntegrationStep,
   IntegrationStepExecutionContext,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
-import { createAPIClient } from '../client';
-import { IntegrationConfig } from '../types';
-import { ACCOUNT_ENTITY_KEY, ACCOUNT_ENTITY_TYPE } from './account';
 
-const USER_ENTITY_TYPE = 'artifactory_user';
-const GROUP_ENTITY_TYPE = 'artifactory_group';
+import { createAPIClient } from '../client';
+import { ACCOUNT_ENTITY_DATA_KEY, entities, relationships } from '../constants';
+import { IntegrationConfig } from '../types';
 
 function getUserKey(name: string): string {
   return `artifactory_user:${name}`;
@@ -27,16 +25,18 @@ export async function fetchUsers({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
 
-  const accountEntity = (await jobState.getData(ACCOUNT_ENTITY_KEY)) as Entity;
+  const accountEntity = (await jobState.getData(
+    ACCOUNT_ENTITY_DATA_KEY,
+  )) as Entity;
 
   await apiClient.iterateUsers(async (user) => {
     const userEntity = createIntegrationEntity({
       entityData: {
         source: user,
         assign: {
-          _type: USER_ENTITY_TYPE,
           _key: getUserKey(user.name),
-          _class: 'User',
+          _type: entities.USER._type,
+          _class: entities.USER._class,
           webLink: user.uri,
           displayName: user.name,
           username: user.name,
@@ -55,18 +55,16 @@ export async function fetchUsers({
 
     if (user.groups) {
       for (const groupName of user.groups) {
-        const groupEntity = await jobState.getEntity({
-          _key: getGroupKey(groupName),
-          _type: GROUP_ENTITY_TYPE,
-        });
-
-        await jobState.addRelationship(
-          createDirectRelationship({
-            _class: 'HAS',
-            from: groupEntity,
-            to: userEntity,
-          }),
-        );
+        const groupEntity = await jobState.findEntity(getGroupKey(groupName));
+        if (groupEntity) {
+          await jobState.addRelationship(
+            createDirectRelationship({
+              _class: RelationshipClass.HAS,
+              from: groupEntity,
+              to: userEntity,
+            }),
+          );
+        }
       }
     }
 
@@ -74,7 +72,7 @@ export async function fetchUsers({
       jobState.addEntity(userEntity),
       jobState.addRelationship(
         createDirectRelationship({
-          _class: 'HAS',
+          _class: RelationshipClass.HAS,
           from: accountEntity,
           to: userEntity,
         }),
@@ -89,16 +87,18 @@ export async function fetchGroups({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
 
-  const accountEntity = (await jobState.getData(ACCOUNT_ENTITY_KEY)) as Entity;
+  const accountEntity = (await jobState.getData(
+    ACCOUNT_ENTITY_DATA_KEY,
+  )) as Entity;
 
   await apiClient.iterateGroups(async (group) => {
     const groupEntity = createIntegrationEntity({
       entityData: {
         source: group,
         assign: {
-          _type: GROUP_ENTITY_TYPE,
           _key: getGroupKey(group.name),
-          _class: 'Group',
+          _type: entities.GROUP._type,
+          _class: entities.GROUP._class,
           webLink: group.uri,
           displayName: group.name,
           name: group.name,
@@ -118,7 +118,7 @@ export async function fetchGroups({
       jobState.addEntity(groupEntity),
       jobState.addRelationship(
         createDirectRelationship({
-          _class: 'HAS',
+          _class: RelationshipClass.HAS,
           from: accountEntity,
           to: groupEntity,
         }),
@@ -131,20 +131,18 @@ export const accessSteps: IntegrationStep<IntegrationConfig>[] = [
   {
     id: 'fetch-groups',
     name: 'Fetch Groups',
-    types: [
-      GROUP_ENTITY_TYPE,
-      generateRelationshipType('HAS', ACCOUNT_ENTITY_TYPE, GROUP_ENTITY_TYPE),
-    ],
+    entities: [entities.GROUP],
+    relationships: [relationships.ACCOUNT_HAS_GROUP],
     dependsOn: ['fetch-account'],
     executionHandler: fetchGroups,
   },
   {
     id: 'fetch-users',
     name: 'Fetch Users',
-    types: [
-      USER_ENTITY_TYPE,
-      generateRelationshipType('HAS', ACCOUNT_ENTITY_TYPE, USER_ENTITY_TYPE),
-      generateRelationshipType('HAS', GROUP_ENTITY_TYPE, USER_ENTITY_TYPE),
+    entities: [entities.USER],
+    relationships: [
+      relationships.ACCOUNT_HAS_USER,
+      relationships.GROUP_HAS_USER,
     ],
     dependsOn: ['fetch-account', 'fetch-groups'],
     executionHandler: fetchUsers,

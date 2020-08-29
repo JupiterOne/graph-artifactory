@@ -50,7 +50,7 @@ Object {
     },
     Object {
       "_class": Array [
-        "Group",
+        "UserGroup",
       ],
       "_key": "artifactory_group:new-empty-group",
       "_rawData": Array [
@@ -83,7 +83,7 @@ Object {
     },
     Object {
       "_class": Array [
-        "Group",
+        "UserGroup",
       ],
       "_key": "artifactory_group:readers",
       "_rawData": Array [
