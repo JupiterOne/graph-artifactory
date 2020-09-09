@@ -29,6 +29,7 @@ The following entities are created:
 | AccessToken        | `artifactory_access_token`        | `Key`, `AccessKey` |
 | Group              | `artifactory_group`               | `UserGroup`        |
 | User               | `artifactory_user`                | `User`             |
+| RepositoryGroup    | `artifactory_repository_group`    | `Group`            |
 | Repository         | `artifactory_repository`          | `Repository`       |
 | ArtifactCodeModule | `artifactory_artifact_codemodule` | `CodeModule`       |
 | Build              | `artifactory_build`               | `Configuration`    |
@@ -46,6 +47,7 @@ The following relationships are created/mapped:
 | `artifactory_account`      | **HAS**               | `artifactory_group`               |
 | `artifactory_account`      | **HAS**               | `artifactory_user`                |
 | `artifactory_group`        | **HAS**               | `artifactory_user`                |
+| `artifactory_account`      | **HAS**               | `artifactory_repository_group`    |
 | `artifactory_account`      | **HAS**               | `artifactory_repository`          |
 | `artifactory_repository`   | **HAS**               | `artifactory_artifact_codemodule` |
 | `artifactory_build`        | **CREATED**           | `artifactory_artifact_codemodule` |
@@ -53,6 +55,7 @@ The following relationships are created/mapped:
 | `artifactory_permission`   | **ASSIGNED**          | `artifactory_group`               |
 | `artifactory_permission`   | **ALLOWS**            | `artifactory_repository`          |
 | `artifactory_permission`   | **ALLOWS**            | `artifactory_build`               |
+| `artifactory_permission`   | **ALLOWS**            | `artifactory_repository_group`    |
 | `artifactory_account`      | **HAS**               | `artifactory_pipeline_source`     |
 
 <!--

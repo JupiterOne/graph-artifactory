@@ -9,7 +9,11 @@ import { fetchUsers, fetchGroups, fetchAccessTokens } from './access';
 import { fetchAccountDetails } from './account';
 import { fetchBuilds } from './builds';
 import { fetchPipelineSources } from './pipelineSources';
-import { fetchArtifacts, fetchRepositories } from './repositories';
+import {
+  fetchArtifacts,
+  fetchRepositories,
+  generateRepositoryGroups,
+} from './repositories';
 import { fetchPermissions } from './permissions';
 
 const integrationConfig: IntegrationConfig = {
@@ -53,6 +57,7 @@ describe('JFrog Arrifactory', () => {
     await fetchArtifacts(context);
     await fetchBuilds(context);
     await fetchPermissions(context);
+    await generateRepositoryGroups(context);
 
     expect({
       numCollectedEntities: context.jobState.collectedEntities.length,
@@ -259,6 +264,34 @@ describe('JFrog Arrifactory', () => {
           },
           description: {
             type: 'string',
+          },
+          type: {
+            type: 'string',
+          },
+        },
+        required: [],
+      },
+    });
+
+    expect(
+      context.jobState.collectedEntities.filter(
+        (e) =>
+          e._class.includes('Group') &&
+          e._type === 'artifactory_repository_group',
+      ),
+    ).toMatchGraphObjectSchema({
+      _class: ['Group'],
+      schema: {
+        additionalProperties: true,
+        properties: {
+          _type: { const: 'artifactory_repository_group' },
+          _rawData: {
+            type: 'array',
+            items: { type: 'object' },
+          },
+          webLink: {
+            type: 'string',
+            format: 'url',
           },
           type: {
             type: 'string',

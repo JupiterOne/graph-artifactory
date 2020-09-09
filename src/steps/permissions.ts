@@ -14,6 +14,7 @@ import { createAPIClient } from '../client';
 import { IntegrationConfig, ArtifactoryPermission } from '../types';
 import { getUserKey, getGroupKey } from './access';
 import { entities, relationships } from '../constants';
+import { getRepositoryGroupKey } from './repositories';
 
 type PermissionRules = {
   [rule: string]: boolean;
@@ -138,6 +139,34 @@ async function createPermissionBuildAllowsRelationships(
   );
 }
 
+async function createPermissionAllowsRepositoryGroupRelationships(
+  jobState: JobState,
+  permission: ArtifactoryPermission,
+  permissionEntity: Entity,
+): Promise<void> {
+  for (const repositoryName of permission.repo?.repositories || []) {
+    if (!['ANY', 'ANY LOCAL', 'ANY REMOTE'].includes(repositoryName)) {
+      continue;
+    }
+
+    const group = await jobState.findEntity(
+      getRepositoryGroupKey(repositoryName),
+    );
+
+    if (group) {
+      await jobState.addRelationship(
+        createMappedRelationship({
+          _class: RelationshipClass.ALLOWS,
+          _type: relationships.PERMISSION_ALLOWS_REPOSITORY_GROUP._type,
+          _key: `${permissionEntity._key}|allows|${group._key}`,
+          source: permissionEntity,
+          target: group,
+        }),
+      );
+    }
+  }
+}
+
 async function createPermissionRepositoryAllowsRelationships(
   jobState: JobState,
   permission: ArtifactoryPermission,
@@ -224,6 +253,12 @@ export async function fetchPermissions({
       permission,
       permissionEntity,
     );
+
+    await createPermissionAllowsRepositoryGroupRelationships(
+      jobState,
+      permission,
+      permissionEntity,
+    );
   });
 }
 
@@ -237,9 +272,11 @@ export const permissionsSteps: IntegrationStep<IntegrationConfig>[] = [
       relationships.PERMISSION_ASSIGNED_GROUP,
       relationships.PERMISSION_ALLOWS_REPOSITORY,
       relationships.PERMISSION_ALLOWS_BUILD,
+      relationships.PERMISSION_ALLOWS_REPOSITORY_GROUP,
     ],
     dependsOn: [
       'fetch-users',
+      'generate-repository-groups',
       'fetch-groups',
       'fetch-repositories',
       'fetch-builds',

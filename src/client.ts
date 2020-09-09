@@ -21,7 +21,6 @@ import {
   ArtifactoryPipelineSource,
   ArtifactoryBuildDetailsResponse,
   ArtifactoryAccessTokenResponse,
-  ArtifactoryRepositoryName,
 } from './types';
 
 /**
@@ -164,31 +163,8 @@ export class APIClient {
     );
 
     const repositories: ArtifactoryRepository[] = await response.json();
-    const wildcardRepositories: ArtifactoryRepository[] = [
-      {
-        url: this.withBaseUri('artifactory/*'),
-        description: 'ANY',
-        key: 'ANY' as ArtifactoryRepositoryName,
-        packageType: 'Generic',
-        type: 'ANY',
-      },
-      {
-        url: this.withBaseUri('artifactory/*?type=local'),
-        description: 'ANY LOCAL',
-        key: 'ANY LOCAL' as ArtifactoryRepositoryName,
-        packageType: 'Generic',
-        type: 'LOCAL',
-      },
-      {
-        url: this.withBaseUri('artifactory/*?type=remote'),
-        description: 'ANY REMOTE',
-        key: 'ANY REMOTE' as ArtifactoryRepositoryName,
-        packageType: 'Generic',
-        type: 'REMOTE',
-      },
-    ];
 
-    for (const repository of [...repositories, ...wildcardRepositories]) {
+    for (const repository of repositories) {
       await iteratee(repository);
     }
   }
@@ -242,10 +218,6 @@ export class APIClient {
     key: string,
     iteratee: ResourceIteratee<ArtifactoryArtifactRef>,
   ): Promise<void> {
-    if (['ANY', 'ANY LOCAL', 'ANY REMOTE'].includes(key)) {
-      return;
-    }
-
     const response = await this.request(
       this.withBaseUri(`artifactory/api/storage/${key}`),
     );

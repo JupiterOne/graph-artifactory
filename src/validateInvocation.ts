@@ -14,10 +14,11 @@ export default async function validateInvocation(
   if (
     !config.clientNamespace ||
     !config.clientAccessToken ||
+    !config.clientPipelineAccessToken ||
     !config.clientAdminName
   ) {
     throw new IntegrationValidationError(
-      'Config requires all of {clientNamespace, clientAccessToken, clientAdminName}',
+      'Config requires all of {clientNamespace, clientAccessToken, clientPipelineAccessToken, clientAdminName}',
     );
   }
 

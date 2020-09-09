@@ -10,6 +10,7 @@ type EntityConstantKeys =
   | 'ACCOUNT'
   | 'GROUP'
   | 'REPOSITORY'
+  | 'REPOSITORY_GROUP'
   | 'USER'
   | 'ACCESS_TOKEN'
   | 'PIPELINE_SOURCE'
@@ -32,6 +33,11 @@ export const entities: Record<EntityConstantKeys, StepEntityMetadata> = {
     resourceName: 'Repository',
     _type: 'artifactory_repository',
     _class: 'Repository',
+  },
+  REPOSITORY_GROUP: {
+    resourceName: 'RepositoryGroup',
+    _type: 'artifactory_repository_group',
+    _class: 'Group',
   },
   USER: {
     resourceName: 'User',
@@ -68,6 +74,7 @@ export const entities: Record<EntityConstantKeys, StepEntityMetadata> = {
 type RelationshipConstantKeys =
   | 'ACCOUNT_HAS_GROUP'
   | 'ACCOUNT_HAS_REPOSITORY'
+  | 'ACCOUNT_HAS_REPOSITORY_GROUP'
   | 'ACCOUNT_HAS_USER'
   | 'ACCOUNT_HAS_ACCESS_TOKEN'
   | 'ACCESS_TOKEN_ASSIGNED_USER'
@@ -78,7 +85,8 @@ type RelationshipConstantKeys =
   | 'PERMISSION_ASSIGNED_USER'
   | 'PERMISSION_ASSIGNED_GROUP'
   | 'PERMISSION_ALLOWS_REPOSITORY'
-  | 'PERMISSION_ALLOWS_BUILD';
+  | 'PERMISSION_ALLOWS_BUILD'
+  | 'PERMISSION_ALLOWS_REPOSITORY_GROUP';
 
 export const relationships: Record<
   RelationshipConstantKeys,
@@ -95,6 +103,12 @@ export const relationships: Record<
     _class: RelationshipClass.HAS,
     sourceType: entities.ACCOUNT._type,
     targetType: entities.REPOSITORY._type,
+  },
+  ACCOUNT_HAS_REPOSITORY_GROUP: {
+    _type: 'artifactory_account_has_repository_group',
+    _class: RelationshipClass.HAS,
+    sourceType: entities.ACCOUNT._type,
+    targetType: entities.REPOSITORY_GROUP._type,
   },
   ACCOUNT_HAS_USER: {
     _type: 'artifactory_account_has_user',
@@ -161,5 +175,11 @@ export const relationships: Record<
     _class: RelationshipClass.ALLOWS,
     sourceType: entities.PERMISSION._type,
     targetType: entities.BUILD._type,
+  },
+  PERMISSION_ALLOWS_REPOSITORY_GROUP: {
+    _type: 'artifactory_permission_allows_repository_group',
+    _class: RelationshipClass.ALLOWS,
+    sourceType: entities.PERMISSION._type,
+    targetType: entities.REPOSITORY_GROUP._type,
   },
 };

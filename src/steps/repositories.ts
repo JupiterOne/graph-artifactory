@@ -15,8 +15,57 @@ export function getRepositoryKey(name: string): string {
   return `artifactory_repository:${name}`;
 }
 
+export function getRepositoryGroupKey(name: string): string {
+  return `artifactory_repository_group:${name}`;
+}
 export function getArtifactKey(uri: string): string {
   return `artifactory_artifact:${uri}`;
+}
+
+export async function generateRepositoryGroups({
+  jobState,
+}: IntegrationStepExecutionContext<IntegrationConfig>): Promise<void> {
+  const accountEntity: Entity = await jobState.getData(ACCOUNT_ENTITY_DATA_KEY);
+
+  const groups = [
+    {
+      name: 'ANY',
+      type: 'ANY',
+    },
+    {
+      name: 'ANY LOCAL',
+      type: 'LOCAL',
+    },
+    {
+      name: 'ANY REMOTE',
+      type: 'REMOTE',
+    },
+  ];
+
+  for (const group of groups) {
+    const repositoryGoupEntity = createIntegrationEntity({
+      entityData: {
+        source: group,
+        assign: {
+          _key: getRepositoryGroupKey(group.name),
+          _type: entities.REPOSITORY_GROUP._type,
+          _class: entities.REPOSITORY_GROUP._class,
+          type: group.type,
+        },
+      },
+    });
+
+    await Promise.all([
+      jobState.addEntity(repositoryGoupEntity),
+      jobState.addRelationship(
+        createDirectRelationship({
+          _class: RelationshipClass.HAS,
+          from: accountEntity,
+          to: repositoryGoupEntity,
+        }),
+      ),
+    ]);
+  }
 }
 
 export async function fetchRepositories({
@@ -111,6 +160,14 @@ export const repositoriesSteps: IntegrationStep<IntegrationConfig>[] = [
     relationships: [relationships.ACCOUNT_HAS_REPOSITORY],
     dependsOn: ['fetch-account'],
     executionHandler: fetchRepositories,
+  },
+  {
+    id: 'generate-repository-groups',
+    name: 'Generate Repository Groups',
+    entities: [entities.REPOSITORY_GROUP],
+    relationships: [relationships.ACCOUNT_HAS_REPOSITORY_GROUP],
+    dependsOn: ['fetch-account'],
+    executionHandler: generateRepositoryGroups,
   },
   {
     id: 'fetch-artifacts',
