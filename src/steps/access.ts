@@ -154,16 +154,33 @@ export async function fetchAccessTokens({
       },
     });
 
-    await Promise.all([
-      jobState.addEntity(tokenEntity),
-      jobState.addRelationship(
-        createDirectRelationship({
-          _class: RelationshipClass.HAS,
-          from: accountEntity,
-          to: tokenEntity,
-        }),
-      ),
-    ]);
+    const [, , username] = token.subject.split('/');
+
+    const userEntity = await jobState.findEntity(getUserKey(username));
+
+    if (userEntity) {
+      await Promise.all([
+        jobState.addEntity(tokenEntity),
+        jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.ASSIGNED,
+            from: tokenEntity,
+            to: userEntity,
+          }),
+        ),
+      ]);
+    } else {
+      await Promise.all([
+        jobState.addEntity(tokenEntity),
+        jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.HAS,
+            from: accountEntity,
+            to: tokenEntity,
+          }),
+        ),
+      ]);
+    }
   });
 }
 
@@ -180,7 +197,10 @@ export const accessSteps: IntegrationStep<IntegrationConfig>[] = [
     id: 'fetch-access-tokens',
     name: 'Fetch Access Tokens',
     entities: [entities.ACCESS_TOKEN],
-    relationships: [relationships.ACCOUNT_HAS_ACCESS_TOKEN],
+    relationships: [
+      relationships.ACCOUNT_HAS_ACCESS_TOKEN,
+      relationships.ACCESS_TOKEN_ASSIGNED_USER,
+    ],
     dependsOn: ['fetch-account'],
     executionHandler: fetchAccessTokens,
   },

@@ -71,10 +71,7 @@ export const buildSteps: IntegrationStep<IntegrationConfig>[] = [
     id: 'fetch-builds',
     name: 'Fetch Builds',
     entities: [entities.BUILD],
-    relationships: [
-      relationships.BUILD_CREATED_ARTIFACT_CODEMODULE,
-      relationships.BUILD_CREATED_ARTIFACT_IMAGE,
-    ],
+    relationships: [relationships.BUILD_CREATED_ARTIFACT_CODEMODULE],
     dependsOn: ['fetch-artifacts'],
     executionHandler: fetchBuilds,
   },

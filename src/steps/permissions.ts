@@ -16,18 +16,6 @@ import { getUserKey, getGroupKey } from './access';
 import { getRepositoryKey } from './repositories';
 import { entities, relationships } from '../constants';
 
-export function getUsersPermissionKey(
-  permission: ArtifactoryPermission,
-): string {
-  return `users:${permission.name}`;
-}
-
-export function getGroupsPermissionKey(
-  permission: ArtifactoryPermission,
-): string {
-  return `groups:${permission.name}`;
-}
-
 type PermissionRules = {
   [rule: string]: boolean;
 };
@@ -40,6 +28,10 @@ type PermissionsMap = {
     };
   };
 };
+
+export function getPermissionKey(permission: ArtifactoryPermission): string {
+  return `artifactory_permission:${permission.name}`;
+}
 
 function constructPermissions(rules: string[]): PermissionRules {
   return rules.reduce(
@@ -101,7 +93,6 @@ async function createPermissionBuildAllowsRelationships(
     jobState,
     permission,
     permissionEntity,
-    'include-patterns',
     {
       _class: RelationshipClass.ALLOWS,
       _type: relationships.PERMISSION_ALLOWS_BUILD._type,
@@ -110,193 +101,40 @@ async function createPermissionBuildAllowsRelationships(
   );
 }
 
-async function createPermissionBuildDeniesRelationships(
-  jobState: JobState,
-  permission: ArtifactoryPermission,
-  permissionEntity: Entity,
-): Promise<void> {
-  return createPermissionBuildRelationship(
-    jobState,
-    permission,
-    permissionEntity,
-    'exclude-patterns',
-    {
-      _class: RelationshipClass.DENIES,
-      _type: relationships.PERMISSION_DENIES_BUILD._type,
-    },
-    (buildEntity) => `${permissionEntity._key}|denies|${buildEntity._key}`,
-  );
-}
-
 async function createPermissionBuildRelationship(
   jobState: JobState,
   permission: ArtifactoryPermission,
   permissionEntity: Entity,
-  type: 'include-patterns' | 'exclude-patterns',
   relationshipTemplate: {
     _type: string;
     _class: RelationshipClass;
   },
   keyGenerator: (buildEntity: Entity) => string,
 ): Promise<void> {
-  const builds = permission.build?.[type] || [];
+  const includes = permission.build?.['include-patterns'] || [];
+  const excludes = permission.build?.['exclude-patterns'] || [];
 
-  for (const targetBuild of builds) {
-    const [buildNamePattern] = targetBuild.split('/');
+  const matchesIncludes = (target: string) =>
+    includes.some((pattern) => match(pattern.split('/')[0], target).matches);
+  const matchesExcludes = (target: string) =>
+    excludes.some((pattern) => match(pattern.split('/')[0], target).matches);
 
-    await jobState.iterateEntities(
-      { _type: entities.BUILD._type },
-      async (buildEntity) => {
-        const [, buildName] = buildEntity._key.split(':');
-        const { matches } = match(buildNamePattern, buildName);
+  await jobState.iterateEntities(
+    { _type: entities.BUILD._type },
+    async (buildEntity) => {
+      const [, buildName] = buildEntity._key.split(':');
 
-        if (matches) {
-          await jobState.addRelationship(
-            createMappedRelationship({
-              ...relationshipTemplate,
-              _key: keyGenerator(buildEntity),
-              source: permissionEntity,
-              target: buildEntity,
-            }),
-          );
-        }
-      },
-    );
-  }
-}
-async function handleGroupPermissions(
-  jobState: JobState,
-  permission: ArtifactoryPermission,
-): Promise<void> {
-  const permissionEntity = createIntegrationEntity({
-    entityData: {
-      source: permission,
-      assign: {
-        _key: getGroupsPermissionKey(permission),
-        _type: entities.PERMISSION._type,
-        _class: entities.PERMISSION._class,
-        principalType: 'groups',
-      },
+      if (matchesIncludes(buildName) && !matchesExcludes(buildName)) {
+        await jobState.addRelationship(
+          createMappedRelationship({
+            ...relationshipTemplate,
+            _key: keyGenerator(buildEntity),
+            source: permissionEntity,
+            target: buildEntity,
+          }),
+        );
+      }
     },
-  });
-
-  await jobState.addEntity(permissionEntity);
-
-  for (const [groupName, { permissions }] of Object.entries(
-    constructPermissionsMap(permission, 'groups'),
-  )) {
-    const userEntity = await jobState.findEntity(getGroupKey(groupName));
-
-    if (userEntity) {
-      await jobState.addRelationship(
-        createDirectRelationship({
-          _class: RelationshipClass.ASSIGNED,
-          from: permissionEntity,
-          to: userEntity,
-          properties: permissions,
-        }),
-      );
-    }
-  }
-
-  const targetRepositories = permission.repo?.repositories || [];
-
-  for (const targetRepository of targetRepositories) {
-    const repositoryEntity = await jobState.findEntity(
-      getRepositoryKey(targetRepository),
-    );
-
-    if (repositoryEntity) {
-      await jobState.addRelationship(
-        createMappedRelationship({
-          _class: RelationshipClass.ALLOWS,
-          _type: relationships.PERMISSION_ALLOWS_REPOSITORY._type,
-          _key: `${permissionEntity._key}|allows|${repositoryEntity._key}`,
-          source: permissionEntity,
-          target: repositoryEntity,
-        }),
-      );
-    }
-  }
-
-  await createPermissionBuildAllowsRelationships(
-    jobState,
-    permission,
-    permissionEntity,
-  );
-
-  await createPermissionBuildDeniesRelationships(
-    jobState,
-    permission,
-    permissionEntity,
-  );
-}
-
-async function handleUserPermissions(
-  jobState: JobState,
-  permission: ArtifactoryPermission,
-): Promise<void> {
-  const permissionEntity = createIntegrationEntity({
-    entityData: {
-      source: permission,
-      assign: {
-        _key: getUsersPermissionKey(permission),
-        _type: entities.PERMISSION._type,
-        _class: entities.PERMISSION._class,
-        principalType: 'users',
-      },
-    },
-  });
-
-  await jobState.addEntity(permissionEntity);
-
-  for (const [username, { permissions }] of Object.entries(
-    constructPermissionsMap(permission, 'users'),
-  )) {
-    const userEntity = await jobState.findEntity(getUserKey(username));
-
-    if (userEntity) {
-      await jobState.addRelationship(
-        createDirectRelationship({
-          _class: RelationshipClass.ASSIGNED,
-          from: permissionEntity,
-          to: userEntity,
-          properties: permissions,
-        }),
-      );
-    }
-  }
-
-  const targetRepositories = permission.repo?.repositories || [];
-
-  for (const targetRepository of targetRepositories) {
-    const repositoryEntity = await jobState.findEntity(
-      getRepositoryKey(targetRepository),
-    );
-
-    if (repositoryEntity) {
-      await jobState.addRelationship(
-        createMappedRelationship({
-          _class: RelationshipClass.ALLOWS,
-          _type: relationships.PERMISSION_ALLOWS_REPOSITORY._type,
-          _key: `${permissionEntity._key}|allows|${repositoryEntity._key}`,
-          source: permissionEntity,
-          target: repositoryEntity,
-        }),
-      );
-    }
-  }
-
-  await createPermissionBuildAllowsRelationships(
-    jobState,
-    permission,
-    permissionEntity,
-  );
-
-  await createPermissionBuildDeniesRelationships(
-    jobState,
-    permission,
-    permissionEntity,
   );
 }
 
@@ -307,8 +145,80 @@ export async function fetchPermissions({
   const apiClient = createAPIClient(instance.config);
 
   await apiClient.iteratePermissions(async (permission) => {
-    await handleGroupPermissions(jobState, permission);
-    await handleUserPermissions(jobState, permission);
+    const permissionEntity = createIntegrationEntity({
+      entityData: {
+        source: permission,
+        assign: {
+          _key: getPermissionKey(permission),
+          _type: entities.PERMISSION._type,
+          _class: entities.PERMISSION._class,
+        },
+      },
+    });
+
+    await jobState.addEntity(permissionEntity);
+
+    // Group permissions
+    for (const [groupName, { permissions }] of Object.entries(
+      constructPermissionsMap(permission, 'groups'),
+    )) {
+      const userEntity = await jobState.findEntity(getGroupKey(groupName));
+
+      if (userEntity) {
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.ASSIGNED,
+            from: permissionEntity,
+            to: userEntity,
+            properties: permissions,
+          }),
+        );
+      }
+    }
+
+    // User permissions
+    for (const [username, { permissions }] of Object.entries(
+      constructPermissionsMap(permission, 'users'),
+    )) {
+      const userEntity = await jobState.findEntity(getUserKey(username));
+
+      if (userEntity) {
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.ASSIGNED,
+            from: permissionEntity,
+            to: userEntity,
+            properties: permissions,
+          }),
+        );
+      }
+    }
+
+    const targetRepositories = permission.repo?.repositories || [];
+
+    for (const targetRepository of targetRepositories) {
+      const repositoryEntity = await jobState.findEntity(
+        getRepositoryKey(targetRepository),
+      );
+
+      if (repositoryEntity) {
+        await jobState.addRelationship(
+          createMappedRelationship({
+            _class: RelationshipClass.ALLOWS,
+            _type: relationships.PERMISSION_ALLOWS_REPOSITORY._type,
+            _key: `${permissionEntity._key}|allows|${repositoryEntity._key}`,
+            source: permissionEntity,
+            target: repositoryEntity,
+          }),
+        );
+      }
+    }
+
+    await createPermissionBuildAllowsRelationships(
+      jobState,
+      permission,
+      permissionEntity,
+    );
   });
 }
 
@@ -322,9 +232,13 @@ export const permissionsSteps: IntegrationStep<IntegrationConfig>[] = [
       relationships.PERMISSION_ASSIGNED_GROUP,
       relationships.PERMISSION_ALLOWS_REPOSITORY,
       relationships.PERMISSION_ALLOWS_BUILD,
-      relationships.PERMISSION_DENIES_BUILD,
     ],
-    dependsOn: ['fetch-users', 'fetch-repositories', 'fetch-builds'],
+    dependsOn: [
+      'fetch-users',
+      'fetch-groups',
+      'fetch-repositories',
+      'fetch-builds',
+    ],
     executionHandler: fetchPermissions,
   },
 ];

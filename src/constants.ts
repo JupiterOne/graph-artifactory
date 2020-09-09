@@ -14,7 +14,6 @@ type EntityConstantKeys =
   | 'ACCESS_TOKEN'
   | 'PIPELINE_SOURCE'
   | 'ARTIFACT_CODEMODULE'
-  | 'ARTIFACT_IMAGE'
   | 'BUILD'
   | 'PERMISSION';
 
@@ -54,11 +53,6 @@ export const entities: Record<EntityConstantKeys, StepEntityMetadata> = {
     _type: 'artifactory_artifact_codemodule',
     _class: 'CodeModule',
   },
-  ARTIFACT_IMAGE: {
-    resourceName: 'ArtifactImage',
-    _type: 'artifactory_artifact_image',
-    _class: 'Image',
-  },
   BUILD: {
     resourceName: 'Build',
     _type: 'artifactory_build',
@@ -76,17 +70,15 @@ type RelationshipConstantKeys =
   | 'ACCOUNT_HAS_REPOSITORY'
   | 'ACCOUNT_HAS_USER'
   | 'ACCOUNT_HAS_ACCESS_TOKEN'
+  | 'ACCESS_TOKEN_ASSIGNED_USER'
   | 'ACCOUNT_HAS_PIPELINE_SOURCE'
   | 'GROUP_HAS_USER'
   | 'REPOSITORY_HAS_ARTIFACT_CODEMODULE'
   | 'BUILD_CREATED_ARTIFACT_CODEMODULE'
-  | 'REPOSITORY_HAS_ARTIFACT_IMAGE'
-  | 'BUILD_CREATED_ARTIFACT_IMAGE'
   | 'PERMISSION_ASSIGNED_USER'
   | 'PERMISSION_ASSIGNED_GROUP'
   | 'PERMISSION_ALLOWS_REPOSITORY'
-  | 'PERMISSION_ALLOWS_BUILD'
-  | 'PERMISSION_DENIES_BUILD';
+  | 'PERMISSION_ALLOWS_BUILD';
 
 export const relationships: Record<
   RelationshipConstantKeys,
@@ -116,6 +108,12 @@ export const relationships: Record<
     sourceType: entities.ACCOUNT._type,
     targetType: entities.ACCESS_TOKEN._type,
   },
+  ACCESS_TOKEN_ASSIGNED_USER: {
+    _type: 'artifactory_access_token_assigned_user',
+    _class: RelationshipClass.ASSIGNED,
+    sourceType: entities.ACCESS_TOKEN._type,
+    targetType: entities.USER._type,
+  },
   ACCOUNT_HAS_PIPELINE_SOURCE: {
     _type: 'artifactory_account_has_pipeline_source',
     _class: RelationshipClass.HAS,
@@ -140,18 +138,6 @@ export const relationships: Record<
     sourceType: entities.BUILD._type,
     targetType: entities.ARTIFACT_CODEMODULE._type,
   },
-  REPOSITORY_HAS_ARTIFACT_IMAGE: {
-    _type: 'artifactory_repository_has_artifact_image',
-    _class: RelationshipClass.HAS,
-    sourceType: entities.REPOSITORY._type,
-    targetType: entities.ARTIFACT_IMAGE._type,
-  },
-  BUILD_CREATED_ARTIFACT_IMAGE: {
-    _type: 'artifactory_build_created_artifact_image',
-    _class: RelationshipClass.CREATED,
-    sourceType: entities.BUILD._type,
-    targetType: entities.ARTIFACT_IMAGE._type,
-  },
   PERMISSION_ASSIGNED_USER: {
     _type: 'artifactory_permission_assigned_user',
     _class: RelationshipClass.ASSIGNED,
@@ -173,12 +159,6 @@ export const relationships: Record<
   PERMISSION_ALLOWS_BUILD: {
     _type: 'artifactory_permission_allows_build',
     _class: RelationshipClass.ALLOWS,
-    sourceType: entities.PERMISSION._type,
-    targetType: entities.BUILD._type,
-  },
-  PERMISSION_DENIES_BUILD: {
-    _type: 'artifactory_permission_denies_build',
-    _class: RelationshipClass.DENIES,
     sourceType: entities.PERMISSION._type,
     targetType: entities.BUILD._type,
   },

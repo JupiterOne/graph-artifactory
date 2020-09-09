@@ -10,6 +10,7 @@ import { fetchAccountDetails } from './account';
 import { fetchBuilds } from './builds';
 import { fetchPipelineSources } from './pipelineSources';
 import { fetchArtifacts, fetchRepositories } from './repositories';
+import { fetchPermissions } from './permissions';
 
 const integrationConfig: IntegrationConfig = {
   clientNamespace: process.env.CLIENT_NAMESPACE || 'codeworkr',
@@ -51,6 +52,7 @@ describe('JFrog Arrifactory', () => {
     await fetchPipelineSources(context);
     await fetchArtifacts(context);
     await fetchBuilds(context);
+    await fetchPermissions(context);
 
     expect({
       numCollectedEntities: context.jobState.collectedEntities.length,
@@ -322,30 +324,6 @@ describe('JFrog Arrifactory', () => {
         additionalProperties: true,
         properties: {
           _type: { const: 'artifactory_artifact_codemodule' },
-          _rawData: {
-            type: 'array',
-            items: { type: 'object' },
-          },
-          name: {
-            type: 'string',
-          },
-        },
-        required: [],
-      },
-    });
-
-    expect(
-      context.jobState.collectedEntities.filter(
-        (e) =>
-          e._class.includes('Image') &&
-          e._type === 'artifactory_artifact_image',
-      ),
-    ).toMatchGraphObjectSchema({
-      _class: ['Image'],
-      schema: {
-        additionalProperties: true,
-        properties: {
-          _type: { const: 'artifactory_artifact_image' },
           _rawData: {
             type: 'array',
             items: { type: 'object' },

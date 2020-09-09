@@ -110,6 +110,8 @@ export type ArtifactoryPermission = {
         [name: string]: string[];
       };
     };
+    'include-patterns': string[];
+    'exclude-patterns': string[];
   };
   build?: {
     repositories: string[];
@@ -194,30 +196,3 @@ export type ArtifactoryPipelineSource = {
   createdAt: string;
   updatedAt: string;
 };
-/*
-export type ArtifactoryPackageTypes =
-  | 'maven'
-  | 'gradle'
-  | 'ivy'
-  | 'sbt'
-  | 'helm'
-  | 'cocoapods'
-  | 'opkg'
-  | 'rpm'
-  | 'nuget'
-  | 'cran'
-  | 'gems'
-  | 'npm'
-  | 'bower'
-  | 'debian'
-  | 'composer'
-  | 'pypi'
-  | 'docker'
-  | 'vagrant'
-  | 'gitlfs'
-  | 'go'
-  | 'yum'
-  | 'conan'
-  | 'chef'
-  | 'puppet'
-  | 'generic';*/

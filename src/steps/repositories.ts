@@ -5,7 +5,6 @@ import {
   IntegrationStep,
   IntegrationStepExecutionContext,
   RelationshipClass,
-  StepEntityMetadata,
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
@@ -18,14 +17,6 @@ export function getRepositoryKey(name: string): string {
 
 export function getArtifactKey(uri: string): string {
   return `artifactory_artifact:${uri}`;
-}
-
-function mapPackageTypeToStepEntityMetadata(type: string): StepEntityMetadata {
-  if (type.match(/docker|vagrant/i)) {
-    return entities.ARTIFACT_IMAGE;
-  }
-
-  return entities.ARTIFACT_CODEMODULE;
 }
 
 export async function fetchRepositories({
@@ -82,19 +73,16 @@ export async function fetchArtifacts({
       await apiClient.iterateRepositoryArtifacts(
         repositoryEntityKey,
         async (artifact) => {
-          const { _type, _class } = mapPackageTypeToStepEntityMetadata(
-            packageType,
-          );
-
           const artifactEntity = createIntegrationEntity({
             entityData: {
               source: artifact,
               assign: {
                 _key: getArtifactKey(artifact.uri),
-                _type,
-                _class,
+                _type: entities.ARTIFACT_CODEMODULE._type,
+                _class: entities.ARTIFACT_CODEMODULE._class,
                 name: artifact.uri,
                 webLink: artifact.uri,
+                packageType,
               },
             },
           });
@@ -127,11 +115,8 @@ export const repositoriesSteps: IntegrationStep<IntegrationConfig>[] = [
   {
     id: 'fetch-artifacts',
     name: 'Fetch Artifacts',
-    entities: [entities.ARTIFACT_CODEMODULE, entities.ARTIFACT_IMAGE],
-    relationships: [
-      relationships.REPOSITORY_HAS_ARTIFACT_CODEMODULE,
-      relationships.REPOSITORY_HAS_ARTIFACT_IMAGE,
-    ],
+    entities: [entities.ARTIFACT_CODEMODULE],
+    relationships: [relationships.REPOSITORY_HAS_ARTIFACT_CODEMODULE],
     dependsOn: ['fetch-repositories'],
     executionHandler: fetchArtifacts,
   },
