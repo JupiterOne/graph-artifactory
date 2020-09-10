@@ -23,23 +23,40 @@ https://github.com/JupiterOne/sdk/blob/master/docs/integrations/development.md
 
 The following entities are created:
 
-| Resources  | Entity `_type`           | Entity `_class` |
-| ---------- | ------------------------ | --------------- |
-| Account    | `artifactory_account`    | `Account`       |
-| Group      | `artifactory_group`      | `UserGroup`     |
-| User       | `artifactory_user`       | `User`          |
-| Repository | `artifactory_repository` | `Repository`    |
+| Resources          | Entity `_type`                    | Entity `_class`    |
+| ------------------ | --------------------------------- | ------------------ |
+| Account            | `artifactory_account`             | `Account`          |
+| AccessToken        | `artifactory_access_token`        | `Key`, `AccessKey` |
+| Group              | `artifactory_group`               | `UserGroup`        |
+| User               | `artifactory_user`                | `User`             |
+| RepositoryGroup    | `artifactory_repository_group`    | `Group`            |
+| Repository         | `artifactory_repository`          | `Repository`       |
+| ArtifactCodeModule | `artifactory_artifact_codemodule` | `CodeModule`       |
+| Build              | `artifactory_build`               | `Configuration`    |
+| Permission         | `artifactory_permission`          | `AccessPolicy`     |
+| PipelineSource     | `artifactory_pipeline_source`     | `CodeRepo`         |
 
 ### Relationships
 
 The following relationships are created/mapped:
 
-| Source Entity `_type` | Relationship `_class` | Target Entity `_type`    |
-| --------------------- | --------------------- | ------------------------ |
-| `artifactory_account` | **HAS**               | `artifactory_group`      |
-| `artifactory_account` | **HAS**               | `artifactory_user`       |
-| `artifactory_group`   | **HAS**               | `artifactory_user`       |
-| `artifactory_account` | **HAS**               | `artifactory_repository` |
+| Source Entity `_type`      | Relationship `_class` | Target Entity `_type`             |
+| -------------------------- | --------------------- | --------------------------------- |
+| `artifactory_account`      | **HAS**               | `artifactory_access_token`        |
+| `artifactory_access_token` | **ASSIGNED**          | `artifactory_user`                |
+| `artifactory_account`      | **HAS**               | `artifactory_group`               |
+| `artifactory_account`      | **HAS**               | `artifactory_user`                |
+| `artifactory_group`        | **HAS**               | `artifactory_user`                |
+| `artifactory_account`      | **HAS**               | `artifactory_repository_group`    |
+| `artifactory_account`      | **HAS**               | `artifactory_repository`          |
+| `artifactory_repository`   | **HAS**               | `artifactory_artifact_codemodule` |
+| `artifactory_build`        | **CREATED**           | `artifactory_artifact_codemodule` |
+| `artifactory_permission`   | **ASSIGNED**          | `artifactory_user`                |
+| `artifactory_permission`   | **ASSIGNED**          | `artifactory_group`               |
+| `artifactory_permission`   | **ALLOWS**            | `artifactory_repository`          |
+| `artifactory_permission`   | **ALLOWS**            | `artifactory_build`               |
+| `artifactory_permission`   | **ALLOWS**            | `artifactory_repository_group`    |
+| `artifactory_account`      | **HAS**               | `artifactory_pipeline_source`     |
 
 <!--
 ********************************************************************************

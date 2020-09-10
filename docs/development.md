@@ -44,13 +44,26 @@ To set up a JFrog Artifactory account, please follow these steps:
 CLIENT_ACCESS_TOKEN="paste the access token value here"
 ```
 
-6. The final step is to also include the hostname in the `.env` file. Put the
-   host part of the URL that you received from the email that you received from
-   JFrog ([this part].jfrog.io).
+6. The next step is to include the hostname in the `.env` file. Put the host
+   part of the URL that you received from the email that you received from JFrog
+   ([this part].jfrog.io).
 
 ```bash
 CLIENT_ACCESS_TOKEN="paste the access token value here"
 CLIENT_NAMESPACE="your organization name"
+```
+
+7. The final step is to also include the pipeline access token. Creation process
+   is similar, you just make sure that the "Pipelines" service is selected on
+   the modal after you click on the "+ Generate Admin Token" button on the same
+   Access Tokens page.
+
+![Generate pipeline token](images/generate_pipeline_token.png)
+
+```bash
+CLIENT_ACCESS_TOKEN="paste the access token value here"
+CLIENT_NAMESPACE="your organization name"
+CLIENT_PIPELINE_ACCESS_TOKEN="paste the pipeline token generated from the previous step here"
 ```
 
 After following the above steps, you should now be able to start contributing to

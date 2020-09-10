@@ -11,12 +11,16 @@ import { createAPIClient } from '../client';
 import { ACCOUNT_ENTITY_DATA_KEY, entities, relationships } from '../constants';
 import { IntegrationConfig } from '../types';
 
-function getUserKey(name: string): string {
+export function getUserKey(name: string): string {
   return `artifactory_user:${name}`;
 }
 
-function getGroupKey(name: string): string {
+export function getGroupKey(name: string): string {
   return `artifactory_group:${name}`;
+}
+
+export function getAccessTokenKey(id: string): string {
+  return `artifactory_api_token:${id}`;
 }
 
 export async function fetchUsers({
@@ -127,6 +131,59 @@ export async function fetchGroups({
   });
 }
 
+export async function fetchAccessTokens({
+  instance,
+  jobState,
+}: IntegrationStepExecutionContext<IntegrationConfig>) {
+  const apiClient = createAPIClient(instance.config);
+
+  const accountEntity = (await jobState.getData(
+    ACCOUNT_ENTITY_DATA_KEY,
+  )) as Entity;
+
+  await apiClient.iterateAccessTokens(async (token) => {
+    const tokenEntity = createIntegrationEntity({
+      entityData: {
+        source: token,
+        assign: {
+          _key: getAccessTokenKey(token.token_id),
+          _type: entities.ACCESS_TOKEN._type,
+          _class: entities.ACCESS_TOKEN._class,
+          name: token.token_id,
+        },
+      },
+    });
+
+    const [, , username] = token.subject.split('/');
+
+    const userEntity = await jobState.findEntity(getUserKey(username));
+
+    if (userEntity) {
+      await Promise.all([
+        jobState.addEntity(tokenEntity),
+        jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.ASSIGNED,
+            from: tokenEntity,
+            to: userEntity,
+          }),
+        ),
+      ]);
+    } else {
+      await Promise.all([
+        jobState.addEntity(tokenEntity),
+        jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.HAS,
+            from: accountEntity,
+            to: tokenEntity,
+          }),
+        ),
+      ]);
+    }
+  });
+}
+
 export const accessSteps: IntegrationStep<IntegrationConfig>[] = [
   {
     id: 'fetch-groups',
@@ -135,6 +192,17 @@ export const accessSteps: IntegrationStep<IntegrationConfig>[] = [
     relationships: [relationships.ACCOUNT_HAS_GROUP],
     dependsOn: ['fetch-account'],
     executionHandler: fetchGroups,
+  },
+  {
+    id: 'fetch-access-tokens',
+    name: 'Fetch Access Tokens',
+    entities: [entities.ACCESS_TOKEN],
+    relationships: [
+      relationships.ACCOUNT_HAS_ACCESS_TOKEN,
+      relationships.ACCESS_TOKEN_ASSIGNED_USER,
+    ],
+    dependsOn: ['fetch-account'],
+    executionHandler: fetchAccessTokens,
   },
   {
     id: 'fetch-users',

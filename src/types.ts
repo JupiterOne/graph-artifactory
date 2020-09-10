@@ -17,6 +17,11 @@ export interface IntegrationConfig extends IntegrationInstanceConfig {
   clientAccessToken: string;
 
   /**
+   * The JFrog Pipeline API client access token used to authenticate requests.
+   */
+  clientPipelineAccessToken: string;
+
+  /**
    * The provider API client admin name used for root account in the graph.
    */
   clientAdminName: string;
@@ -95,18 +100,99 @@ export type ArtifactoryRepository = {
 
 export type ArtifactoryPermission = {
   name: string;
-  repositories: string[];
-  principals: {
-    groups?: {
-      [name: string]: string[];
+  repo?: {
+    repositories: string[];
+    actions: {
+      users?: {
+        [name: string]: string[];
+      };
+      groups?: {
+        [name: string]: string[];
+      };
     };
-    users?: {
-      [name: string]: string[];
-    };
+    'include-patterns': string[];
+    'exclude-patterns': string[];
   };
-  uri: string;
+  build?: {
+    repositories: string[];
+    actions: {
+      users?: {
+        [name: string]: string[];
+      };
+      groups?: {
+        [name: string]: string[];
+      };
+    };
+    'include-patterns': string[];
+    'exclude-patterns': string[];
+  };
 };
 
 export type ArtifactoryPermissionRef = {
   uri: string;
+};
+
+export type ArtifactoryAccessToken = {
+  token_id: string;
+  issuer: string;
+  subject: string;
+  expiry: number;
+  refreshable: boolean;
+  issued_at: number;
+};
+
+export type ArtifactoryAccessTokenResponse = {
+  tokens: ArtifactoryAccessToken[];
+};
+
+export type ArtifactoryBuildRef = {
+  uri: string;
+  lastStarted: string;
+};
+
+export type ArtifactoryBuild = {
+  name: string;
+  number: string;
+  repository: string;
+  artifacts: string[];
+  uri: string;
+};
+
+export type ArtifactoryBuildResponse = {
+  builds: ArtifactoryBuildRef[];
+  uri: string;
+};
+
+export type ArtifactoryArtifactRef = {
+  uri: string;
+  folder: boolean;
+};
+
+export type ArtifactoryArtifactResponse = {
+  repo: string;
+  path: string;
+  children: ArtifactoryArtifactRef[];
+  uri: string;
+};
+
+export type ArtifactoryBuildArtifactsResponse = {
+  results: {
+    downloadUri: string;
+  }[];
+  errors?: any;
+};
+
+export type ArtifactoryBuildDetailsResponse = {
+  buildsNumbers: [
+    {
+      uri: string;
+      started: string;
+    },
+  ];
+};
+
+export type ArtifactoryPipelineSource = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
 };
