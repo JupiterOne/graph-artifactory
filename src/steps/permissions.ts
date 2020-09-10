@@ -182,7 +182,8 @@ async function createPermissionRepositoryAllowsRelationships(
       _class: RelationshipClass.ALLOWS,
       _type: relationships.PERMISSION_ALLOWS_REPOSITORY._type,
     },
-    (buildEntity) => `${permissionEntity._key}|allows|${buildEntity._key}`,
+    (repositoryEntity) =>
+      `${permissionEntity._key}|allows|${repositoryEntity._key}`,
   );
 }
 
