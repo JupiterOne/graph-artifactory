@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/graph-artifactory",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A graph conversion tool for https://jfrog.com/artifactory",
   "license": "MPL-2.0",
   "main": "dist/index.js",
@@ -20,7 +20,7 @@
     "type-check": "tsc",
     "test": "jest",
     "test:ci": "yarn lint && yarn type-check && yarn test",
-    "build": "tsc -p tsconfig.dist.json --declaration && cp package.json dist/package.json",
+    "build": "tsc -p tsconfig.dist.json --declaration",
     "prepush": "yarn lint && yarn type-check && jest --changedSince master",
     "prepack": "yarn build"
   },
