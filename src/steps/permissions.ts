@@ -43,7 +43,7 @@ function constructPermissions(rules: string[]): PermissionRules {
   );
 }
 
-function constructPermissionsMap(
+export function constructPermissionsMap(
   permission: ArtifactoryPermission,
   key: 'users' | 'groups',
 ): PermissionsMap {
