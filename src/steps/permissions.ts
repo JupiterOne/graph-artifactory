@@ -3,7 +3,6 @@ import {
   createIntegrationEntity,
   IntegrationStep,
   createDirectRelationship,
-  createMappedRelationship,
   JobState,
   RelationshipClass,
   Entity,
@@ -89,11 +88,13 @@ async function createPermissionRelationship(
 
     if (matchesIncludes(target) && !matchesExcludes(target)) {
       await jobState.addRelationship(
-        createMappedRelationship({
-          ...relationshipTemplate,
-          _key: keyGenerator(entity),
-          source: permissionEntity,
-          target: entity,
+        createDirectRelationship({
+          _class: relationshipTemplate._class,
+          from: permissionEntity,
+          to: entity,
+          properties: {
+            _type: relationshipTemplate._type,
+          },
         }),
       );
     }
@@ -135,12 +136,14 @@ async function createPermissionAllowsRepositoryGroupRelationships(
 
     if (group) {
       await jobState.addRelationship(
-        createMappedRelationship({
+        createDirectRelationship({
           _class: RelationshipClass.ALLOWS,
-          _type: relationships.PERMISSION_ALLOWS_REPOSITORY_GROUP._type,
-          _key: `${permissionEntity._key}|allows|${group._key}`,
-          source: permissionEntity,
-          target: group,
+          from: permissionEntity,
+          to: group,
+          properties: {
+            _type: relationships.PERMISSION_ALLOWS_REPOSITORY_GROUP._type,
+            _key: `${permissionEntity._key}|allows|${group._key}`,
+          },
         }),
       );
     }

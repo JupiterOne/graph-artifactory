@@ -2616,167 +2616,33 @@ pipelines.yml: successfully updated pipeline: pipeline_hello_world",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:users-permission",
       "_key": "artifactory_permission:users-permission|allows|artifactory_repository:docker-repo",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:users-permission",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:docker-repo",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "key": "docker-repo",
-                "packageType": "Docker",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/docker-repo",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": undefined,
-          "displayName": "docker-repo",
-          "name": "docker-repo",
-          "packageType": "Docker",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:docker-repo",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:users-permission",
       "_key": "artifactory_permission:users-permission|allows|artifactory_repository:example-repo-local",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:users-permission",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:example-repo-local",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "description": "Example artifactory repository",
-                "key": "example-repo-local",
-                "packageType": "Generic",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/example-repo-local",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": "Example artifactory repository",
-          "displayName": "example-repo-local",
-          "name": "example-repo-local",
-          "packageType": "Generic",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/example-repo-local",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:example-repo-local",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:users-permission",
       "_key": "artifactory_permission:users-permission|allows|artifactory_repository:jfrogpipelines",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:users-permission",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:jfrogpipelines",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "description": "",
-                "key": "jfrogpipelines",
-                "packageType": "Generic",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": "",
-          "displayName": "jfrogpipelines",
-          "name": "jfrogpipelines",
-          "packageType": "Generic",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:jfrogpipelines",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:users-permission",
       "_key": "artifactory_permission:users-permission|allows|artifactory_repository:maven-repo",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:users-permission",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:maven-repo",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "key": "maven-repo",
-                "packageType": "Maven",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/maven-repo",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": undefined,
-          "displayName": "maven-repo",
-          "name": "maven-repo",
-          "packageType": "Maven",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:maven-repo",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
@@ -2801,167 +2667,33 @@ pipelines.yml: successfully updated pipeline: pipeline_hello_world",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:users-groups-permissions",
       "_key": "artifactory_permission:users-groups-permissions|allows|artifactory_repository:docker-repo",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:users-groups-permissions",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:docker-repo",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "key": "docker-repo",
-                "packageType": "Docker",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/docker-repo",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": undefined,
-          "displayName": "docker-repo",
-          "name": "docker-repo",
-          "packageType": "Docker",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:docker-repo",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:users-groups-permissions",
       "_key": "artifactory_permission:users-groups-permissions|allows|artifactory_repository:example-repo-local",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:users-groups-permissions",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:example-repo-local",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "description": "Example artifactory repository",
-                "key": "example-repo-local",
-                "packageType": "Generic",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/example-repo-local",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": "Example artifactory repository",
-          "displayName": "example-repo-local",
-          "name": "example-repo-local",
-          "packageType": "Generic",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/example-repo-local",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:example-repo-local",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:users-groups-permissions",
       "_key": "artifactory_permission:users-groups-permissions|allows|artifactory_repository:jfrogpipelines",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:users-groups-permissions",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:jfrogpipelines",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "description": "",
-                "key": "jfrogpipelines",
-                "packageType": "Generic",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": "",
-          "displayName": "jfrogpipelines",
-          "name": "jfrogpipelines",
-          "packageType": "Generic",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:jfrogpipelines",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:users-groups-permissions",
       "_key": "artifactory_permission:users-groups-permissions|allows|artifactory_repository:maven-repo",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:users-groups-permissions",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:maven-repo",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "key": "maven-repo",
-                "packageType": "Maven",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/maven-repo",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": undefined,
-          "displayName": "maven-repo",
-          "name": "maven-repo",
-          "packageType": "Maven",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:maven-repo",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
@@ -2977,167 +2709,33 @@ pipelines.yml: successfully updated pipeline: pipeline_hello_world",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:Any Remote",
       "_key": "artifactory_permission:Any Remote|allows|artifactory_repository:docker-repo",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:Any Remote",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:docker-repo",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "key": "docker-repo",
-                "packageType": "Docker",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/docker-repo",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": undefined,
-          "displayName": "docker-repo",
-          "name": "docker-repo",
-          "packageType": "Docker",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:docker-repo",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:Any Remote",
       "_key": "artifactory_permission:Any Remote|allows|artifactory_repository:example-repo-local",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:Any Remote",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:example-repo-local",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "description": "Example artifactory repository",
-                "key": "example-repo-local",
-                "packageType": "Generic",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/example-repo-local",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": "Example artifactory repository",
-          "displayName": "example-repo-local",
-          "name": "example-repo-local",
-          "packageType": "Generic",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/example-repo-local",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:example-repo-local",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:Any Remote",
       "_key": "artifactory_permission:Any Remote|allows|artifactory_repository:jfrogpipelines",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:Any Remote",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:jfrogpipelines",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "description": "",
-                "key": "jfrogpipelines",
-                "packageType": "Generic",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": "",
-          "displayName": "jfrogpipelines",
-          "name": "jfrogpipelines",
-          "packageType": "Generic",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:jfrogpipelines",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:Any Remote",
       "_key": "artifactory_permission:Any Remote|allows|artifactory_repository:maven-repo",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:Any Remote",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:maven-repo",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "key": "maven-repo",
-                "packageType": "Maven",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/maven-repo",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": undefined,
-          "displayName": "maven-repo",
-          "name": "maven-repo",
-          "packageType": "Maven",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:maven-repo",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
@@ -3163,216 +2761,41 @@ pipelines.yml: successfully updated pipeline: pipeline_hello_world",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:Anything",
       "_key": "artifactory_permission:Anything|allows|artifactory_repository:docker-repo",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:Anything",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:docker-repo",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "key": "docker-repo",
-                "packageType": "Docker",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/docker-repo",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": undefined,
-          "displayName": "docker-repo",
-          "name": "docker-repo",
-          "packageType": "Docker",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/docker-repo",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:docker-repo",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:Anything",
       "_key": "artifactory_permission:Anything|allows|artifactory_repository:example-repo-local",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:Anything",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:example-repo-local",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "description": "Example artifactory repository",
-                "key": "example-repo-local",
-                "packageType": "Generic",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/example-repo-local",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": "Example artifactory repository",
-          "displayName": "example-repo-local",
-          "name": "example-repo-local",
-          "packageType": "Generic",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/example-repo-local",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:example-repo-local",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:Anything",
       "_key": "artifactory_permission:Anything|allows|artifactory_repository:jfrogpipelines",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:Anything",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:jfrogpipelines",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "description": "",
-                "key": "jfrogpipelines",
-                "packageType": "Generic",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": "",
-          "displayName": "jfrogpipelines",
-          "name": "jfrogpipelines",
-          "packageType": "Generic",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/jfrogpipelines",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:jfrogpipelines",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:Anything",
       "_key": "artifactory_permission:Anything|allows|artifactory_repository:maven-repo",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:Anything",
-        "targetEntity": Object {
-          "_class": Array [
-            "Repository",
-          ],
-          "_key": "artifactory_repository:maven-repo",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "key": "maven-repo",
-                "packageType": "Maven",
-                "type": "LOCAL",
-                "url": "https://codeworkr.jfrog.io/artifactory/maven-repo",
-              },
-            },
-          ],
-          "_type": "artifactory_repository",
-          "createdOn": undefined,
-          "description": undefined,
-          "displayName": "maven-repo",
-          "name": "maven-repo",
-          "packageType": "Maven",
-          "type": "LOCAL",
-          "webLink": "https://codeworkr.jfrog.io/artifactory/maven-repo",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_repository:maven-repo",
       "_type": "artifactory_permission_allows_repository",
       "displayName": "ALLOWS",
     },
     Object {
       "_class": "ALLOWS",
+      "_fromEntityKey": "artifactory_permission:Anything",
       "_key": "artifactory_permission:Anything|allows|artifactory_build:gitlabci-maven-artifactory",
-      "_mapping": Object {
-        "relationshipDirection": "FORWARD",
-        "sourceEntityKey": "artifactory_permission:Anything",
-        "targetEntity": Object {
-          "_class": Array [
-            "Configuration",
-          ],
-          "_key": "artifactory_build:gitlabci-maven-artifactory",
-          "_rawData": Array [
-            Object {
-              "name": "default",
-              "rawData": Object {
-                "artifacts": Array [
-                  "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.pom",
-                  "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi/3.7-SNAPSHOT/multi-3.7-20200827.083402-1.pom",
-                  "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-tests.jar",
-                  "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1-sources.jar",
-                  "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.war",
-                  "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi3/3.7-SNAPSHOT/multi3-3.7-20200827.083402-1.pom",
-                  "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.pom",
-                  "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi2/3.7-SNAPSHOT/multi2-3.7-20200827.083402-1.jar",
-                  "https://codeworkr.jfrog.io/artifactory/maven-repo/org/jfrog/test/multi1/3.7-SNAPSHOT/multi1-3.7-20200827.083402-1.jar",
-                ],
-                "name": "gitlabci-maven-artifactory",
-                "number": "706202363",
-                "repository": "maven-repo",
-                "uri": "https://codeworkr.jfrog.io/ui/builds/gitlabci-maven-artifactory",
-              },
-            },
-          ],
-          "_type": "artifactory_build",
-          "createdOn": undefined,
-          "displayName": "gitlabci-maven-artifactory",
-          "name": "gitlabci-maven-artifactory",
-          "webLink": "https://codeworkr.jfrog.io/ui/builds/gitlabci-maven-artifactory",
-        },
-        "targetFilterKeys": Array [
-          Array [
-            "_type",
-            "_key",
-          ],
-        ],
-      },
+      "_toEntityKey": "artifactory_build:gitlabci-maven-artifactory",
       "_type": "artifactory_permission_allows_build",
       "displayName": "ALLOWS",
     },
