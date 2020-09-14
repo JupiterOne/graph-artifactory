@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.1.2 - 2020-09-16
+
 ### Fixed
 
 - Fixed an issue where permission properties were objects, failing graph
