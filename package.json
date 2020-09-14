@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/graph-artifactory",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A graph conversion tool for https://jfrog.com/artifactory",
   "license": "MPL-2.0",
   "main": "dist/index.js",
