@@ -35,27 +35,15 @@ describe('constructPermissionsMap', () => {
 
     expect(constructPermissionsMap(permission, 'groups')).toEqual({
       readers: {
-        permissions: {
-          repositoryPermissions: {
-            read: true,
-          },
-          buildPermissions: {
-            read: true,
-          },
-        },
+        'permission:repository:read': true,
+        'permission:build:read': true,
       },
     });
 
     expect(constructPermissionsMap(permission, 'users')).toEqual({
       anonymous: {
-        permissions: {
-          repositoryPermissions: {
-            read: true,
-          },
-          buildPermissions: {
-            read: true,
-          },
-        },
+        'permission:repository:read': true,
+        'permission:build:read': true,
       },
     });
   });

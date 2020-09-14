@@ -16,31 +16,18 @@ import { getUserKey, getGroupKey } from './access';
 import { entities, relationships } from '../constants';
 import { getRepositoryGroupKey } from './repositories';
 
-type PermissionRules = {
-  [rule: string]: boolean;
-};
-
+/** Relationships cannot have array or object properties, so permissions are stored as primitives.
+ *
+ * { user1: { 'permission:build:read': true, 'permission:repo:write': true } }
+ */
 type PermissionsMap = {
   [targetName: string]: {
-    permissions: {
-      repositoryPermissions?: PermissionRules;
-      buildPermissions?: PermissionRules;
-    };
+    [permissionName: string]: true;
   };
 };
 
 export function getPermissionKey(permission: ArtifactoryPermission): string {
   return `artifactory_permission:${permission.name}`;
-}
-
-function constructPermissions(rules: string[]): PermissionRules {
-  return rules.reduce(
-    (acc, rule) => ({
-      ...acc,
-      [rule]: true,
-    }),
-    {},
-  );
 }
 
 export function constructPermissionsMap(
@@ -50,17 +37,13 @@ export function constructPermissionsMap(
   const repoTargets = Object.entries(permission.repo?.actions[key] || {}).map(
     ([targetName, rules]) => ({
       targetName,
-      permissions: {
-        repositoryPermissions: constructPermissions(rules),
-      },
+      permissions: rules.map((rule) => `repository:${rule}`),
     }),
   );
   const buildTargets = Object.entries(permission.build?.actions[key] || {}).map(
     ([targetName, rules]) => ({
       targetName,
-      permissions: {
-        buildPermissions: constructPermissions(rules),
-      },
+      permissions: rules.map((rule) => `build:${rule}`),
     }),
   );
 
@@ -69,15 +52,12 @@ export function constructPermissionsMap(
     const { targetName, permissions } = targetPermissions;
 
     const existingUser = targetPermissionsMap[targetName];
-    if (existingUser) {
-      targetPermissionsMap[targetName] = {
-        permissions: {
-          ...existingUser.permissions,
-          ...permissions,
-        },
-      };
-    } else {
-      targetPermissionsMap[targetName] = { permissions };
+    if (!existingUser) {
+      targetPermissionsMap[targetName] = {};
+    }
+
+    for (const permission of permissions) {
+      targetPermissionsMap[targetName][`permission:${permission}`] = true;
     }
   }
 
@@ -208,7 +188,7 @@ export async function fetchPermissions({
     await jobState.addEntity(permissionEntity);
 
     // Group permissions
-    for (const [groupName, { permissions }] of Object.entries(
+    for (const [groupName, permissions] of Object.entries(
       constructPermissionsMap(permission, 'groups'),
     )) {
       const groupEntity = await jobState.findEntity(getGroupKey(groupName));
@@ -226,7 +206,7 @@ export async function fetchPermissions({
     }
 
     // User permissions
-    for (const [username, { permissions }] of Object.entries(
+    for (const [username, permissions] of Object.entries(
       constructPermissionsMap(permission, 'users'),
     )) {
       const userEntity = await jobState.findEntity(getUserKey(username));
