@@ -8,6 +8,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.1.2 - 2020-09-16
+
+### Fixed
+
+- Fixed an issue where permission properties were objects, failing graph
+  validation.
+- Fixed an issue where permission->build and permission->repo relationships were
+  created as mapped instead of direct relationships and failed persister
+  validation.
+
 ## 0.1.0 - 2020-08-17
 
 ### Added
