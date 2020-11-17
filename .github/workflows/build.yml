@@ -65,7 +65,7 @@ jobs:
           fi
 
       - name: Publish
-        if: env.publish == 'true'
+        if: steps.fetch-tags.outputs.publish == 'true'
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
