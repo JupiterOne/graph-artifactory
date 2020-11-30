@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- This integration requires _two_ distinct access tokens. Fixed an issue where
+  the pipeline access token was not being validated for this integration,
+  causing `UNEXPECTED_ERROR` in the `fetch-pipeline-sources` step.
+
 ## 0.1.2 - 2020-09-16
 
 ### Fixed
