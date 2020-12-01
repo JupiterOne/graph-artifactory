@@ -65,7 +65,7 @@ export class APIClient {
   }
 
   public async verifyAuthentication(): Promise<void> {
-    const endpoint = this.withBaseUri('artifactory/api/security/users');
+    const endpoint = this.withBaseUri('artifactory/api/security/users?limit=1');
     try {
       const response = await this.request(endpoint, 'GET');
 
@@ -87,7 +87,9 @@ export class APIClient {
   }
 
   public async verifyPipelineAuthentication(): Promise<void> {
-    const endpoint = this.withBaseUri('pipelines/api/v1/pipelinesources');
+    const endpoint = this.withBaseUri(
+      'pipelines/api/v1/pipelinesources?limit=1',
+    );
     try {
       const response = await this.request(endpoint, 'GET', null, {
         Authorization: `Bearer ${this.clientPipelineAccessToken}`,
