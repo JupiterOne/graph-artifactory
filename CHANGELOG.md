@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+### 0.1.3 - 2020-12-01
+
 ### Fixed
 
 - This integration requires _two_ distinct access tokens. Fixed an issue where
