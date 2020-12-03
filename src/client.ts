@@ -2,7 +2,6 @@ import fetch, { Response } from 'node-fetch';
 import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-sdk-core';
 import {
   IntegrationConfig,
-  StatusError,
   ArtifactoryUser,
   ArtifactoryGroup,
   ResourceIteratee,
@@ -66,23 +65,47 @@ export class APIClient {
   }
 
   public async verifyAuthentication(): Promise<void> {
+    const endpoint = this.withBaseUri('artifactory/api/security/users?limit=1');
     try {
-      const response = await this.request(
-        this.withBaseUri('artifactory/api/security/users'),
-        'GET',
-      );
+      const response = await this.request(endpoint, 'GET');
 
       if (response.status !== 200) {
-        throw new StatusError({
-          message: 'Provider authentication failed',
-          statusCode: response.status,
+        throw new IntegrationProviderAuthenticationError({
+          endpoint,
+          status: response.status,
           statusText: response.statusText,
         });
       }
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint: `https://${this.clientNamespace}.jfrog.io/artifactory/api/security/users`,
+        endpoint,
+        status: err.options ? err.options.statusCode : -1,
+        statusText: err.options ? err.options.statusText : '',
+      });
+    }
+  }
+
+  public async verifyPipelineAuthentication(): Promise<void> {
+    const endpoint = this.withBaseUri(
+      'pipelines/api/v1/pipelinesources?limit=1',
+    );
+    try {
+      const response = await this.request(endpoint, 'GET', null, {
+        Authorization: `Bearer ${this.clientPipelineAccessToken}`,
+      });
+
+      if (response.status !== 200) {
+        throw new IntegrationProviderAuthenticationError({
+          endpoint,
+          status: response.status,
+          statusText: response.statusText,
+        });
+      }
+    } catch (err) {
+      throw new IntegrationProviderAuthenticationError({
+        cause: err,
+        endpoint,
         status: err.options ? err.options.statusCode : -1,
         statusText: err.options ? err.options.statusText : '',
       });

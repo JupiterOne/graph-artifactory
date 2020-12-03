@@ -27,20 +27,6 @@ export interface IntegrationConfig extends IntegrationInstanceConfig {
   clientAdminName: string;
 }
 
-export class StatusError extends Error {
-  constructor(
-    readonly options: {
-      statusCode: number;
-      statusText: string;
-      message?: string;
-    },
-  ) {
-    super(options.message);
-    this.name = 'StatusError';
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
-}
-
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
 export type ArtifactoryGroupName = Opaque<string, 'ArtifactoryGroupName'>;
