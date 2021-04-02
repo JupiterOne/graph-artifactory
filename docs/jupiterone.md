@@ -1,5 +1,27 @@
 # Integration with JupiterOne
 
+## JFrog Artifactory + JupiterOne Integration Benefits
+
+- Visualize Artifactory repository groups, code repositories, code modules,
+  builds, keys, permissions, code modules, user groups, and users in the
+  JupiterOne graph.
+- Monitor Artifactory CI/CD activities across containers and repositories.
+- Monitor Artifactory changes to repository groups, code repositories, code
+  modules, builds, keys, permissions, code modules, user groups, and users using
+  JupiterOne alerts.
+
+## How it Works
+
+- JupiterOne periodically fetches Artifactory users and data across your CI/CD pipeline to update the graph.
+- Write JupiterOne queries to review and monitor updates to the graph.
+- Configure alerts to take action when the JupiterOne graph changes.
+
+## Requirements
+
+- JupiterOne requires the namespace of your Artifactory account. Also required are a client access token, 
+client pipeline access token, and the client administrator name that granted the access tokens.
+- You must have permission in JupiterOne to install new integrations.
+
 ## Setup
 
 JupiterOne provides a managed integration for JFrog Artifactory. The integration
