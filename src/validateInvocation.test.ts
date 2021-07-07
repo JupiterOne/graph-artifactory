@@ -37,6 +37,7 @@ it('auth error', async () => {
       clientNamespace: 'INVALID',
       clientAccessToken: 'INVALID',
       clientAdminName: 'INVALID',
+      enablePipelineIngestion: false,
     },
   });
 

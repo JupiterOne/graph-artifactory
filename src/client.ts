@@ -1,8 +1,4 @@
 import fetch, { Response } from 'node-fetch';
-import {
-  IntegrationExecutionContext,
-  IntegrationValidationError,
-} from '@jupiterone/integration-sdk-core';
 import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-sdk-core';
 import {
   IntegrationConfig,
@@ -25,7 +21,6 @@ import {
   ArtifactoryBuildDetailsResponse,
   ArtifactoryAccessTokenResponse,
 } from './types';
-import { sanitizeConfig } from './validateInvocation';
 
 /**
  * An APIClient maintains authentication state and provides an interface to
