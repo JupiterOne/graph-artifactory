@@ -3,6 +3,7 @@ import {
   StepStartStates,
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from './types';
+import { Steps } from './constants';
 
 export default function getStepStartStates(
   context: IntegrationExecutionContext<IntegrationConfig>,
@@ -10,34 +11,34 @@ export default function getStepStartStates(
   const { config } = context.instance;
 
   return {
-    'fetch-groups': {
+    [Steps.GROUPS]: {
       disabled: false,
     },
-    'fetch-access-tokens': {
+    [Steps.ACCESS_TOKENS]: {
       disabled: false,
     },
-    'fetch-users': {
+    [Steps.USERS]: {
       disabled: false,
     },
-    'fetch-account': {
+    [Steps.ACCOUNT]: {
       disabled: false,
     },
-    'fetch-builds': {
+    [Steps.BUILDS]: {
       disabled: false,
     },
-    'fetch-permissions': {
+    [Steps.PERMISSIONS]: {
       disabled: false,
     },
-    'fetch-pipeline-sources': {
+    [Steps.PIPELINE_SOURCES]: {
       disabled: !config.enablePipelineIngestion,
     },
-    'fetch-repositories': {
+    [Steps.REPOSITORIES]: {
       disabled: false,
     },
-    'generate-repository-groups': {
+    [Steps.GENERATE_REPOSITORY_GROUPS]: {
       disabled: false,
     },
-    'fetch-artifacts': {
+    [Steps.ARTIFACTS]: {
       disabled: false,
     },
   };

@@ -42,7 +42,6 @@ export class APIClient {
   private readonly clientPipelineAccessToken?: string;
 
   constructor(readonly config: IntegrationConfig) {
-    sanitizeConfig(config);
     this.clientNamespace = config.clientNamespace;
     this.clientAccessToken = config.clientAccessToken;
     this.clientAdminName = config.clientAdminName;

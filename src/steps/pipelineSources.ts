@@ -9,7 +9,12 @@ import {
 
 import { createAPIClient } from '../client';
 import { IntegrationConfig } from '../types';
-import { ACCOUNT_ENTITY_DATA_KEY, entities, relationships } from '../constants';
+import {
+  ACCOUNT_ENTITY_DATA_KEY,
+  entities,
+  relationships,
+  Steps,
+} from '../constants';
 
 export function getPipelineSourceKey(id: number): string {
   return `artifactory_pipeline_source:${id}`;
@@ -51,11 +56,11 @@ export async function fetchPipelineSources({
 
 export const pipelineSourcesSteps: IntegrationStep<IntegrationConfig>[] = [
   {
-    id: 'fetch-pipeline-sources',
+    id: Steps.PIPELINE_SOURCES,
     name: 'Fetch Pipeline Sources',
     entities: [entities.PIPELINE_SOURCE],
     relationships: [relationships.ACCOUNT_HAS_PIPELINE_SOURCE],
-    dependsOn: ['fetch-account'],
+    dependsOn: [Steps.ACCOUNT],
     executionHandler: fetchPipelineSources,
   },
 ];

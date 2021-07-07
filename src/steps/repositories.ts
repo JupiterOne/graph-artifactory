@@ -8,7 +8,12 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
-import { ACCOUNT_ENTITY_DATA_KEY, entities, relationships } from '../constants';
+import {
+  ACCOUNT_ENTITY_DATA_KEY,
+  entities,
+  relationships,
+  Steps,
+} from '../constants';
 import { IntegrationConfig } from '../types';
 
 export function getRepositoryKey(name: string): string {
@@ -154,27 +159,27 @@ export async function fetchArtifacts({
 
 export const repositoriesSteps: IntegrationStep<IntegrationConfig>[] = [
   {
-    id: 'fetch-repositories',
+    id: Steps.REPOSITORIES,
     name: 'Fetch Repositories',
     entities: [entities.REPOSITORY],
     relationships: [relationships.ACCOUNT_HAS_REPOSITORY],
-    dependsOn: ['fetch-account'],
+    dependsOn: [Steps.ACCOUNT],
     executionHandler: fetchRepositories,
   },
   {
-    id: 'generate-repository-groups',
+    id: Steps.GENERATE_REPOSITORY_GROUPS,
     name: 'Generate Repository Groups',
     entities: [entities.REPOSITORY_GROUP],
     relationships: [relationships.ACCOUNT_HAS_REPOSITORY_GROUP],
-    dependsOn: ['fetch-account'],
+    dependsOn: [Steps.ACCOUNT],
     executionHandler: generateRepositoryGroups,
   },
   {
-    id: 'fetch-artifacts',
+    id: Steps.ARTIFACTS,
     name: 'Fetch Artifacts',
     entities: [entities.ARTIFACT_CODEMODULE],
     relationships: [relationships.REPOSITORY_HAS_ARTIFACT_CODEMODULE],
-    dependsOn: ['fetch-repositories'],
+    dependsOn: [Steps.REPOSITORIES],
     executionHandler: fetchArtifacts,
   },
 ];

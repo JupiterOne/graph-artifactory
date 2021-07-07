@@ -9,9 +9,7 @@ import { IntegrationConfig } from './types';
 export default async function validateInvocation(
   context: IntegrationExecutionContext<IntegrationConfig>,
 ) {
-  console.log(context.instance.config);
   const config = sanitizeConfig(context.instance.config);
-  console.log(config);
 
   if (
     !config.clientNamespace ||
@@ -22,21 +20,26 @@ export default async function validateInvocation(
       'Config requires all of {clientNamespace, clientAccessToken, clientAdminName}',
     );
   }
-  console.log(config.clientPipelineAccessToken);
+
   const apiClient = createAPIClient(config);
   await apiClient.verifyAuthentication();
 
-  //Check pipeline authentication if it is enabled
   if (config.enablePipelineIngestion) {
     await apiClient.verifyPipelineAuthentication();
   }
 }
 
 export function sanitizeConfig(config) {
-  if (!config.enablePipelineIngestion) {
-    config.clientPipelineAccessToken = 'NOT_USED';
-  } else {
-    config.clientPipelineAccessToken = process.env.CLIENT_PIPELINE_ACCESS_TOKEN;
+  // Pipeline ingestion is optional which means the token may or may not exist.
+  // This function will check to see if it is enabled and assign the token to
+  // the config.
+  const token = process.env.CLIENT_PIPELINE_ACCESS_TOKEN;
+  if (token && config.enablePipelineIngestion) {
+    config.clientPipelineAccessToken = token;
+  } else if (!token && config.enablePipelineIngestion) {
+    throw new IntegrationValidationError(
+      'Pipeline Ingestion Enabled: Config requires {clientPipelineAccessToken}',
+    );
   }
   return config;
 }

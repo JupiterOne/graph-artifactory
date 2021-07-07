@@ -71,6 +71,19 @@ export const entities: Record<EntityConstantKeys, StepEntityMetadata> = {
   },
 };
 
+export const Steps = {
+  USERS: 'fetch-users',
+  ACCESS_TOKENS: 'fetch-access-tokens',
+  ACCOUNT: 'fetch-account',
+  BUILDS: 'fetch-builds',
+  GROUPS: 'fetch-groups',
+  PERMISSIONS: 'fetch-permissions',
+  PIPELINE_SOURCES: 'fetch-pipeline-sources',
+  REPOSITORIES: 'fetch-repositories',
+  GENERATE_REPOSITORY_GROUPS: 'generate-repository-groups',
+  ARTIFACTS: 'fetch-artifacts',
+};
+
 type RelationshipConstantKeys =
   | 'ACCOUNT_HAS_GROUP'
   | 'ACCOUNT_HAS_REPOSITORY'
