@@ -17,9 +17,14 @@ export interface IntegrationConfig extends IntegrationInstanceConfig {
   clientAccessToken: string;
 
   /**
+   * The provider API client access token used to authenticate requests.
+   */
+  enablePipelineIngestion: boolean;
+
+  /**
    * The JFrog Pipeline API client access token used to authenticate requests.
    */
-  clientPipelineAccessToken: string;
+  clientPipelineAccessToken?: string;
 
   /**
    * The provider API client admin name used for root account in the graph.

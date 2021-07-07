@@ -1,4 +1,8 @@
 import fetch, { Response } from 'node-fetch';
+import {
+  IntegrationExecutionContext,
+  IntegrationValidationError,
+} from '@jupiterone/integration-sdk-core';
 import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-sdk-core';
 import {
   IntegrationConfig,
@@ -21,6 +25,7 @@ import {
   ArtifactoryBuildDetailsResponse,
   ArtifactoryAccessTokenResponse,
 } from './types';
+import { sanitizeConfig } from './validateInvocation';
 
 /**
  * An APIClient maintains authentication state and provides an interface to
@@ -34,9 +39,10 @@ export class APIClient {
   private readonly clientNamespace: string;
   private readonly clientAccessToken: string;
   private readonly clientAdminName: string;
-  private readonly clientPipelineAccessToken: string;
+  private readonly clientPipelineAccessToken?: string;
 
   constructor(readonly config: IntegrationConfig) {
+    sanitizeConfig(config);
     this.clientNamespace = config.clientNamespace;
     this.clientAccessToken = config.clientAccessToken;
     this.clientAdminName = config.clientAdminName;
