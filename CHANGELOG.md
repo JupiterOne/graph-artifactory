@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+### 0.1.4 - 2021-07-08
+
 ### Changed
 
 - This integration required the ingestion of pipeline sources. This caused
