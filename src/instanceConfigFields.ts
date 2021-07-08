@@ -11,6 +11,10 @@ const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
   enablePipelineIngestion: {
     type: 'boolean',
   },
+  clientPipelineAccessToken: {
+    type: 'string',
+    mask: true,
+  },
   clientAdminName: {
     type: 'string',
   },
