@@ -11,7 +11,7 @@ import {
 import { IntegrationConfig, ArtifactoryBuild } from '../types';
 import { createAPIClient } from '../client';
 import { getArtifactKey } from './repositories';
-import { entities, relationships } from '../constants';
+import { entities, relationships, Steps } from '../constants';
 
 export function getBuildKey(name: string): string {
   return `artifactory_build:${name}`;
@@ -68,11 +68,11 @@ export async function fetchBuilds({
 
 export const buildSteps: IntegrationStep<IntegrationConfig>[] = [
   {
-    id: 'fetch-builds',
+    id: Steps.BUILDS,
     name: 'Fetch Builds',
     entities: [entities.BUILD],
     relationships: [relationships.BUILD_CREATED_ARTIFACT_CODEMODULE],
-    dependsOn: ['fetch-artifacts'],
+    dependsOn: [Steps.ARTIFACTS],
     executionHandler: fetchBuilds,
   },
 ];

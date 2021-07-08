@@ -14,16 +14,17 @@ export default async function validateInvocation(
   if (
     !config.clientNamespace ||
     !config.clientAccessToken ||
-    !config.clientPipelineAccessToken ||
     !config.clientAdminName
   ) {
     throw new IntegrationValidationError(
-      'Config requires all of {clientNamespace, clientAccessToken, clientPipelineAccessToken, clientAdminName}',
+      'Config requires all of {clientNamespace, clientAccessToken, clientAdminName}',
     );
   }
 
   const apiClient = createAPIClient(config);
-
   await apiClient.verifyAuthentication();
-  await apiClient.verifyPipelineAuthentication();
+
+  if (config.enablePipelineIngestion) {
+    await apiClient.verifyPipelineAuthentication();
+  }
 }

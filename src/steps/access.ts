@@ -8,6 +8,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
+import { Steps } from '../constants';
 import { ACCOUNT_ENTITY_DATA_KEY, entities, relationships } from '../constants';
 import { IntegrationConfig } from '../types';
 
@@ -186,33 +187,33 @@ export async function fetchAccessTokens({
 
 export const accessSteps: IntegrationStep<IntegrationConfig>[] = [
   {
-    id: 'fetch-groups',
+    id: Steps.GROUPS,
     name: 'Fetch Groups',
     entities: [entities.GROUP],
     relationships: [relationships.ACCOUNT_HAS_GROUP],
-    dependsOn: ['fetch-account'],
+    dependsOn: [Steps.ACCOUNT],
     executionHandler: fetchGroups,
   },
   {
-    id: 'fetch-access-tokens',
+    id: Steps.ACCESS_TOKENS,
     name: 'Fetch Access Tokens',
     entities: [entities.ACCESS_TOKEN],
     relationships: [
       relationships.ACCOUNT_HAS_ACCESS_TOKEN,
       relationships.ACCESS_TOKEN_ASSIGNED_USER,
     ],
-    dependsOn: ['fetch-account'],
+    dependsOn: [Steps.ACCOUNT],
     executionHandler: fetchAccessTokens,
   },
   {
-    id: 'fetch-users',
+    id: Steps.USERS,
     name: 'Fetch Users',
     entities: [entities.USER],
     relationships: [
       relationships.ACCOUNT_HAS_USER,
       relationships.GROUP_HAS_USER,
     ],
-    dependsOn: ['fetch-account', 'fetch-groups'],
+    dependsOn: [Steps.ACCOUNT, Steps.GROUPS],
     executionHandler: fetchUsers,
   },
 ];

@@ -34,7 +34,7 @@ export class APIClient {
   private readonly clientNamespace: string;
   private readonly clientAccessToken: string;
   private readonly clientAdminName: string;
-  private readonly clientPipelineAccessToken: string;
+  private readonly clientPipelineAccessToken?: string;
 
   constructor(readonly config: IntegrationConfig) {
     this.clientNamespace = config.clientNamespace;

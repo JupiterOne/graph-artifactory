@@ -12,7 +12,7 @@ import { match } from 'node-match-path';
 import { createAPIClient } from '../client';
 import { IntegrationConfig, ArtifactoryPermission } from '../types';
 import { getUserKey, getGroupKey } from './access';
-import { entities, relationships } from '../constants';
+import { entities, relationships, Steps } from '../constants';
 import { getRepositoryGroupKey } from './repositories';
 
 /** Relationships cannot have array or object properties, so permissions are stored as primitives.
@@ -248,7 +248,7 @@ export async function fetchPermissions({
 
 export const permissionsSteps: IntegrationStep<IntegrationConfig>[] = [
   {
-    id: 'fetch-permissions',
+    id: Steps.PERMISSIONS,
     name: 'Fetch Permissions',
     entities: [entities.PERMISSION],
     relationships: [
@@ -259,11 +259,11 @@ export const permissionsSteps: IntegrationStep<IntegrationConfig>[] = [
       relationships.PERMISSION_ALLOWS_REPOSITORY_GROUP,
     ],
     dependsOn: [
-      'fetch-users',
-      'generate-repository-groups',
-      'fetch-groups',
-      'fetch-repositories',
-      'fetch-builds',
+      Steps.USERS,
+      Steps.GENERATE_REPOSITORY_GROUPS,
+      Steps.GROUPS,
+      Steps.REPOSITORIES,
+      Steps.BUILDS,
     ],
     executionHandler: fetchPermissions,
   },

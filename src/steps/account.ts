@@ -5,7 +5,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
-import { ACCOUNT_ENTITY_DATA_KEY, entities } from '../constants';
+import { ACCOUNT_ENTITY_DATA_KEY, entities, Steps } from '../constants';
 import { ArtifactoryUsername, IntegrationConfig } from '../types';
 
 export function getAccountKey(name: ArtifactoryUsername): string {
@@ -51,7 +51,7 @@ export async function fetchAccountDetails({
 
 export const accountSteps: IntegrationStep<IntegrationConfig>[] = [
   {
-    id: 'fetch-account',
+    id: Steps.ACCOUNT,
     name: 'Fetch Account Details',
     entities: [entities.ACCOUNT],
     relationships: [],

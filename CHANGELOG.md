@@ -8,6 +8,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- This integration required the ingestion of pipeline sources. This caused
+  issues in cases where pipelines weren't being used. This change was to make
+  the pipeline ingestion optional and to disable the step if not explicityly
+  enabled.
+
 ### 0.1.3 - 2020-12-01
 
 ### Fixed
