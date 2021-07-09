@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Updated the error message to display to the customer when {clientAdminName} is
+  not found as a user.
+
 ### 0.1.4 - 2021-07-08
 
 ### Changed

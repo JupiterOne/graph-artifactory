@@ -1,5 +1,8 @@
 import fetch, { Response } from 'node-fetch';
-import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-sdk-core';
+import {
+  IntegrationProviderAuthenticationError,
+  IntegrationValidationError,
+} from '@jupiterone/integration-sdk-core';
 import {
   IntegrationConfig,
   ArtifactoryUser,
@@ -130,7 +133,9 @@ export class APIClient {
 
       return accountData;
     } else {
-      throw new Error('Unable to find admin user from users response');
+      throw new IntegrationValidationError(
+        '{clientAdminName} provided in the Config is not a valid user.',
+      );
     }
   }
 
