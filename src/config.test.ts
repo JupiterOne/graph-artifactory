@@ -7,8 +7,8 @@ import {
   setupRecording,
 } from '@jupiterone/integration-sdk-testing';
 
+import { validateInvocation } from './config';
 import { IntegrationConfig } from './types';
-import validateInvocation from './validateInvocation';
 
 it('requires valid config', async () => {
   const executionContext = createMockExecutionContext<IntegrationConfig>({
