@@ -1,20 +1,20 @@
 import {
+  createDirectRelationship,
   createIntegrationEntity,
+  Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
-  createDirectRelationship,
-  Entity,
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
-import { IntegrationConfig } from '../types';
 import {
   ACCOUNT_ENTITY_DATA_KEY,
   entities,
   relationships,
   Steps,
 } from '../constants';
+import { IntegrationConfig } from '../types';
 
 export function getPipelineSourceKey(id: number): string {
   return `artifactory_pipeline_source:${id}`;
@@ -26,17 +26,22 @@ export async function fetchPipelineSources({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
 
-  const accountEntity: Entity = await jobState.getData(ACCOUNT_ENTITY_DATA_KEY);
+  const accountEntity = (await jobState.getData(
+    ACCOUNT_ENTITY_DATA_KEY,
+  )) as Entity;
 
   await apiClient.iteratePipelineSources(async (source) => {
     const pipelineSource = createIntegrationEntity({
       entityData: {
-        source: { ...source, id: source.id.toString() },
+        source,
         assign: {
           _key: getPipelineSourceKey(source.id),
           _type: entities.PIPELINE_SOURCE._type,
           _class: entities.PIPELINE_SOURCE._class,
           name: getPipelineSourceKey(source.id),
+          id: String(source.id),
+          createdBy: String(source.createdBy),
+          updatedBy: String(source.updatedBy),
         },
       },
     });

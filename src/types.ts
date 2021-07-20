@@ -186,4 +186,6 @@ export type ArtifactoryPipelineSource = {
   id: number;
   createdAt: string;
   updatedAt: string;
+  createdBy: number;
+  updatedBy: number;
 };

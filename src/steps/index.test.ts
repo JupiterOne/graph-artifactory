@@ -4,26 +4,18 @@ import {
   setupRecording,
 } from '@jupiterone/integration-sdk-testing';
 
+import { integrationConfig } from '../../test/config';
 import { IntegrationConfig } from '../types';
-import { fetchUsers, fetchGroups, fetchAccessTokens } from './access';
+import { fetchAccessTokens, fetchGroups, fetchUsers } from './access';
 import { fetchAccountDetails } from './account';
 import { fetchBuilds } from './builds';
+import { fetchPermissions } from './permissions';
 import { fetchPipelineSources } from './pipelineSources';
 import {
   fetchArtifacts,
   fetchRepositories,
   generateRepositoryGroups,
 } from './repositories';
-import { fetchPermissions } from './permissions';
-
-const integrationConfig: IntegrationConfig = {
-  clientNamespace: process.env.CLIENT_NAMESPACE || 'codeworkr',
-  clientAccessToken: process.env.CLIENT_ACCESS_TOKEN || 'codeworkr',
-  enablePipelineIngestion: true,
-  clientPipelineAccessToken:
-    process.env.CLIENT_PIPELINE_ACCESS_TOKEN || 'codeworkr',
-  clientAdminName: process.env.CLIENT_ADMIN_NAME || 'viragsf@gmail.com',
-};
 
 jest.setTimeout(10000 * 5);
 

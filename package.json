@@ -14,23 +14,25 @@
   "scripts": {
     "start": "j1-integration collect",
     "graph": "j1-integration visualize",
+    "graph:types": "j1-integration visualize-types",
     "document": "j1-integration document",
     "lint": "eslint . --cache --fix --ext .ts,.tsx",
     "format": "prettier --write '**/*.{ts,js,json,css,md,yml}'",
     "type-check": "tsc",
     "test": "jest",
+    "test:env": "LOAD_ENV=1 yarn test",
     "test:ci": "yarn lint && yarn type-check && yarn test",
     "build": "tsc -p tsconfig.dist.json --declaration",
     "prepush": "yarn lint && yarn type-check && jest --changedSince master",
     "prepack": "yarn build"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^3.2.1"
+    "@jupiterone/integration-sdk-core": "^6.11.0"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^3.2.1",
-    "@jupiterone/integration-sdk-dev-tools": "^3.2.1",
-    "@jupiterone/integration-sdk-testing": "^3.2.1",
+    "@jupiterone/integration-sdk-core": "^6.11.0",
+    "@jupiterone/integration-sdk-dev-tools": "^6.11.0",
+    "@jupiterone/integration-sdk-testing": "^6.11.0",
     "@types/node-fetch": "^2.5.7"
   },
   "dependencies": {

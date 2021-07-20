@@ -10,6 +10,14 @@ and this project adheres to
 
 ### Changed
 
+- Upgraded SDK packages and some coding patterns
+- Changed `CodeRepo.{id, createdBy, updatedBy}` from `number` to `string` to
+  meet data-model schema requirements
+
+### 0.1.5 - 2021-07-09
+
+### Changed
+
 - Updated the error message to display to the customer when {clientAdminName} is
   not found as a user.
 

@@ -30,7 +30,9 @@ export function getArtifactKey(uri: string): string {
 export async function generateRepositoryGroups({
   jobState,
 }: IntegrationStepExecutionContext<IntegrationConfig>): Promise<void> {
-  const accountEntity: Entity = await jobState.getData(ACCOUNT_ENTITY_DATA_KEY);
+  const accountEntity = (await jobState.getData(
+    ACCOUNT_ENTITY_DATA_KEY,
+  )) as Entity;
 
   const groups = [
     {
@@ -79,7 +81,9 @@ export async function fetchRepositories({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
 
-  const accountEntity: Entity = await jobState.getData(ACCOUNT_ENTITY_DATA_KEY);
+  const accountEntity = (await jobState.getData(
+    ACCOUNT_ENTITY_DATA_KEY,
+  )) as Entity;
 
   await apiClient.iterateRepositories(async (repository) => {
     const repositoryEntity = createIntegrationEntity({
