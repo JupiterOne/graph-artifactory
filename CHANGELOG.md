@@ -8,13 +8,15 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.0.0 - 2021-07-19
+
 ### Changed
 
 - Upgraded SDK packages and some coding patterns
 - Changed `CodeRepo.{id, createdBy, updatedBy}` from `number` to `string` to
   meet data-model schema requirements
 
-### 0.1.5 - 2021-07-09
+## 0.1.5 - 2021-07-09
 
 ### Changed
 
