@@ -15,5 +15,5 @@ export const integrationConfig: IntegrationConfig = {
   enablePipelineIngestion: true,
   clientPipelineAccessToken:
     process.env.CLIENT_PIPELINE_ACCESS_TOKEN || 'codeworkr',
-  clientAdminName: process.env.CLIENT_ADMIN_NAME || 'viragsf@gmail.com',
+  clientAdminName: process.env.CLIENT_ADMIN_NAME || 'acmonta2@ncsu.edu',
 };

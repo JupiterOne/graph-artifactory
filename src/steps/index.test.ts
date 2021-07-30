@@ -1,10 +1,10 @@
 import {
   createMockStepExecutionContext,
   Recording,
-  setupRecording,
 } from '@jupiterone/integration-sdk-testing';
 
 import { integrationConfig } from '../../test/config';
+import { setupArtifactoryRecording } from '../../test/helpers/recording';
 import { IntegrationConfig } from '../types';
 import { fetchAccessTokens, fetchGroups, fetchUsers } from './access';
 import { fetchAccountDetails } from './account';
@@ -22,21 +22,24 @@ jest.setTimeout(10000 * 5);
 describe('JFrog Arrifactory', () => {
   let recording: Recording;
 
-  beforeEach(() => {
-    recording = setupRecording({
-      directory: __dirname,
-      name: 'jfrog_recordings',
-      options: {
-        recordFailedRequests: true,
-      },
-    });
-  });
-
   afterEach(async () => {
     await recording.stop();
   });
 
   test('should collect data', async () => {
+    recording = setupArtifactoryRecording({
+      directory: __dirname,
+      name: 'invalidConfig',
+      options: {
+        matchRequestsBy: {
+          url: {
+            hostname: false,
+          },
+        },
+        recordFailedRequests: true,
+      },
+    });
+
     const context = createMockStepExecutionContext<IntegrationConfig>({
       instanceConfig: integrationConfig,
     });
