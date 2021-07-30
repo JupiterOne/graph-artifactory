@@ -8,6 +8,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Updated the validate invocation to hit the `User Detail` endpoint, using the
+  provided `clientAdminName`. If a `404` is recieved it means the user is
+  invalid and an error should be displayed to user. This is a fatal error
+  because several other steps rely on this username to be valid.
+
 ## 1.0.0 - 2021-07-19
 
 ### Changed
