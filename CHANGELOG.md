@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.0.2 - 2021-07-30
+
 ### Changed
 
 - Updated to throw `IntegrationValidationError` for when a `404` is recieved
