@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Updated to throw `IntegrationValidationError` for when a `404` is recieved
+  during validate invocation to display useful error message to the user.
+
 ## 1.0.1 - 2021-07-30
 
 ### Changed
