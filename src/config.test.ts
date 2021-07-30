@@ -16,23 +16,12 @@ describe('JFrog Arrifactory', () => {
   let recording: Recording;
 
   afterEach(async () => {
-    await recording.stop();
+    if (recording) {
+      await recording.stop();
+    }
   });
 
   test('requires valid config', async () => {
-    recording = setupArtifactoryRecording({
-      directory: __dirname,
-      name: 'invalidConfig',
-      options: {
-        matchRequestsBy: {
-          url: {
-            hostname: false,
-          },
-        },
-        recordFailedRequests: false,
-      },
-    });
-
     const executionContext = createMockExecutionContext<IntegrationConfig>({
       instanceConfig: {} as IntegrationConfig,
     });
@@ -64,11 +53,9 @@ describe('JFrog Arrifactory', () => {
 
     executionContext.instance.config.clientAccessToken = 'badtoken';
 
-    try {
-      await validateInvocation(executionContext);
-    } catch (e) {
-      expect(e instanceof IntegrationProviderAuthenticationError).toBe(true);
-    }
+    await expect(validateInvocation(executionContext)).rejects.toThrow(
+      IntegrationProviderAuthenticationError,
+    );
   });
 
   test('invalid client admin name - 404', async () => {
@@ -91,10 +78,8 @@ describe('JFrog Arrifactory', () => {
 
     executionContext.instance.config.clientAdminName = 'wrongname@wrong.com';
 
-    try {
-      await validateInvocation(executionContext);
-    } catch (e) {
-      expect(e instanceof IntegrationValidationError).toBe(true);
-    }
+    await expect(validateInvocation(executionContext)).rejects.toThrow(
+      IntegrationValidationError,
+    );
   });
 });
