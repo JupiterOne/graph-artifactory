@@ -4,46 +4,97 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import {
   createMockExecutionContext,
-  setupRecording,
+  Recording,
 } from '@jupiterone/integration-sdk-testing';
 
 import { validateInvocation } from './config';
 import { IntegrationConfig } from './types';
+import { integrationConfig } from '../test/config';
+import { setupArtifactoryRecording } from '../test/helpers/recording';
 
-it('requires valid config', async () => {
-  const executionContext = createMockExecutionContext<IntegrationConfig>({
-    instanceConfig: {} as IntegrationConfig,
+describe('JFrog Arrifactory', () => {
+  let recording: Recording;
+
+  afterEach(async () => {
+    await recording.stop();
   });
 
-  try {
-    await validateInvocation(executionContext);
-  } catch (e) {
-    expect(e instanceof IntegrationValidationError).toBe(true);
-  }
-});
+  test('requires valid config', async () => {
+    recording = setupArtifactoryRecording({
+      directory: __dirname,
+      name: 'invalidConfig',
+      options: {
+        matchRequestsBy: {
+          url: {
+            hostname: false,
+          },
+        },
+        recordFailedRequests: false,
+      },
+    });
 
-it('auth error', async () => {
-  const recording = setupRecording({
-    directory: '__recordings__',
-    name: 'client-auth-error',
+    const executionContext = createMockExecutionContext<IntegrationConfig>({
+      instanceConfig: {} as IntegrationConfig,
+    });
+
+    try {
+      await validateInvocation(executionContext);
+    } catch (e) {
+      expect(e instanceof IntegrationValidationError).toBe(true);
+    }
   });
 
-  recording.server.any().intercept((req, res) => {
-    res.status(401);
+  test('auth error - 401', async () => {
+    recording = setupArtifactoryRecording({
+      directory: __dirname,
+      name: 'authError401',
+      options: {
+        matchRequestsBy: {
+          url: {
+            hostname: false,
+          },
+        },
+        recordFailedRequests: true,
+      },
+    });
+
+    const executionContext = createMockExecutionContext({
+      instanceConfig: integrationConfig,
+    });
+
+    executionContext.instance.config.clientAccessToken = 'badtoken';
+
+    try {
+      await validateInvocation(executionContext);
+    } catch (e) {
+      expect(e instanceof IntegrationProviderAuthenticationError).toBe(true);
+    }
   });
 
-  const executionContext = createMockExecutionContext({
-    instanceConfig: {
-      clientNamespace: 'INVALID',
-      clientAccessToken: 'INVALID',
-      clientAdminName: 'INVALID',
-      enablePipelineIngestion: false,
-    },
-  });
+  test('invalid client admin name - 404', async () => {
+    recording = setupArtifactoryRecording({
+      directory: __dirname,
+      name: 'invalidClientAdminName404',
+      options: {
+        matchRequestsBy: {
+          url: {
+            hostname: false,
+          },
+        },
+        recordFailedRequests: true,
+      },
+    });
 
-  try {
-    await validateInvocation(executionContext);
-  } catch (e) {
-    expect(e instanceof IntegrationProviderAuthenticationError).toBe(true);
-  }
+    const executionContext = createMockExecutionContext({
+      instanceConfig: integrationConfig,
+    });
+
+    executionContext.instance.config.clientAdminName = 'wrongname@wrong.com';
+
+    try {
+      await validateInvocation(executionContext);
+    } catch (e) {
+      expect(e instanceof IntegrationValidationError).toBe(true);
+    }
+  });
 });
