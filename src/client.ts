@@ -71,14 +71,13 @@ export class APIClient {
     const endpoint = this.withBaseUri(
       `artifactory/api/security/users/${this.clientAdminName}`,
     );
+    let invalidAdminName = false;
     try {
       const response = await this.request(endpoint, 'GET');
 
       if (response.status == 404) {
-        // If we got a 404 it is likely that the client admin name isn't valid
-        throw new IntegrationValidationError(
-          "Recieved 404: Verify the 'Client Administrator Name' provided in the Config is a valid user.",
-        );
+        // If we got a 404 it is because it couldn't find the admin name
+        invalidAdminName = true;
       } else if (response.status !== 200) {
         throw new IntegrationProviderAuthenticationError({
           endpoint,
@@ -93,6 +92,12 @@ export class APIClient {
         status: err.options ? err.options.statusCode : -1,
         statusText: err.options ? err.options.statusText : '',
       });
+    }
+
+    if (invalidAdminName) {
+      throw new IntegrationValidationError(
+        "Recieved 404: Verify the 'Client Administrator Name' provided in the Config is a valid user.",
+      );
     }
   }
 
