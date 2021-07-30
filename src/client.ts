@@ -68,11 +68,18 @@ export class APIClient {
   }
 
   public async verifyAuthentication(): Promise<void> {
-    const endpoint = this.withBaseUri('artifactory/api/security/users?limit=1');
+    const endpoint = this.withBaseUri(
+      `artifactory/api/security/users/${this.clientAdminName}`,
+    );
     try {
       const response = await this.request(endpoint, 'GET');
 
-      if (response.status !== 200) {
+      if (response.status == 404) {
+        // If we got a 404 it is likely that the client admin name isn't valid
+        throw new IntegrationValidationError(
+          "Recieved 404: Verify the 'Client Administrator Name' provided in the Config is a valid user.",
+        );
+      } else if (response.status !== 200) {
         throw new IntegrationProviderAuthenticationError({
           endpoint,
           status: response.status,
