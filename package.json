@@ -36,7 +36,7 @@
     "@types/node-fetch": "^2.5.7"
   },
   "dependencies": {
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^3.1.1",
     "node-match-path": "^0.4.4",
     "type-fest": "^0.16.0"
   }
