@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.1.0 - 2022-10-13
+
 ### Changed
 
 - Changed `Account` entity `displayName` and `name` to `instance.name` value.
