@@ -173,8 +173,9 @@ async function createPermissionRepositoryAllowsRelationships(
 export async function fetchPermissions({
   instance,
   jobState,
+  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
-  const apiClient = createAPIClient(instance.config);
+  const apiClient = createAPIClient(logger, instance.config);
 
   await apiClient.iteratePermissions(async (permission) => {
     const permissionEntity = createIntegrationEntity({

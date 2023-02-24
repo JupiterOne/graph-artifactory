@@ -33,9 +33,11 @@
     "@jupiterone/integration-sdk-core": "^6.11.0",
     "@jupiterone/integration-sdk-dev-tools": "^6.11.0",
     "@jupiterone/integration-sdk-testing": "^6.11.0",
-    "@types/node-fetch": "^2.5.7"
+    "@types/node-fetch": "^2.5.7",
+    "nock": "^13.3.0"
   },
   "dependencies": {
+    "@lifeomic/attempt": "^3.0.3",
     "node-fetch": "^2.6.0",
     "node-match-path": "^0.4.4",
     "type-fest": "^0.16.0"
