@@ -189,3 +189,8 @@ export type ArtifactoryPipelineSource = {
   createdBy: number;
   updatedBy: number;
 };
+
+export type ArtifactoryArtifactNodeTypes = {
+  folderNodes: ArtifactoryArtifactRef[];
+  fileNodes: ArtifactoryArtifactRef[];
+};

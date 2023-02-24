@@ -4,26 +4,28 @@ import {
   IntegrationValidationError,
 } from '@jupiterone/integration-sdk-core';
 import {
-  IntegrationConfig,
-  ArtifactoryUser,
-  ArtifactoryGroup,
-  ResourceIteratee,
-  ArtifactoryGroupRef,
-  ArtifactoryUserRef,
-  ArtifactoryRepository,
-  ArtifactoryPermission,
-  ArtifactoryPermissionRef,
   ArtifactoryAccessToken,
-  ArtifactoryBuild,
-  ArtifactoryBuildRef,
-  ArtifactoryBuildResponse,
+  ArtifactoryAccessTokenResponse,
+  ArtifactoryArtifactNodeTypes,
   ArtifactoryArtifactRef,
   ArtifactoryArtifactResponse,
+  ArtifactoryBuild,
   ArtifactoryBuildArtifactsResponse,
-  ArtifactoryPipelineSource,
   ArtifactoryBuildDetailsResponse,
-  ArtifactoryAccessTokenResponse,
+  ArtifactoryBuildRef,
+  ArtifactoryBuildResponse,
+  ArtifactoryGroup,
+  ArtifactoryGroupRef,
+  ArtifactoryPermission,
+  ArtifactoryPermissionRef,
+  ArtifactoryPipelineSource,
+  ArtifactoryRepository,
+  ArtifactoryUser,
+  ArtifactoryUserRef,
+  IntegrationConfig,
+  ResourceIteratee,
 } from './types';
+import { joinUrlPath } from './utils';
 
 /**
  * An APIClient maintains authentication state and provides an interface to
@@ -254,31 +256,50 @@ export class APIClient {
     iteratee: ResourceIteratee<ArtifactoryArtifactRef>,
   ): Promise<void> {
     const response = await this.request(
-      this.withBaseUri(`artifactory/api/storage/${key}`),
+      this.withBaseUri(joinUrlPath('artifactory/api/storage', key)),
     );
 
-    await this.recurseArtifacts(await response.json(), iteratee);
-  }
+    const stack = [await response.json()];
+    while (stack.length > 0) {
+      const current = stack.pop() as ArtifactoryArtifactResponse;
 
-  private async recurseArtifacts(
-    response: ArtifactoryArtifactResponse,
-    iteratee: ResourceIteratee<ArtifactoryArtifactRef>,
-  ): Promise<void> {
-    for (const artifact of response.children || []) {
-      if (artifact.folder) {
-        const nextUri = `${response.uri}${artifact.uri}`;
-        const nextResponse = await this.request(nextUri);
+      const { folderNodes, fileNodes } = this.separateFolderAndFileNodes(
+        current.children,
+      );
 
-        await this.recurseArtifacts(await nextResponse.json(), iteratee);
-      } else {
-        await iteratee({
-          ...artifact,
-          uri: this.withBaseUri(
-            `artifactory/${response.repo}${response.path}${artifact.uri}`,
-          ),
-        });
+      const nextFolderResponses = await Promise.all(
+        folderNodes.map(async (folderNode) => {
+          const nextUri = joinUrlPath(current.uri, folderNode.uri);
+          const nextResponse = await this.request(nextUri);
+          return nextResponse.json();
+        }),
+      );
+      stack.push(...nextFolderResponses);
+
+      for (const fileNode of fileNodes) {
+        const uri = this.withBaseUri(
+          joinUrlPath('artifactory', current.repo, current.path, fileNode.uri),
+        );
+        const resource = { ...fileNode, uri };
+        await iteratee(resource);
       }
     }
+  }
+
+  private separateFolderAndFileNodes(
+    children: ArtifactoryArtifactRef[],
+  ): ArtifactoryArtifactNodeTypes {
+    return children.reduce<ArtifactoryArtifactNodeTypes>(
+      (acc, child) => {
+        if (child.folder) {
+          acc.folderNodes.push(child);
+        } else {
+          acc.fileNodes.push(child);
+        }
+        return acc;
+      },
+      { folderNodes: [], fileNodes: [] },
+    );
   }
 
   /**
