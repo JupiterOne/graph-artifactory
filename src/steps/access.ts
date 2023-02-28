@@ -205,7 +205,7 @@ export const accessSteps: IntegrationStep<IntegrationConfig>[] = [
       relationships.ACCOUNT_HAS_ACCESS_TOKEN,
       relationships.ACCESS_TOKEN_ASSIGNED_USER,
     ],
-    dependsOn: [Steps.ACCOUNT],
+    dependsOn: [Steps.ACCOUNT, Steps.USERS],
     executionHandler: fetchAccessTokens,
   },
   {
