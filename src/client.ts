@@ -75,7 +75,7 @@ export class APIClient {
         'Content-Type': 'application/json',
         ...headers,
       },
-      ...(body && { body }),
+      body,
     });
   }
 
