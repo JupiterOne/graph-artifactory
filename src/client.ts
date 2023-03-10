@@ -32,7 +32,7 @@ import { joinUrlPath } from './utils';
 
 const MAX_ATTEMPTS = 3;
 const RETRY_DELAY = 3_000; // 3 seconds to start
-const TIMEOUT = 180_000; // 3 min timeout. We need this in case Node hangs with ETIMEDOUT
+const TIMEOUT = 60_000; // 3 min timeout. We need this in case Node hangs with ETIMEDOUT
 const RETRY_FACTOR = 2;
 
 /**
