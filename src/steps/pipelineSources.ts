@@ -23,8 +23,9 @@ export function getPipelineSourceKey(id: number): string {
 export async function fetchPipelineSources({
   instance,
   jobState,
+  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
-  const apiClient = createAPIClient(instance.config);
+  const apiClient = createAPIClient(logger, instance.config);
 
   const accountEntity = (await jobState.getData(
     ACCOUNT_ENTITY_DATA_KEY,

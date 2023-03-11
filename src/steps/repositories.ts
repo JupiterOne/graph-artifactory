@@ -78,8 +78,9 @@ export async function generateRepositoryGroups({
 export async function fetchRepositories({
   instance,
   jobState,
+  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
-  const apiClient = createAPIClient(instance.config);
+  const apiClient = createAPIClient(logger, instance.config);
 
   const accountEntity = (await jobState.getData(
     ACCOUNT_ENTITY_DATA_KEY,
@@ -119,8 +120,9 @@ export async function fetchRepositories({
 export async function fetchArtifacts({
   instance,
   jobState,
+  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
-  const apiClient = createAPIClient(instance.config);
+  const apiClient = createAPIClient(logger, instance.config);
 
   await jobState.iterateEntities(
     { _type: entities.REPOSITORY._type },

@@ -48,10 +48,11 @@ describe('JFrog Arrifactory', () => {
     });
 
     const executionContext = createMockExecutionContext({
-      instanceConfig: integrationConfig,
+      instanceConfig: {
+        ...integrationConfig,
+        clientAccessToken: 'badtoken',
+      },
     });
-
-    executionContext.instance.config.clientAccessToken = 'badtoken';
 
     await expect(validateInvocation(executionContext)).rejects.toThrow(
       IntegrationProviderAuthenticationError,
@@ -73,10 +74,11 @@ describe('JFrog Arrifactory', () => {
     });
 
     const executionContext = createMockExecutionContext({
-      instanceConfig: integrationConfig,
+      instanceConfig: {
+        ...integrationConfig,
+        clientAdminName: 'wrongname@wrong.com',
+      },
     });
-
-    executionContext.instance.config.clientAdminName = 'wrongname@wrong.com';
 
     await expect(validateInvocation(executionContext)).rejects.toThrow(
       IntegrationValidationError,

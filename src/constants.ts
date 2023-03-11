@@ -22,27 +22,27 @@ export const entities: Record<EntityConstantKeys, StepEntityMetadata> = {
   ACCOUNT: {
     resourceName: 'Account',
     _type: 'artifactory_account',
-    _class: 'Account',
+    _class: ['Account'],
   },
   GROUP: {
     resourceName: 'Group',
     _type: 'artifactory_group',
-    _class: 'UserGroup',
+    _class: ['UserGroup'],
   },
   REPOSITORY: {
     resourceName: 'Repository',
     _type: 'artifactory_repository',
-    _class: 'Repository',
+    _class: ['Repository'],
   },
   REPOSITORY_GROUP: {
     resourceName: 'RepositoryGroup',
     _type: 'artifactory_repository_group',
-    _class: 'Group',
+    _class: ['Group'],
   },
   USER: {
     resourceName: 'User',
     _type: 'artifactory_user',
-    _class: 'User',
+    _class: ['User'],
   },
   ACCESS_TOKEN: {
     resourceName: 'AccessToken',
@@ -52,22 +52,22 @@ export const entities: Record<EntityConstantKeys, StepEntityMetadata> = {
   PIPELINE_SOURCE: {
     resourceName: 'PipelineSource',
     _type: 'artifactory_pipeline_source',
-    _class: 'CodeRepo',
+    _class: ['CodeRepo'],
   },
   ARTIFACT_CODEMODULE: {
     resourceName: 'ArtifactCodeModule',
     _type: 'artifactory_artifact_codemodule',
-    _class: 'CodeModule',
+    _class: ['CodeModule'],
   },
   BUILD: {
     resourceName: 'Build',
     _type: 'artifactory_build',
-    _class: 'Configuration',
+    _class: ['Configuration'],
   },
   PERMISSION: {
     resourceName: 'Permission',
     _type: 'artifactory_permission',
-    _class: 'AccessPolicy',
+    _class: ['AccessPolicy'],
   },
 };
 

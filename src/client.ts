@@ -2,28 +2,38 @@ import fetch, { Response } from 'node-fetch';
 import {
   IntegrationProviderAuthenticationError,
   IntegrationValidationError,
+  IntegrationLogger,
+  IntegrationProviderAPIError,
 } from '@jupiterone/integration-sdk-core';
 import {
-  IntegrationConfig,
-  ArtifactoryUser,
-  ArtifactoryGroup,
-  ResourceIteratee,
-  ArtifactoryGroupRef,
-  ArtifactoryUserRef,
-  ArtifactoryRepository,
-  ArtifactoryPermission,
-  ArtifactoryPermissionRef,
   ArtifactoryAccessToken,
-  ArtifactoryBuild,
-  ArtifactoryBuildRef,
-  ArtifactoryBuildResponse,
+  ArtifactoryAccessTokenResponse,
+  ArtifactoryArtifactNodeTypes,
   ArtifactoryArtifactRef,
   ArtifactoryArtifactResponse,
+  ArtifactoryBuild,
   ArtifactoryBuildArtifactsResponse,
-  ArtifactoryPipelineSource,
   ArtifactoryBuildDetailsResponse,
-  ArtifactoryAccessTokenResponse,
+  ArtifactoryBuildRef,
+  ArtifactoryBuildResponse,
+  ArtifactoryGroup,
+  ArtifactoryGroupRef,
+  ArtifactoryPermission,
+  ArtifactoryPermissionRef,
+  ArtifactoryPipelineSource,
+  ArtifactoryRepository,
+  ArtifactoryUser,
+  ArtifactoryUserRef,
+  IntegrationConfig,
+  ResourceIteratee,
 } from './types';
+import * as attempt from '@lifeomic/attempt';
+import { joinUrlPath } from './utils';
+
+const MAX_ATTEMPTS = 3;
+const RETRY_DELAY = 3_000; // 3 seconds to start
+const TIMEOUT = 60_000; // 3 min timeout. We need this in case Node hangs with ETIMEDOUT
+const RETRY_FACTOR = 2;
 
 /**
  * An APIClient maintains authentication state and provides an interface to
@@ -34,12 +44,14 @@ import {
  * resources.
  */
 export class APIClient {
+  private readonly logger: IntegrationLogger;
   private readonly clientNamespace: string;
   private readonly clientAccessToken: string;
   private readonly clientAdminName: string;
   private readonly clientPipelineAccessToken?: string;
 
-  constructor(readonly config: IntegrationConfig) {
+  constructor(logger: IntegrationLogger, readonly config: IntegrationConfig) {
+    this.logger = logger;
     this.clientNamespace = config.clientNamespace;
     this.clientAccessToken = config.clientAccessToken;
     this.clientAdminName = config.clientAdminName;
@@ -65,6 +77,62 @@ export class APIClient {
       },
       body,
     });
+  }
+
+  private async requestWithRetry<T>(request: () => Promise<Response>) {
+    return attempt.retry<T>(
+      async () => {
+        const response = await request();
+
+        if (response.status >= 400) {
+          try {
+            const errorBody = await response.json();
+            const message = errorBody.message;
+            this.logger.info(
+              { errMessage: message },
+              'Encountered error from API',
+            );
+          } catch (e) {
+            // pass
+          }
+          throw new IntegrationProviderAPIError({
+            code: 'TenableClientApiError',
+            status: response.status,
+            endpoint: response.url,
+            statusText: response.statusText,
+          });
+        } else {
+          return response.json();
+        }
+      },
+      {
+        maxAttempts: MAX_ATTEMPTS,
+        delay: RETRY_DELAY,
+        timeout: TIMEOUT,
+        factor: RETRY_FACTOR,
+        handleError: (err, context) => {
+          if (
+            err instanceof IntegrationProviderAPIError &&
+            ![408, 429, 500, 502, 503, 504].includes(err.status as number)
+          ) {
+            this.logger.info(
+              { context, err },
+              `Hit an unrecoverable error when attempting fetch. Aborting.`,
+            );
+            context.abort();
+          } else {
+            this.logger.info(
+              {
+                err,
+                attemptNum: context.attemptNum,
+                attemptsRemaining: context.attemptsRemaining,
+              },
+              `Hit a possibly recoverable error when attempting fetch. Retrying in a moment.`,
+            );
+          }
+        },
+      },
+    );
   }
 
   public async verifyAuthentication(): Promise<void> {
@@ -253,32 +321,65 @@ export class APIClient {
     key: string,
     iteratee: ResourceIteratee<ArtifactoryArtifactRef>,
   ): Promise<void> {
-    const response = await this.request(
-      this.withBaseUri(`artifactory/api/storage/${key}`),
+    const response = await this.requestWithRetry<ArtifactoryArtifactResponse>(
+      () =>
+        this.request(
+          this.withBaseUri(joinUrlPath('artifactory/api/storage', key)),
+        ),
     );
 
-    await this.recurseArtifacts(await response.json(), iteratee);
-  }
+    const stack = [response];
+    while (stack.length > 0) {
+      const current = stack.pop() as ArtifactoryArtifactResponse;
 
-  private async recurseArtifacts(
-    response: ArtifactoryArtifactResponse,
-    iteratee: ResourceIteratee<ArtifactoryArtifactRef>,
-  ): Promise<void> {
-    for (const artifact of response.children || []) {
-      if (artifact.folder) {
-        const nextUri = `${response.uri}${artifact.uri}`;
-        const nextResponse = await this.request(nextUri);
+      const { folderNodes, fileNodes } = this.separateFolderAndFileNodes(
+        current.children,
+      );
 
-        await this.recurseArtifacts(await nextResponse.json(), iteratee);
-      } else {
-        await iteratee({
-          ...artifact,
-          uri: this.withBaseUri(
-            `artifactory/${response.repo}${response.path}${artifact.uri}`,
-          ),
-        });
+      // Fetch metadata for all the folders in the current folder.
+      const folderPromises = folderNodes.map(async (folderNode) => {
+        const nextUri = joinUrlPath(current.uri, folderNode.uri);
+        const nextResponse = await this.requestWithRetry<
+          ArtifactoryArtifactResponse
+        >(() => this.request(nextUri));
+        return nextResponse;
+      });
+      const results = await Promise.allSettled(folderPromises);
+
+      // Extract fulfilled responses from the results and add them to the stack.
+      const nextFolderResponses: ArtifactoryArtifactResponse[] = [];
+      for (const result of results) {
+        if (result.status === 'fulfilled') {
+          nextFolderResponses.push(result.value);
+        }
+      }
+      stack.push(...nextFolderResponses);
+
+      for (const fileNode of fileNodes) {
+        const uri = this.withBaseUri(
+          joinUrlPath('artifactory', current.repo, current.path, fileNode.uri),
+        );
+        const resource = { ...fileNode, uri };
+        await iteratee(resource);
       }
     }
+  }
+
+  private separateFolderAndFileNodes(
+    children: ArtifactoryArtifactRef[],
+  ): ArtifactoryArtifactNodeTypes {
+    const result: ArtifactoryArtifactNodeTypes = {
+      folderNodes: [],
+      fileNodes: [],
+    };
+    for (const child of children) {
+      if (child.folder) {
+        result.folderNodes.push(child);
+      } else {
+        result.fileNodes.push(child);
+      }
+    }
+    return result;
   }
 
   /**
@@ -381,6 +482,9 @@ export class APIClient {
   }
 }
 
-export function createAPIClient(config: IntegrationConfig): APIClient {
-  return new APIClient(config);
+export function createAPIClient(
+  logger: IntegrationLogger,
+  config: IntegrationConfig,
+): APIClient {
+  return new APIClient(logger, config);
 }

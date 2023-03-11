@@ -15,8 +15,9 @@ export function getAccountKey(name: ArtifactoryUsername): string {
 export async function fetchAccountDetails({
   instance,
   jobState,
+  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
-  const apiClient = createAPIClient(instance.config);
+  const apiClient = createAPIClient(logger, instance.config);
 
   const account = await apiClient.getAccount();
 

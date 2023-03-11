@@ -58,7 +58,7 @@ export async function validateInvocation(
     );
   }
 
-  const apiClient = createAPIClient(config);
+  const apiClient = createAPIClient(context.logger, config);
   await apiClient.verifyAuthentication();
 
   if (config.enablePipelineIngestion) {

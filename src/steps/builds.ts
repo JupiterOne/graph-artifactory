@@ -40,8 +40,9 @@ async function createBuildEntity(
 export async function fetchBuilds({
   instance,
   jobState,
+  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
-  const apiClient = createAPIClient(instance.config);
+  const apiClient = createAPIClient(logger, instance.config);
 
   await apiClient.iterateBuilds(async (build) => {
     const buildEntity =
