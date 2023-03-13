@@ -8,6 +8,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.2.0 - 2023-03-13
+
+### Changed
+
+- Added error / timeout handling and optimizations to fetch artifacts step
+- Updated sdk packages
+
 ## 1.1.0 - 2022-10-13
 
 ### Changed
