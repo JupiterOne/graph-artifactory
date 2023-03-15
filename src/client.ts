@@ -321,39 +321,38 @@ export class APIClient {
     key: string,
     iteratee: ResourceIteratee<ArtifactoryArtifactRef>,
   ): Promise<void> {
-    const response = await this.requestWithRetry<ArtifactoryArtifactResponse>(
-      () =>
-        this.request(
-          this.withBaseUri(joinUrlPath('artifactory/api/storage', key)),
-        ),
+    const initialUri = this.withBaseUri(
+      joinUrlPath('artifactory/api/storage', key),
     );
+    const foldersUriStack: string[] = [];
+    foldersUriStack.push(initialUri);
 
-    const stack = [response];
-    while (stack.length > 0) {
-      const current = stack.pop() as ArtifactoryArtifactResponse;
+    while (foldersUriStack.length > 0) {
+      const currentUri = foldersUriStack.pop() as string;
+      let current: ArtifactoryArtifactResponse;
+      try {
+        current = await this.requestWithRetry<ArtifactoryArtifactResponse>(() =>
+          this.request(currentUri),
+        );
+      } catch (err) {
+        if (initialUri === currentUri) {
+          throw err;
+        }
+        this.logger.debug(
+          { err },
+          `Skip consuming folder with uri: ${currentUri} due to error with API`,
+        );
+        continue;
+      }
 
       const { folderNodes, fileNodes } = this.separateFolderAndFileNodes(
         current.children,
       );
 
-      // Fetch metadata for all the folders in the current folder.
-      const folderPromises = folderNodes.map(async (folderNode) => {
+      for (const folderNode of folderNodes) {
         const nextUri = joinUrlPath(current.uri, folderNode.uri);
-        const nextResponse = await this.requestWithRetry<
-          ArtifactoryArtifactResponse
-        >(() => this.request(nextUri));
-        return nextResponse;
-      });
-      const results = await Promise.allSettled(folderPromises);
-
-      // Extract fulfilled responses from the results and add them to the stack.
-      const nextFolderResponses: ArtifactoryArtifactResponse[] = [];
-      for (const result of results) {
-        if (result.status === 'fulfilled') {
-          nextFolderResponses.push(result.value);
-        }
+        foldersUriStack.push(nextUri);
       }
-      stack.push(...nextFolderResponses);
 
       for (const fileNode of fileNodes) {
         const uri = this.withBaseUri(
