@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.2.1 - 2023-03-16
+
+### Changed
+
+- Optimize fetch artifacts client for better memory handling.
+
 ## 1.2.0 - 2023-03-13
 
 ### Changed
