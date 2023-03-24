@@ -152,6 +152,7 @@ export async function fetchArtifacts({
                     _type: entities.ARTIFACT_CODEMODULE._type,
                     _class: entities.ARTIFACT_CODEMODULE._class,
                     name: artifact.name,
+                    displayName: artifact.uri,
                     webLink: artifact.uri,
                     packageType,
                     size: artifact.size,

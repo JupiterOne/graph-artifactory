@@ -9,6 +9,7 @@ import {
   ArtifactEntity,
   ArtifactoryAccessToken,
   ArtifactoryAccessTokenResponse,
+  ArtifactoryArtifactRef,
   ArtifactoryArtifactResponse,
   ArtifactoryBuild,
   ArtifactoryBuildArtifactsResponse,
@@ -327,20 +328,16 @@ export class APIClient {
       return `items.find({"repo":"${repoKey}"}).offset(${offset}).limit(${ARTIFACTS_PAGE_LIMIT})`;
     };
 
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const { results } = await this.requestWithRetry<
-        ArtifactoryArtifactResponse
-      >(() =>
-        this.request(url, 'POST', getQuery(key, offset), {
-          'Content-Type': 'text/plain',
-        }),
+    let artifacts: ArtifactoryArtifactRef[] = [];
+    do {
+      const response = await this.requestWithRetry<ArtifactoryArtifactResponse>(
+        () =>
+          this.request(url, 'POST', getQuery(key, offset), {
+            'Content-Type': 'text/plain',
+          }),
       );
-      // Stop pagination when encounter an empty page.
-      if (!results.length) {
-        break;
-      }
-      for (const artifact of results) {
+      artifacts = response.results || [];
+      for (const artifact of artifacts) {
         const uri = this.withBaseUri(
           joinUrlPath(
             'artifactory',
@@ -355,7 +352,7 @@ export class APIClient {
         });
       }
       offset += ARTIFACTS_PAGE_LIMIT;
-    }
+    } while (artifacts.length > 0);
   }
 
   /**
