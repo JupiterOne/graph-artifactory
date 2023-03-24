@@ -6,10 +6,9 @@ import {
   IntegrationProviderAPIError,
 } from '@jupiterone/integration-sdk-core';
 import {
+  ArtifactEntity,
   ArtifactoryAccessToken,
   ArtifactoryAccessTokenResponse,
-  ArtifactoryArtifactNodeTypes,
-  ArtifactoryArtifactRef,
   ArtifactoryArtifactResponse,
   ArtifactoryBuild,
   ArtifactoryBuildArtifactsResponse,
@@ -34,6 +33,7 @@ const MAX_ATTEMPTS = 3;
 const RETRY_DELAY = 3_000; // 3 seconds to start
 const TIMEOUT = 60_000; // 3 min timeout. We need this in case Node hangs with ETIMEDOUT
 const RETRY_FACTOR = 2;
+const ARTIFACTS_PAGE_LIMIT = 1000;
 
 /**
  * An APIClient maintains authentication state and provides an interface to
@@ -319,66 +319,43 @@ export class APIClient {
    */
   public async iterateRepositoryArtifacts(
     key: string,
-    iteratee: ResourceIteratee<ArtifactoryArtifactRef>,
+    iteratee: ResourceIteratee<ArtifactEntity>,
   ): Promise<void> {
-    const initialUri = this.withBaseUri(
-      joinUrlPath('artifactory/api/storage', key),
-    );
-    const foldersUriStack: string[] = [];
-    foldersUriStack.push(initialUri);
-
-    while (foldersUriStack.length > 0) {
-      const currentUri = foldersUriStack.pop() as string;
-      let current: ArtifactoryArtifactResponse;
-      try {
-        current = await this.requestWithRetry<ArtifactoryArtifactResponse>(() =>
-          this.request(currentUri),
-        );
-      } catch (err) {
-        if (initialUri === currentUri) {
-          throw err;
-        }
-        this.logger.debug(
-          { err },
-          `Skip consuming folder with uri: ${currentUri} due to error with API`,
-        );
-        continue;
-      }
-
-      const { folderNodes, fileNodes } = this.separateFolderAndFileNodes(
-        current.children,
-      );
-
-      for (const folderNode of folderNodes) {
-        const nextUri = joinUrlPath(current.uri, folderNode.uri);
-        foldersUriStack.push(nextUri);
-      }
-
-      for (const fileNode of fileNodes) {
-        const uri = this.withBaseUri(
-          joinUrlPath('artifactory', current.repo, current.path, fileNode.uri),
-        );
-        const resource = { ...fileNode, uri };
-        await iteratee(resource);
-      }
-    }
-  }
-
-  private separateFolderAndFileNodes(
-    children: ArtifactoryArtifactRef[],
-  ): ArtifactoryArtifactNodeTypes {
-    const result: ArtifactoryArtifactNodeTypes = {
-      folderNodes: [],
-      fileNodes: [],
+    let offset = 0;
+    const url = this.withBaseUri('artifactory/api/search/aql');
+    const getQuery = (repoKey: string, offset: number) => {
+      return `items.find({"repo":"${repoKey}"}).offset(${offset}).limit(${ARTIFACTS_PAGE_LIMIT})`;
     };
-    for (const child of children) {
-      if (child.folder) {
-        result.folderNodes.push(child);
-      } else {
-        result.fileNodes.push(child);
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const { results } = await this.requestWithRetry<
+        ArtifactoryArtifactResponse
+      >(() =>
+        this.request(url, 'POST', getQuery(key, offset), {
+          'Content-Type': 'text/plain',
+        }),
+      );
+      // Stop pagination when encounter an empty page.
+      if (!results.length) {
+        break;
       }
+      for (const artifact of results) {
+        const uri = this.withBaseUri(
+          joinUrlPath(
+            'artifactory',
+            artifact.repo,
+            artifact.path,
+            artifact.name,
+          ),
+        );
+        await iteratee({
+          ...artifact,
+          uri,
+        });
+      }
+      offset += ARTIFACTS_PAGE_LIMIT;
     }
-    return result;
   }
 
   /**

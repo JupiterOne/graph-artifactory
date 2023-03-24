@@ -4,6 +4,7 @@ import {
   Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
+  parseTimePropertyValue,
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
@@ -129,36 +130,52 @@ export async function fetchArtifacts({
     async (repositoryEntity) => {
       const [, repositoryEntityKey] = repositoryEntity._key.split(':');
       const packageType = repositoryEntity.packageType?.toString() || '';
+      const repoType = repositoryEntity.type;
+      const repositoryKeys =
+        repoType === 'REMOTE'
+          ? [repositoryEntityKey, `${repositoryEntityKey}-cache`]
+          : [repositoryEntityKey];
 
-      await apiClient.iterateRepositoryArtifacts(
-        repositoryEntityKey,
-        async (artifact) => {
-          const artifactEntity = createIntegrationEntity({
-            entityData: {
-              source: artifact,
-              assign: {
-                _key: getArtifactKey(artifact.uri),
-                _type: entities.ARTIFACT_CODEMODULE._type,
-                _class: entities.ARTIFACT_CODEMODULE._class,
-                name: artifact.uri,
-                webLink: artifact.uri,
-                packageType,
-              },
-            },
-          });
+      for (const repoKey of repositoryKeys) {
+        await apiClient.iterateRepositoryArtifacts(
+          repoKey,
+          async (artifact) => {
+            const artifactKey = getArtifactKey(artifact.uri);
+            let artifactEntity = await jobState.findEntity(artifactKey);
 
-          await Promise.all([
-            jobState.addEntity(artifactEntity),
-            jobState.addRelationship(
+            if (!artifactEntity) {
+              artifactEntity = createIntegrationEntity({
+                entityData: {
+                  source: artifact,
+                  assign: {
+                    _key: artifactKey,
+                    _type: entities.ARTIFACT_CODEMODULE._type,
+                    _class: entities.ARTIFACT_CODEMODULE._class,
+                    name: artifact.name,
+                    webLink: artifact.uri,
+                    packageType,
+                    size: artifact.size,
+                    createdOn: parseTimePropertyValue(artifact.created),
+                    createdBy: artifact.created_by,
+                    modifiedOn: parseTimePropertyValue(artifact.modified),
+                    modifiedBy: artifact.modified_by,
+                    updatedOn: parseTimePropertyValue(artifact.updated),
+                  },
+                },
+              });
+              await jobState.addEntity(artifactEntity);
+            }
+
+            await jobState.addRelationship(
               createDirectRelationship({
                 _class: RelationshipClass.HAS,
                 from: repositoryEntity,
                 to: artifactEntity,
               }),
-            ),
-          ]);
-        },
-      );
+            );
+          },
+        );
+      }
     },
   );
 }

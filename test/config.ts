@@ -20,13 +20,12 @@ export function buildStepTestConfig(stepId: string): StepTestConfig {
 }
 
 export const integrationConfig: IntegrationConfig = {
-  clientNamespace: process.env.CLIENT_NAMESPACE || 'rymvym',
-  clientAccessToken: process.env.CLIENT_ACCESS_TOKEN || 'rymvym',
+  clientNamespace: process.env.CLIENT_NAMESPACE || 'blo',
+  clientAccessToken: process.env.CLIENT_ACCESS_TOKEN || 'blo',
   enablePipelineIngestion: true,
   clientPipelineAccessToken:
     process.env.CLIENT_PIPELINE_ACCESS_TOKEN || 'codeworkr',
-  clientAdminName:
-    process.env.CLIENT_ADMIN_NAME || '35mgu7ai3q@happy2023year.com',
+  clientAdminName: process.env.CLIENT_ADMIN_NAME || 's3kfd4by4h@bloheyz.com',
 };
 
 if (process.env.LOAD_ENV) {
