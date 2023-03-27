@@ -5,7 +5,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { createMockIntegrationLogger } from '@jupiterone/integration-sdk-testing';
 import { APIClient } from './client';
-import { ArtifactoryArtifactResponse } from './types';
+import { ArtifactoryArtifactRef, ArtifactoryArtifactResponse } from './types';
 import { integrationConfig } from '../test/config';
 
 jest.mock('node-fetch', () => require('fetch-mock-jest').sandbox());
@@ -29,85 +29,77 @@ describe('iterateRepositoryArtifacts', () => {
     fetchMock.reset();
   });
 
-  it('should iterate over all file nodes', async () => {
-    // Mock the initial response from the API
-    const initialResponse: ArtifactoryArtifactResponse = {
-      repo: 'my-repo',
-      path: '/',
-      children: [
-        { uri: '/folder1', folder: true },
-        { uri: '/file1.txt', folder: false },
-        { uri: '/file2.txt', folder: false },
-        { uri: '/folder2', folder: true },
-      ],
-      uri: `${baseUrl}/artifactory/api/storage/my-repo`,
-    };
-    fetchMock.get(
-      `${baseUrl}/artifactory/api/storage/my-repo`,
-      initialResponse,
-    );
+  const mockArtifact = (name: string): ArtifactoryArtifactRef => ({
+    repo: 'test-repo',
+    path: `path/to/artifact`,
+    name,
+    type: 'file',
+    size: 124,
+    created: '2023-03-24T15:25:56.911Z',
+    created_by: 'test',
+    modified: '2023-03-24T15:26:02.006Z',
+    modified_by: 'test',
+    updated: '2023-03-24T15:26:02.067Z',
+  });
 
-    // Mock the responses for each folder
-    const folder1Response: ArtifactoryArtifactResponse = {
-      repo: 'my-repo',
-      path: '/folder1',
-      children: [{ uri: 'file3.txt', folder: false }],
-      uri: `${baseUrl}/artifactory/api/storage/my-repo/folder1`,
+  it('should call iteratee for each artifact returned by page', async () => {
+    const firstResponse: ArtifactoryArtifactResponse = {
+      results: [mockArtifact('artifact-1'), mockArtifact('artifact-2')],
     };
-    fetchMock.get(
-      `${baseUrl}/artifactory/api/storage/my-repo/folder1`,
-      folder1Response,
-    );
+    fetchMock.post(`${baseUrl}/artifactory/api/search/aql`, firstResponse, {
+      repeat: 1,
+    });
 
-    const folder2Response: ArtifactoryArtifactResponse = {
-      repo: 'my-repo',
-      path: '/folder2',
-      children: [{ uri: 'file4.txt', folder: false }],
-      uri: `${baseUrl}/artifactory/api/storage/my-repo/folder2`,
+    const secondResponse: ArtifactoryArtifactResponse = {
+      results: [mockArtifact('artifact-3'), mockArtifact('artifact-4')],
     };
-    fetchMock.get(
-      `${baseUrl}/artifactory/api/storage/my-repo/folder2`,
-      folder2Response,
+
+    fetchMock.post(`${baseUrl}/artifactory/api/search/aql`, secondResponse, {
+      repeat: 1,
+    });
+
+    // Indirectly tests that it should stop pagination when an empty page is encountered
+    fetchMock.post(
+      `${baseUrl}/artifactory/api/search/aql`,
+      { results: [] },
+      {
+        repeat: 1,
+      },
     );
 
     const iteratee = jest.fn();
-    await client.iterateRepositoryArtifacts('my-repo', iteratee);
+    await client.iterateRepositoryArtifacts('test-repo', iteratee);
 
     expect(iteratee).toHaveBeenCalledTimes(4);
-    expect(iteratee).toHaveBeenCalledWith({
-      uri: `${baseUrl}/artifactory/my-repo/file1.txt`,
-      folder: false,
-    });
-    expect(iteratee).toHaveBeenCalledWith({
-      uri: `${baseUrl}/artifactory/my-repo/file2.txt`,
-      folder: false,
-    });
-    expect(iteratee).toHaveBeenCalledWith({
-      uri: `${baseUrl}/artifactory/my-repo/folder1/file3.txt`,
-      folder: false,
-    });
-    expect(iteratee).toHaveBeenCalledWith({
-      uri: `${baseUrl}/artifactory/my-repo/folder2/file4.txt`,
-      folder: false,
-    });
+    expect(iteratee.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-1`,
+      }),
+    );
+    expect(iteratee.mock.calls[1][0]).toEqual(
+      expect.objectContaining({
+        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-2`,
+      }),
+    );
+    expect(iteratee.mock.calls[2][0]).toEqual(
+      expect.objectContaining({
+        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-3`,
+      }),
+    );
+    expect(iteratee.mock.calls[3][0]).toEqual(
+      expect.objectContaining({
+        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-4`,
+      }),
+    );
     expect(fetchMock.done()).toBe(true);
   });
 
   it('should not call iteratee when there are no files in the repository', async () => {
-    const artifactResponse: ArtifactoryArtifactResponse = {
-      repo: 'repo',
-      path: 'path',
-      children: [],
-      uri: '',
-    };
-    fetchMock.get(
-      `${baseUrl}/artifactory/api/storage/my-repo`,
-      artifactResponse,
-    );
+    fetchMock.post(`${baseUrl}/artifactory/api/search/aql`, { results: [] });
 
     const iteratee = jest.fn();
     await expect(
-      client.iterateRepositoryArtifacts('my-repo', iteratee),
+      client.iterateRepositoryArtifacts('test-repo', iteratee),
     ).resolves.toBeUndefined();
 
     expect(iteratee).not.toHaveBeenCalled();
@@ -115,40 +107,33 @@ describe('iterateRepositoryArtifacts', () => {
   });
 
   it('retries on recoverable error', async () => {
-    const response1 = {
-      repo: 'my-repo',
-      path: '/',
-      children: [{ uri: '/folder1', folder: true }],
-      uri: `${baseUrl}/artifactory/api/storage/my-repo`,
+    const response: ArtifactoryArtifactResponse = {
+      results: [mockArtifact('artifact-1')],
     };
-    const response2 = {
-      repo: 'my-repo',
-      path: '/folder1',
-      children: [{ uri: 'file3.txt', folder: false }],
-      uri: `${baseUrl}/artifactory/api/storage/my-repo/folder1`,
-    };
+
     fetchMock
-      .get(`${baseUrl}/artifactory/api/storage/my-repo`, response1)
-      .get(`${baseUrl}/artifactory/api/storage/my-repo/folder1`, 408, {
-        repeat: 1,
-      })
-      .get(`${baseUrl}/artifactory/api/storage/my-repo/folder1`, response2, {
-        repeat: 1,
-      });
+      .post(`${baseUrl}/artifactory/api/search/aql`, 408, { repeat: 1 })
+      .post(`${baseUrl}/artifactory/api/search/aql`, response, { repeat: 1 })
+      .post(
+        `${baseUrl}/artifactory/api/search/aql`,
+        { results: [] },
+        { repeat: 1 },
+      );
 
     const iteratee = jest.fn();
-    await client.iterateRepositoryArtifacts('my-repo', iteratee);
+    await client.iterateRepositoryArtifacts('test-repo', iteratee);
 
     expect(iteratee).toHaveBeenCalledTimes(1);
-    expect(iteratee).toHaveBeenCalledWith({
-      uri: `${baseUrl}/artifactory/my-repo/folder1/file3.txt`,
-      folder: false,
-    });
+    expect(iteratee.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-1`,
+      }),
+    );
     expect(fetchMock.done()).toBe(true);
   });
 
   it('throws on unrecoverable error', async () => {
-    fetchMock.get(`${baseUrl}/artifactory/api/storage/my-repo`, 404);
+    fetchMock.post(`${baseUrl}/artifactory/api/search/aql`, 404);
 
     const iteratee = jest.fn();
     await expect(
@@ -156,47 +141,6 @@ describe('iterateRepositoryArtifacts', () => {
     ).rejects.toThrow(IntegrationProviderAPIError);
 
     expect(iteratee).toHaveBeenCalledTimes(0);
-    expect(fetchMock.done()).toBe(true);
-  });
-
-  it('ignores inner folders if the request is aborted', async () => {
-    const response1 = {
-      repo: 'my-repo',
-      path: '/',
-      children: [
-        { uri: '/folder1', folder: true },
-        { uri: '/file1.txt', folder: false },
-        { uri: '/folder2', folder: true },
-      ],
-      uri: `${baseUrl}/artifactory/api/storage/my-repo`,
-    };
-
-    const folder2Response: ArtifactoryArtifactResponse = {
-      repo: 'my-repo',
-      path: '/folder2',
-      children: [{ uri: 'file4.txt', folder: false }],
-      uri: `${baseUrl}/artifactory/api/storage/my-repo/folder2`,
-    };
-    fetchMock
-      .get(`${baseUrl}/artifactory/api/storage/my-repo`, response1)
-      .get(`${baseUrl}/artifactory/api/storage/my-repo/folder1`, 404)
-      .get(
-        `${baseUrl}/artifactory/api/storage/my-repo/folder2`,
-        folder2Response,
-      );
-
-    const iteratee = jest.fn();
-    await client.iterateRepositoryArtifacts('my-repo', iteratee);
-
-    expect(iteratee).toHaveBeenCalledTimes(2);
-    expect(iteratee).toHaveBeenCalledWith({
-      uri: `${baseUrl}/artifactory/my-repo/file1.txt`,
-      folder: false,
-    });
-    expect(iteratee).toHaveBeenCalledWith({
-      uri: `${baseUrl}/artifactory/my-repo/folder2/file4.txt`,
-      folder: false,
-    });
     expect(fetchMock.done()).toBe(true);
   });
 });

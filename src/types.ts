@@ -155,14 +155,23 @@ export type ArtifactoryBuildResponse = {
 };
 
 export type ArtifactoryArtifactRef = {
-  uri: string;
-  folder: boolean;
+  repo: string;
+  path: string;
+  name: string;
+  type: string;
+  size: number;
+  created: string;
+  created_by: string;
+  modified: string;
+  modified_by: string;
+  updated: string;
 };
 
 export type ArtifactoryArtifactResponse = {
-  repo: string;
-  path: string;
-  children: ArtifactoryArtifactRef[];
+  results: ArtifactoryArtifactRef[];
+};
+
+export type ArtifactEntity = ArtifactoryArtifactRef & {
   uri: string;
 };
 
@@ -188,9 +197,4 @@ export type ArtifactoryPipelineSource = {
   updatedAt: string;
   createdBy: number;
   updatedBy: number;
-};
-
-export type ArtifactoryArtifactNodeTypes = {
-  folderNodes: ArtifactoryArtifactRef[];
-  fileNodes: ArtifactoryArtifactRef[];
 };
