@@ -167,13 +167,15 @@ export async function fetchArtifacts({
               await jobState.addEntity(artifactEntity);
             }
 
-            await jobState.addRelationship(
-              createDirectRelationship({
-                _class: RelationshipClass.HAS,
-                from: repositoryEntity,
-                to: artifactEntity,
-              }),
-            );
+            const repoArtifactRelationship = createDirectRelationship({
+              _class: RelationshipClass.HAS,
+              from: repositoryEntity,
+              to: artifactEntity,
+            });
+
+            if (!(await jobState.hasKey(repoArtifactRelationship._key))) {
+              await jobState.addRelationship(repoArtifactRelationship);
+            }
           },
         );
       }
