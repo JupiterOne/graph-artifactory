@@ -8,6 +8,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.3.0 - 2023-03-27
+
+### Changed
+
+- Changed API used to fetch artifacts from Jfrog Artifactory.
+- Added new fields to `artifactory_artifact_codemodule` entity.
+
 ## 1.2.1 - 2023-03-16
 
 ### Changed
