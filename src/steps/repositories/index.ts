@@ -4,18 +4,19 @@ import {
   Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
-  parseTimePropertyValue,
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
-import { createAPIClient } from '../client';
+import { createAPIClient } from '../../client';
 import {
   ACCOUNT_ENTITY_DATA_KEY,
   entities,
   relationships,
   Steps,
-} from '../constants';
-import { IntegrationConfig } from '../types';
+} from '../../constants';
+import { IntegrationConfig } from '../../types';
+import { compareEntities } from '../../utils';
+import { createArtifactEntity, getArtifactKey } from './converters';
 
 export function getRepositoryKey(name: string): string {
   return `artifactory_repository:${name}`;
@@ -23,9 +24,6 @@ export function getRepositoryKey(name: string): string {
 
 export function getRepositoryGroupKey(name: string): string {
   return `artifactory_repository_group:${name}`;
-}
-export function getArtifactKey(uri: string): string {
-  return `artifactory_artifact:${uri}`;
 }
 
 export async function generateRepositoryGroups({
@@ -144,27 +142,18 @@ export async function fetchArtifacts({
             let artifactEntity = await jobState.findEntity(artifactKey);
 
             if (!artifactEntity) {
-              artifactEntity = createIntegrationEntity({
-                entityData: {
-                  source: artifact,
-                  assign: {
-                    _key: artifactKey,
-                    _type: entities.ARTIFACT_CODEMODULE._type,
-                    _class: entities.ARTIFACT_CODEMODULE._class,
-                    name: artifact.name,
-                    displayName: artifact.uri,
-                    webLink: artifact.uri,
-                    packageType,
-                    size: artifact.size,
-                    createdOn: parseTimePropertyValue(artifact.created),
-                    createdBy: artifact.created_by,
-                    modifiedOn: parseTimePropertyValue(artifact.modified),
-                    modifiedBy: artifact.modified_by,
-                    updatedOn: parseTimePropertyValue(artifact.updated),
-                  },
-                },
-              });
+              artifactEntity = createArtifactEntity(artifact, packageType);
               await jobState.addEntity(artifactEntity);
+            } else {
+              const duplicatedArtifact = createArtifactEntity(
+                artifact,
+                packageType,
+              );
+              const duplicateEntityReport = compareEntities(
+                artifactEntity,
+                duplicatedArtifact,
+              );
+              logger.error(duplicateEntityReport, 'Duplicate entity report.');
             }
 
             const repoArtifactRelationship = createDirectRelationship({

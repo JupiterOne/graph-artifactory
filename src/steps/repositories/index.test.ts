@@ -1,10 +1,10 @@
-import { Steps } from '../constants';
-import { buildStepTestConfig } from '../../test/config';
+import { Steps } from '../../constants';
+import { buildStepTestConfig } from '../../../test/config';
 import { executeStepWithDependencies } from '@jupiterone/integration-sdk-testing';
 import {
   setupArtifactoryRecording,
   Recording,
-} from '../../test/helpers/recording';
+} from '../../../test/helpers/recording';
 
 let recording: Recording;
 

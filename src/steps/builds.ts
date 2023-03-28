@@ -10,7 +10,7 @@ import {
 
 import { IntegrationConfig, ArtifactoryBuild } from '../types';
 import { createAPIClient } from '../client';
-import { getArtifactKey } from './repositories';
+import { getArtifactKey } from './repositories/converters';
 import { entities, relationships, Steps } from '../constants';
 
 export function getBuildKey(name: string): string {
