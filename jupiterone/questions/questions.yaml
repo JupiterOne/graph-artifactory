@@ -1,0 +1,78 @@
+---
+sourceId: managed:artifactory
+integrationDefinitionId: '${integration_definition_id}'
+questions:
+  - id: managed-question-appdev-artifactory-permission-allow
+    title:
+      Which Artifactory permissions allow Artifactory builds, repositories, or
+      repository groups?
+    description:
+      Returns permissions that allow builds, repositories, and repository
+      groups.
+    queries:
+      query: |
+        FIND artifactory_permission
+          THAT ALLOWS (artifactory_build|artifactory_repository|artifactory_repository_group) AS allowed
+          RETURN
+            artifactory_permission.displayName, 
+            allowed.displayName, allowed._type
+    tags:
+      - artifactory
+      - dev
+      - devops
+
+  - id: managed-question-appdev-artifactory-anonymous-user-no-disableUIAccess
+    title: Which Artifactory anonymous user has UI Access?
+    description: Returns Artifactory anonymous user that has no disableUIAccess.
+    queries:
+      - name: Anonymous Artifactory user with no disableUIAccess
+        resultsAre: BAD
+        query: |
+          FIND artifactory_user WITH username = 'anonymous' AND disableUIAccess != true
+    tags:
+      - artifactory
+      - dev
+      - devops
+
+  - id: managed-question-appdev-artifactory-repo-packageType-deprecated
+    title: Which Artifactory repository package type is unsupported?
+    description:
+      Returns an Artifactory repository package type that is not supported.
+    queries:
+      - name: Invalid Artifactory repository package type.
+        resultsAre: BAD
+        query: |
+          FIND artifactory_repository WITH packageType !~= (
+                     "Alpine" OR 
+                     "Bower" OR 
+                     "Cargo" OR
+                     "Chef" OR 
+                     "CocoaPods" OR
+                     "Conan" OR 
+                     "Conda" OR 
+                     "CRAN" OR
+                     "Debian" OR 
+                     "Docker" OR
+                     "Git LFS" OR
+                     "Go Registry" OR
+                     "Gradle" OR 
+                     "Helm" OR 
+                     "Maven" OR 
+                     "Npm" OR 
+                     "NuGet" OR 
+                     "Opkg" OR 
+                     "P2" OR 
+                     "PHP Composer" OR
+                     "Pub Repositories" OR 
+                     "Puppet" OR 
+                     "PyPl" OR 
+                     "RPM" OR 
+                     "RubyGems" OR 
+                     "SBT" OR 
+                     "Terraform" OR 
+                     "Vagrant" OR
+                     "VCS")
+    tags:
+      - artifactory
+      - dev
+      - devops
