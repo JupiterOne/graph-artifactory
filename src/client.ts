@@ -51,7 +51,10 @@ export class APIClient {
   private readonly clientAdminName: string;
   private readonly clientPipelineAccessToken?: string;
 
-  constructor(logger: IntegrationLogger, readonly config: IntegrationConfig) {
+  constructor(
+    logger: IntegrationLogger,
+    readonly config: IntegrationConfig,
+  ) {
     this.logger = logger;
     this.clientNamespace = config.clientNamespace;
     this.clientAccessToken = config.clientAccessToken;
@@ -421,7 +424,8 @@ export class APIClient {
       }),
     );
 
-    const jsonResponse: ArtifactoryBuildArtifactsResponse = await response.json();
+    const jsonResponse: ArtifactoryBuildArtifactsResponse =
+      await response.json();
 
     if (jsonResponse.errors) {
       return [];
