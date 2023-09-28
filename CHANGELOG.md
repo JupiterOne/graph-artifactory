@@ -8,6 +8,17 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 2.0.0 - 2023-03-28
+
+### Changed
+
+- Update SDK dependencies
+- Update workflows
+
+### Added
+
+- Added workflow to Dockerize the integration
+
 ## 1.3.1 - 2023-03-27
 
 ### Changed

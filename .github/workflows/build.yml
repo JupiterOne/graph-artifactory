@@ -1,24 +1,22 @@
 name: Build
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [14.x]
-        os: [ubuntu-latest]
-
+    runs-on: ubuntu-latest
     steps:
       - id: setup-node
         name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x
 
       - name: Check out code repository source code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install dependencies
         run: yarn
@@ -35,19 +33,14 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [14]
-
     steps:
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 18.x
 
       - name: Check out repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 2
 
@@ -60,6 +53,7 @@ jobs:
           then
             echo "Found version commit tag. Publishing."
             echo "publish=true" >> $GITHUB_ENV
+            echo "VERSION_NUM=`echo $(git describe --tags --abbrev=0 | sed -e "s/v//gI")`" >> $GITHUB_ENV
           else
             echo "Version commit tag not found. Not publishing."
           fi
@@ -71,4 +65,5 @@ jobs:
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
           yarn
-          npm publish
+          yarn build
+          npm publish ./dist

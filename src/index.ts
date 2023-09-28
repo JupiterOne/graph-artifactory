@@ -8,9 +8,10 @@ import {
 import { integrationSteps } from './steps';
 import { IntegrationConfig } from './types';
 
-export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> = {
-  instanceConfigFields,
-  validateInvocation,
-  getStepStartStates,
-  integrationSteps,
-};
+export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> =
+  {
+    instanceConfigFields,
+    validateInvocation,
+    getStepStartStates,
+    integrationSteps,
+  };

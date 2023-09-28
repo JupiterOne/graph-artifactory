@@ -1,12 +1,13 @@
 {
   "name": "@jupiterone/graph-artifactory",
-  "version": "1.3.1",
+  "version": "2.0.0",
   "description": "A graph conversion tool for https://jfrog.com/artifactory",
   "license": "MPL-2.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
   "files": [
-    "dist"
+    "src",
+    "jupiterone"
   ],
   "publishConfig": {
     "access": "public"
@@ -22,23 +23,24 @@
     "test": "jest",
     "test:env": "LOAD_ENV=1 yarn test",
     "test:ci": "yarn lint && yarn type-check && yarn test",
-    "build": "tsc -p tsconfig.dist.json --declaration",
+    "build": "tsc -p tsconfig.dist.json --declaration && cp README.md dist/README.md && cp -r jupiterone/ dist/jupiterone/",
     "prepush": "yarn lint && yarn type-check && jest --changedSince main",
     "prepack": "yarn build"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^8.30.4"
+    "@jupiterone/integration-sdk-core": "^10.7.0"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^8.30.4",
-    "@jupiterone/integration-sdk-dev-tools": "^8.30.4",
-    "@jupiterone/integration-sdk-testing": "^8.30.4",
+    "@jupiterone/integration-sdk-core": "^10.7.0",
+    "@jupiterone/integration-sdk-dev-tools": "^10.7.0",
+    "@jupiterone/integration-sdk-testing": "^10.7.0",
+    "@types/node": "^18.0.0",
     "@types/node-fetch": "^2.5.7",
     "fetch-mock-jest": "^1.5.1"
   },
   "dependencies": {
     "@lifeomic/attempt": "^3.0.3",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "node-match-path": "^0.4.4",
     "type-fest": "^0.16.0"
   }

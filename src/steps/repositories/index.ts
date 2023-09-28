@@ -162,7 +162,7 @@ export async function fetchArtifacts({
               to: artifactEntity,
             });
 
-            if (!(await jobState.hasKey(repoArtifactRelationship._key))) {
+            if (!jobState.hasKey(repoArtifactRelationship._key)) {
               await jobState.addRelationship(repoArtifactRelationship);
             }
           },
