@@ -27,19 +27,19 @@
     "prepack": "yarn build"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^10.3.0"
+    "@jupiterone/integration-sdk-core": "^10.7.0"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^10.3.0",
-    "@jupiterone/integration-sdk-dev-tools": "^10.3.0",
-    "@jupiterone/integration-sdk-testing": "^10.3.0",
+    "@jupiterone/integration-sdk-core": "^10.7.0",
+    "@jupiterone/integration-sdk-dev-tools": "^10.7.0",
+    "@jupiterone/integration-sdk-testing": "^10.7.0",
     "@types/node-fetch": "^2.5.7",
     "fetch-mock-jest": "^1.5.1",
     "@types/node": "^18.0.0"
   },
   "dependencies": {
     "@lifeomic/attempt": "^3.0.3",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "node-match-path": "^0.4.4",
     "type-fest": "^0.16.0"
   }
