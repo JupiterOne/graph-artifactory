@@ -113,9 +113,9 @@ The following relationships are created:
 | `artifactory_build`        | **CREATED**           | `artifactory_artifact_codemodule` |
 | `artifactory_group`        | **HAS**               | `artifactory_user`                |
 | `artifactory_permission`   | **ALLOWS**            | `artifactory_build`               |
+| `artifactory_permission`   | **ASSIGNED**          | `artifactory_group`               |
 | `artifactory_permission`   | **ALLOWS**            | `artifactory_repository`          |
 | `artifactory_permission`   | **ALLOWS**            | `artifactory_repository_group`    |
-| `artifactory_permission`   | **ASSIGNED**          | `artifactory_group`               |
 | `artifactory_permission`   | **ASSIGNED**          | `artifactory_user`                |
 | `artifactory_repository`   | **HAS**               | `artifactory_artifact_codemodule` |
 

@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 2.0.1 - 2023-10-12
+
+### Fixed
+
+- Updated tsconfig to fix build issues
+
 ## 2.0.0 - 2023-03-28
 
 ### Changed
