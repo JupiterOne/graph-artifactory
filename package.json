@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/graph-artifactory",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A graph conversion tool for https://jfrog.com/artifactory",
   "license": "MPL-2.0",
   "main": "src/index.js",
@@ -28,12 +28,12 @@
     "prepack": "yarn build"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^10.7.0"
+    "@jupiterone/integration-sdk-core": "^11.0.3"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^10.7.0",
-    "@jupiterone/integration-sdk-dev-tools": "^10.7.0",
-    "@jupiterone/integration-sdk-testing": "^10.7.0",
+    "@jupiterone/integration-sdk-core": "^11.0.3",
+    "@jupiterone/integration-sdk-dev-tools": "^11.0.3",
+    "@jupiterone/integration-sdk-testing": "^11.0.3",
     "@types/node": "^18.0.0",
     "@types/node-fetch": "^2.5.7",
     "fetch-mock-jest": "^1.5.1"
