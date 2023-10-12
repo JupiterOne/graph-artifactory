@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 2.0.2. - 2023-10-12
+
+### Changed
+
+- Remove prepack command
+
 ## 2.0.1 - 2023-10-12
 
 ### Fixed
