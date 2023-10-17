@@ -2,6 +2,10 @@
   "name": "@jupiterone/graph-artifactory",
   "version": "2.0.2",
   "description": "A graph conversion tool for https://jfrog.com/artifactory",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JupiterOne/graph-artifactory"
+  },
   "license": "MPL-2.0",
   "main": "src/index.js",
   "types": "src/index.d.ts",

@@ -1,0 +1,12 @@
+openapi: 3.0.1
+info:
+  title: '@jupiterone/graph-artifactory'
+  description: A graph conversion tool for https://jfrog.com/artifactory
+  x-cortex-git:
+    github:
+      repository: JupiterOne/graph-artifactory
+  x-cortex-owners:
+    - type: group
+      name: JupiterOne/integrations
+  x-cortex-service-groups: tier-4
+  x-cortex-tag: '@jupiterone/graph-artifactory'
