@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 2.0.3. - 2023-12-27
+
+### Changed
+
+- change duplicate log to debug level
+
 ## 2.0.2. - 2023-10-12
 
 ### Changed
