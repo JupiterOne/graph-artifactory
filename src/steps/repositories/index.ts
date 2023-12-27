@@ -153,7 +153,7 @@ export async function fetchArtifacts({
                 artifactEntity,
                 duplicatedArtifact,
               );
-              logger.error(duplicateEntityReport, 'Duplicate entity report.');
+              logger.debug(duplicateEntityReport, 'Duplicate entity report.');
             }
 
             const repoArtifactRelationship = createDirectRelationship({
