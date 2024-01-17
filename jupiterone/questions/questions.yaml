@@ -77,7 +77,7 @@ questions:
       - dev
       - devops
 
-  - id: managed-question-appdev-artifactory-anonymous-user-no-disableUIAccess
+  - id: managed-question-appdev-artifactory-internal-user-no-MFA
     title: Which Artifactory internal users do not have MFA enabled?
     description: Returns Artifactory internal users that do not have MFA enabled.
     queries:
