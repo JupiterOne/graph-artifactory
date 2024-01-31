@@ -20,7 +20,7 @@ export function buildStepTestConfig(stepId: string): StepTestConfig {
 }
 
 export const integrationConfig: IntegrationConfig = {
-  clientNamespace: process.env.CLIENT_NAMESPACE || 'blo',
+  baseUrl: process.env.baseUrl || 'blo.jfrog.io',
   clientAccessToken: process.env.CLIENT_ACCESS_TOKEN || 'blo',
   enablePipelineIngestion: true,
   clientPipelineAccessToken:

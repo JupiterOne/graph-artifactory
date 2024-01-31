@@ -31,12 +31,12 @@
     "prepush": "yarn lint && yarn type-check && jest --changedSince main"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^11.0.3"
+    "@jupiterone/integration-sdk-core": "^11.8.0"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^11.0.3",
-    "@jupiterone/integration-sdk-dev-tools": "^11.0.3",
-    "@jupiterone/integration-sdk-testing": "^11.0.3",
+    "@jupiterone/integration-sdk-core": "^11.8.0",
+    "@jupiterone/integration-sdk-dev-tools": "^11.8.0",
+    "@jupiterone/integration-sdk-testing": "^11.8.0",
     "@types/node": "^18.0.0",
     "@types/node-fetch": "^2.5.7",
     "fetch-mock-jest": "^1.5.1"

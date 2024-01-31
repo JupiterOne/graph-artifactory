@@ -19,7 +19,7 @@ function getIntegrationLogger(): IntegrationLogger {
 
 describe('iterateRepositoryArtifacts', () => {
   let client: APIClient;
-  const baseUrl = `https://${integrationConfig.clientNamespace}.jfrog.io`;
+  const baseUrl = `https://${integrationConfig.baseUrl}`;
 
   beforeAll(() => {
     client = new APIClient(getIntegrationLogger(), integrationConfig);
