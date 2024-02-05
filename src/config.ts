@@ -54,6 +54,13 @@ export async function validateInvocation(
     );
   }
 
+  if (
+    !config.baseUrl.startsWith('http://') &&
+    !config.baseUrl.startsWith('https://')
+  ) {
+    config.baseUrl = `https://${config.baseUrl}`;
+  }
+
   const apiClient = createAPIClient(context.logger, config);
   await apiClient.verifyAuthentication();
 

@@ -1,5 +1,4 @@
 import fetch, { Response } from 'node-fetch';
-import path from 'path';
 import {
   IntegrationProviderAuthenticationError,
   IntegrationValidationError,
@@ -64,7 +63,9 @@ export class APIClient {
   }
 
   private withBaseUri(p: string): string {
-    return `https://${path.join(this.baseUrl, p)}`;
+    const url = new URL(p, this.baseUrl);
+    console.log(url.toString());
+    return url.toString();
   }
 
   private async request(
