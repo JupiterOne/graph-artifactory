@@ -64,7 +64,6 @@ export class APIClient {
 
   private withBaseUri(p: string): string {
     const url = new URL(p, this.baseUrl);
-    console.log(url.toString());
     return url.toString();
   }
 
