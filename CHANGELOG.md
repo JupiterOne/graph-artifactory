@@ -8,6 +8,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 3.0.0 - 2024-02-06
+
+### Added
+
+- Added `baseUrl` config option.
+
+### Removed
+
+- Removed `clientNamespace` config option.
+
 ## 2.0.3. - 2023-12-27
 
 ### Changed
