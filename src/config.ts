@@ -24,9 +24,6 @@ import { IntegrationConfig } from './types';
  * `instance.config` in a UI.
  */
 export const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
-  clientNamespace: {
-    type: 'string',
-  },
   clientAccessToken: {
     type: 'string',
     mask: true,
@@ -41,6 +38,9 @@ export const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
   clientAdminName: {
     type: 'string',
   },
+  baseUrl: {
+    type: 'string',
+  },
 };
 
 export async function validateInvocation(
@@ -48,14 +48,17 @@ export async function validateInvocation(
 ) {
   const { config } = context.instance;
 
-  if (
-    !config.clientNamespace ||
-    !config.clientAccessToken ||
-    !config.clientAdminName
-  ) {
+  if (!config.baseUrl || !config.clientAccessToken || !config.clientAdminName) {
     throw new IntegrationValidationError(
-      'Config requires all of {clientNamespace, clientAccessToken, clientAdminName}',
+      'Config requires all of {baseUrl, clientAccessToken, clientAdminName}',
     );
+  }
+
+  if (
+    !config.baseUrl.startsWith('http://') &&
+    !config.baseUrl.startsWith('https://')
+  ) {
+    config.baseUrl = `https://${config.baseUrl}`;
   }
 
   const apiClient = createAPIClient(context.logger, config);

@@ -7,9 +7,9 @@ import { IntegrationInstanceConfig } from '@jupiterone/integration-sdk-core';
  */
 export interface IntegrationConfig extends IntegrationInstanceConfig {
   /**
-   * The provider API client namespace used to authenticate requests.
+   * The provider API baseUrl.
    */
-  clientNamespace: string;
+  baseUrl: string;
 
   /**
    * The provider API client access token used to authenticate requests.

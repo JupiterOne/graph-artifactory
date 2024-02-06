@@ -46,24 +46,25 @@ const ARTIFACTS_PAGE_LIMIT = 1000;
  */
 export class APIClient {
   private readonly logger: IntegrationLogger;
-  private readonly clientNamespace: string;
   private readonly clientAccessToken: string;
   private readonly clientAdminName: string;
   private readonly clientPipelineAccessToken?: string;
+  private readonly baseUrl: string;
 
   constructor(
     logger: IntegrationLogger,
     readonly config: IntegrationConfig,
   ) {
     this.logger = logger;
-    this.clientNamespace = config.clientNamespace;
+    this.baseUrl = config.baseUrl;
     this.clientAccessToken = config.clientAccessToken;
     this.clientAdminName = config.clientAdminName;
     this.clientPipelineAccessToken = config.clientPipelineAccessToken;
   }
 
-  private withBaseUri(path: string): string {
-    return `https://${this.clientNamespace}.jfrog.io/${path}`;
+  private withBaseUri(p: string): string {
+    const url = new URL(p, this.baseUrl);
+    return url.toString();
   }
 
   private async request(
