@@ -2,7 +2,7 @@ name: Build and Package
 
 on:
   push:
-    tags: ['*']
+    tags: '*'
 
 env:
   REGISTRY: ghcr.io
@@ -54,7 +54,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          file: ./Dockerfile-Alternate
 
       # Sign the Docker image (Using OIDC Token for "keyless signing")
       # https://github.com/sigstore/cosign-installer
