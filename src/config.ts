@@ -34,6 +34,7 @@ export const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
   clientPipelineAccessToken: {
     type: 'string',
     mask: true,
+    optional: true
   },
   clientAdminName: {
     type: 'string',
