@@ -1,27 +1,21 @@
 import {
   createIntegrationEntity,
+  Entity,
+  IntegrationInstance,
   IntegrationStep,
   IntegrationStepExecutionContext,
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
 import { ACCOUNT_ENTITY_DATA_KEY, entities, Steps } from '../constants';
-import { ArtifactoryUsername, IntegrationConfig } from '../types';
+import { ArtifactoryUser, IntegrationConfig } from '../types';
 
-export function getAccountKey(name: ArtifactoryUsername): string {
+export function getAccountKey(name: string): string {
   return `artifactory_account:${name}`;
 }
 
-export async function fetchAccountDetails({
-  instance,
-  jobState,
-  logger,
-}: IntegrationStepExecutionContext<IntegrationConfig>) {
-  const apiClient = createAPIClient(logger, instance.config);
-
-  const account = await apiClient.getAccount();
-
-  const accountEntity = createIntegrationEntity({
+function createAccountEntity(account: ArtifactoryUser) {
+  return createIntegrationEntity({
     entityData: {
       source: account,
       assign: {
@@ -29,8 +23,8 @@ export async function fetchAccountDetails({
         _type: entities.ACCOUNT._type,
         _class: entities.ACCOUNT._class,
         webLink: account.uri,
-        displayName: instance.name,
-        name: instance.name,
+        displayName: account.name,
+        name: account.name,
         username: account.name,
         email: account.email,
         policyManager: account.policyManager,
@@ -44,6 +38,50 @@ export async function fetchAccountDetails({
       },
     },
   });
+}
+
+function createBasicAccountEntity(instance: IntegrationInstance) {
+  return createIntegrationEntity({
+    entityData: {
+      source: {},
+      assign: {
+        _key: getAccountKey(instance.id),
+        _type: entities.ACCOUNT._type,
+        _class: entities.ACCOUNT._class,
+        name: instance.name,
+        displayName: instance.name,
+        description: instance.description,
+      },
+    },
+  });
+}
+
+export async function fetchAccountDetails({
+  instance,
+  jobState,
+  logger,
+}: IntegrationStepExecutionContext<IntegrationConfig>) {
+  const apiClient = createAPIClient(logger, instance.config);
+
+  let accountEntity: Entity;
+  if (!instance.config.clientAdminName) {
+    // When the client admin name is not provided, we create a basic account entity
+    accountEntity = createBasicAccountEntity(instance);
+  } else {
+    try {
+      const account = await apiClient.getAccount();
+      accountEntity = createAccountEntity(account);
+    } catch (err) {
+      if (err.status === 403) {
+        logger.warn(
+          'Account details not available due to insufficient permissions, creating basic account entity.',
+        );
+        accountEntity = createBasicAccountEntity(instance);
+      } else {
+        throw err;
+      }
+    }
+  }
 
   await Promise.all([
     jobState.addEntity(accountEntity),

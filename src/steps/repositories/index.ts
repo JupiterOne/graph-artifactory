@@ -11,6 +11,7 @@ import { createAPIClient } from '../../client';
 import {
   ACCOUNT_ENTITY_DATA_KEY,
   entities,
+  IngestionSources,
   relationships,
   Steps,
 } from '../../constants';
@@ -179,6 +180,7 @@ export const repositoriesSteps: IntegrationStep<IntegrationConfig>[] = [
     entities: [entities.REPOSITORY],
     relationships: [relationships.ACCOUNT_HAS_REPOSITORY],
     dependsOn: [Steps.ACCOUNT],
+    ingestionSourceId: IngestionSources.REPOSITORIES,
     executionHandler: fetchRepositories,
   },
   {
@@ -187,6 +189,7 @@ export const repositoriesSteps: IntegrationStep<IntegrationConfig>[] = [
     entities: [entities.REPOSITORY_GROUP],
     relationships: [relationships.ACCOUNT_HAS_REPOSITORY_GROUP],
     dependsOn: [Steps.ACCOUNT],
+    ingestionSourceId: IngestionSources.REPOSITORY_GROUPS,
     executionHandler: generateRepositoryGroups,
   },
   {
@@ -195,6 +198,7 @@ export const repositoriesSteps: IntegrationStep<IntegrationConfig>[] = [
     entities: [entities.ARTIFACT_CODEMODULE],
     relationships: [relationships.REPOSITORY_HAS_ARTIFACT_CODEMODULE],
     dependsOn: [Steps.REPOSITORIES],
+    ingestionSourceId: IngestionSources.ARTIFACTS,
     executionHandler: fetchArtifacts,
   },
 ];

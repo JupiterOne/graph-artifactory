@@ -1,4 +1,3 @@
-import fetch, { Response } from 'node-fetch';
 import {
   IntegrationProviderAuthenticationError,
   IntegrationValidationError,
@@ -27,8 +26,8 @@ import {
   IntegrationConfig,
   ResourceIteratee,
 } from './types';
-import * as attempt from '@lifeomic/attempt';
-import { joinUrlPath } from './utils';
+import { BaseAPIClient } from '@jupiterone/integration-sdk-http-client';
+import fetch from 'node-fetch';
 
 const MAX_ATTEMPTS = 3;
 const RETRY_DELAY = 3_000; // 3 seconds to start
@@ -44,89 +43,35 @@ const ARTIFACTS_PAGE_LIMIT = 1000;
  * place to handle error responses and implement common patterns for iterating
  * resources.
  */
-export class APIClient {
-  private readonly logger: IntegrationLogger;
+export class APIClient extends BaseAPIClient {
   private readonly clientAccessToken: string;
   private readonly clientAdminName: string;
   private readonly clientPipelineAccessToken?: string;
-  private readonly baseUrl: string;
 
   constructor(
     logger: IntegrationLogger,
     readonly config: IntegrationConfig,
   ) {
-    this.logger = logger;
-    this.baseUrl = config.baseUrl;
-    this.clientAccessToken = config.clientAccessToken;
-    this.clientAdminName = config.clientAdminName;
-    this.clientPipelineAccessToken = config.clientPipelineAccessToken;
-  }
-
-  private withBaseUri(p: string): string {
-    const url = new URL(p, this.baseUrl);
-    return url.toString();
-  }
-
-  private async request(
-    uri: string,
-    method: 'GET' | 'HEAD' | 'POST' = 'GET',
-    body?,
-    headers = {},
-  ): Promise<Response> {
-    return fetch(uri, {
-      method,
-      headers: {
-        Authorization: `Bearer ${this.clientAccessToken}`,
-        'Content-Type': 'application/json',
-        ...headers,
-      },
-      body,
-    });
-  }
-
-  private async requestWithRetry<T>(request: () => Promise<Response>) {
-    return attempt.retry<T>(
-      async () => {
-        const response = await request();
-
-        if (response.status >= 400) {
-          try {
-            const errorBody = await response.json();
-            const message = errorBody.message;
-            this.logger.info(
-              { errMessage: message },
-              'Encountered error from API',
-            );
-          } catch (e) {
-            // pass
-          }
-          throw new IntegrationProviderAPIError({
-            code: 'TenableClientApiError',
-            status: response.status,
-            endpoint: response.url,
-            statusText: response.statusText,
-          });
-        } else {
-          return response.json();
-        }
-      },
-      {
+    super({
+      baseUrl: config.baseUrl,
+      logger,
+      retryOptions: {
         maxAttempts: MAX_ATTEMPTS,
         delay: RETRY_DELAY,
         timeout: TIMEOUT,
         factor: RETRY_FACTOR,
-        handleError: (err, context) => {
+        handleError: (err, context, logger) => {
           if (
             err instanceof IntegrationProviderAPIError &&
             ![408, 429, 500, 502, 503, 504].includes(err.status as number)
           ) {
-            this.logger.info(
+            logger.info(
               { context, err },
               `Hit an unrecoverable error when attempting fetch. Aborting.`,
             );
             context.abort();
           } else {
-            this.logger.info(
+            logger.info(
               {
                 err,
                 attemptNum: context.attemptNum,
@@ -137,16 +82,27 @@ export class APIClient {
           }
         },
       },
-    );
+    });
+
+    this.clientAccessToken = config.clientAccessToken;
+    this.clientAdminName = config.clientAdminName;
+    this.clientPipelineAccessToken = config.clientPipelineAccessToken;
+  }
+
+  protected getAuthorizationHeaders(): Record<string, string> {
+    return {
+      Authorization: `Bearer ${this.clientAccessToken}`,
+    };
   }
 
   public async verifyAuthentication(): Promise<void> {
-    const endpoint = this.withBaseUri(
-      `artifactory/api/security/users/${this.clientAdminName}`,
-    );
-    let response: Response;
+    const endpoint = this.withBaseUrl(`artifactory/api/system/ping`);
+    let response: Awaited<ReturnType<typeof this.request>> | undefined;
     try {
-      response = await this.request(endpoint, 'GET');
+      response = await fetch(endpoint, {
+        headers: this.getAuthorizationHeaders(),
+        redirect: 'error',
+      });
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
@@ -156,11 +112,7 @@ export class APIClient {
       });
     }
 
-    if (response?.status == 404) {
-      throw new IntegrationValidationError(
-        "Recieved 404: Verify the 'Client Administrator Name' provided in the Config is a valid user.",
-      );
-    } else if (response?.status !== 200) {
+    if (response.status !== 200) {
       throw new IntegrationProviderAuthenticationError({
         endpoint,
         status: response.status,
@@ -170,12 +122,14 @@ export class APIClient {
   }
 
   public async verifyPipelineAuthentication(): Promise<void> {
-    const endpoint = this.withBaseUri(
+    const endpoint = this.withBaseUrl(
       'pipelines/api/v1/pipelinesources?limit=1',
     );
     try {
-      const response = await this.request(endpoint, 'GET', null, {
-        Authorization: `Bearer ${this.clientPipelineAccessToken}`,
+      const response = await this.request(endpoint, {
+        headers: {
+          Authorization: `Bearer ${this.clientPipelineAccessToken}`,
+        },
       });
 
       if (response.status !== 200) {
@@ -199,8 +153,8 @@ export class APIClient {
    * Returns the account (name = admin) which is auto-generated once cloud-based account is made.
    */
   public async getAccount(): Promise<ArtifactoryUser> {
-    const response = await this.request(
-      this.withBaseUri('artifactory/api/security/users'),
+    const response = await this.retryableRequest(
+      'artifactory/api/security/users',
     );
 
     const users: ArtifactoryUser[] = await response.json();
@@ -208,7 +162,7 @@ export class APIClient {
     const adminUser = users.find((user) => user.name === this.clientAdminName);
 
     if (adminUser) {
-      const resp = await this.request(adminUser.uri);
+      const resp = await this.retryableRequest(adminUser.uri);
       const accountData: ArtifactoryUser = await resp.json();
 
       return accountData;
@@ -227,14 +181,14 @@ export class APIClient {
   public async iterateUsers(
     iteratee: ResourceIteratee<ArtifactoryUser>,
   ): Promise<void> {
-    const response = await this.request(
-      this.withBaseUri('artifactory/api/security/users'),
+    const response = await this.retryableRequest(
+      'artifactory/api/security/users',
     );
 
     const userRefs: ArtifactoryUserRef[] = await response.json();
 
     for (const user of userRefs) {
-      const resp = await this.request(user.uri);
+      const resp = await this.retryableRequest(user.uri);
       await iteratee(await resp.json());
     }
   }
@@ -247,13 +201,13 @@ export class APIClient {
   public async iterateGroups(
     iteratee: ResourceIteratee<ArtifactoryGroup>,
   ): Promise<void> {
-    const response = await this.request(
-      this.withBaseUri('artifactory/api/security/groups'),
+    const response = await this.retryableRequest(
+      'artifactory/api/security/groups',
     );
     const groupRefs: ArtifactoryGroupRef[] = await response.json();
 
     for (const group of groupRefs) {
-      const resp = await this.request(group.uri);
+      const resp = await this.retryableRequest(group.uri);
       await iteratee(await resp.json());
     }
   }
@@ -266,8 +220,8 @@ export class APIClient {
   public async iterateRepositories(
     iteratee: ResourceIteratee<ArtifactoryRepository>,
   ): Promise<void> {
-    const response = await this.request(
-      this.withBaseUri('artifactory/api/repositories'),
+    const response = await this.retryableRequest(
+      'artifactory/api/repositories',
     );
 
     const repositories: ArtifactoryRepository[] = await response.json();
@@ -285,14 +239,14 @@ export class APIClient {
   public async iteratePermissions(
     iteratee: ResourceIteratee<ArtifactoryPermission>,
   ): Promise<void> {
-    const response = await this.request(
-      this.withBaseUri('artifactory/api/v2/security/permissions'),
+    const response = await this.retryableRequest(
+      'artifactory/api/v2/security/permissions',
     );
 
     const permissionRefs: ArtifactoryPermissionRef[] = await response.json();
 
     for (const permission of permissionRefs) {
-      const resp = await this.request(permission.uri);
+      const resp = await this.retryableRequest(permission.uri);
 
       await iteratee(await resp.json());
     }
@@ -306,8 +260,8 @@ export class APIClient {
   public async iterateAccessTokens(
     iteratee: ResourceIteratee<ArtifactoryAccessToken>,
   ): Promise<void> {
-    const response = await this.request(
-      this.withBaseUri('artifactory/api/security/token'),
+    const response = await this.retryableRequest(
+      'artifactory/api/security/token',
     );
 
     const accessTokens: ArtifactoryAccessTokenResponse = await response.json();
@@ -327,28 +281,24 @@ export class APIClient {
     iteratee: ResourceIteratee<ArtifactEntity>,
   ): Promise<void> {
     let offset = 0;
-    const url = this.withBaseUri('artifactory/api/search/aql');
+    const url = 'artifactory/api/search/aql';
     const getQuery = (repoKey: string, offset: number) => {
       return `items.find({"repo":"${repoKey}"}).offset(${offset}).limit(${ARTIFACTS_PAGE_LIMIT})`;
     };
 
     let artifacts: ArtifactoryArtifactRef[] = [];
     do {
-      const response = await this.requestWithRetry<ArtifactoryArtifactResponse>(
-        () =>
-          this.request(url, 'POST', getQuery(key, offset), {
-            'Content-Type': 'text/plain',
-          }),
-      );
-      artifacts = response.results || [];
+      const response = await this.retryableRequest(url, {
+        method: 'POST',
+        body: getQuery(key, offset),
+        bodyType: 'text',
+        headers: { 'Content-Type': 'text/plain' },
+      });
+      const data = (await response.json()) as ArtifactoryArtifactResponse;
+      artifacts = data.results || [];
       for (const artifact of artifacts) {
-        const uri = this.withBaseUri(
-          joinUrlPath(
-            'artifactory',
-            artifact.repo,
-            artifact.path,
-            artifact.name,
-          ),
+        const uri = this.withBaseUrl(
+          `artifactory/${artifact.repo}/${artifact.path}/${artifact.name}`,
         );
         await iteratee({
           ...artifact,
@@ -367,9 +317,7 @@ export class APIClient {
   public async iterateBuilds(
     iteratee: ResourceIteratee<ArtifactoryBuild>,
   ): Promise<void> {
-    const response = await this.request(
-      this.withBaseUri('artifactory/api/build'),
-    );
+    const response = await this.retryableRequest('artifactory/api/build');
 
     const jsonResponse: ArtifactoryBuildResponse = await response.json();
 
@@ -388,7 +336,7 @@ export class APIClient {
         }
 
         const repository = artifacts[0]
-          .split(this.withBaseUri('artifactory'))[1]
+          .split(this.withBaseUrl('artifactory'))[1]
           .split('/')[1];
 
         await iteratee({
@@ -396,15 +344,15 @@ export class APIClient {
           number,
           repository,
           artifacts,
-          uri: this.withBaseUri(`ui/builds${build.uri}`),
+          uri: this.withBaseUrl(`ui/builds${build.uri}`),
         });
       }
     }
   }
 
   private async getBuildList(buildRef: ArtifactoryBuildRef): Promise<string[]> {
-    const response = await this.request(
-      this.withBaseUri(`artifactory/api/build${buildRef.uri}`),
+    const response = await this.retryableRequest(
+      `artifactory/api/build${buildRef.uri}`,
     );
 
     const jsonResponse: ArtifactoryBuildDetailsResponse = await response.json();
@@ -416,13 +364,15 @@ export class APIClient {
     name: string,
     number: string,
   ): Promise<string[]> {
-    const response = await this.request(
-      this.withBaseUri('artifactory/api/search/buildArtifacts'),
-      'POST',
-      JSON.stringify({
-        buildName: name,
-        buildNumber: number,
-      }),
+    const response = await this.retryableRequest(
+      'artifactory/api/search/buildArtifacts',
+      {
+        method: 'POST',
+        body: {
+          buildName: name,
+          buildNumber: number,
+        },
+      },
     );
 
     const jsonResponse: ArtifactoryBuildArtifactsResponse =
@@ -443,12 +393,12 @@ export class APIClient {
   public async iteratePipelineSources(
     iteratee: ResourceIteratee<ArtifactoryPipelineSource>,
   ): Promise<void> {
-    const response = await this.request(
-      this.withBaseUri('pipelines/api/v1/pipelinesources'),
-      'GET',
-      null,
+    const response = await this.retryableRequest(
+      'pipelines/api/v1/pipelinesources',
       {
-        Authorization: `Bearer ${this.clientPipelineAccessToken}`,
+        headers: {
+          Authorization: `Bearer ${this.clientPipelineAccessToken}`,
+        },
       },
     );
 
@@ -460,9 +410,14 @@ export class APIClient {
   }
 }
 
+let client: APIClient | undefined;
+
 export function createAPIClient(
   logger: IntegrationLogger,
   config: IntegrationConfig,
 ): APIClient {
-  return new APIClient(logger, config);
+  if (!client) {
+    client = new APIClient(logger, config);
+  }
+  return client;
 }

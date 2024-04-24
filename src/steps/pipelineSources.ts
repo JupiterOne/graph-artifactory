@@ -11,6 +11,7 @@ import { createAPIClient } from '../client';
 import {
   ACCOUNT_ENTITY_DATA_KEY,
   entities,
+  IngestionSources,
   relationships,
   Steps,
 } from '../constants';
@@ -67,6 +68,7 @@ export const pipelineSourcesSteps: IntegrationStep<IntegrationConfig>[] = [
     entities: [entities.PIPELINE_SOURCE],
     relationships: [relationships.ACCOUNT_HAS_PIPELINE_SOURCE],
     dependsOn: [Steps.ACCOUNT],
+    ingestionSourceId: IngestionSources.PIPELINE_SOURCES,
     executionHandler: fetchPipelineSources,
   },
 ];

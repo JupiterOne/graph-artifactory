@@ -12,7 +12,7 @@ import { match } from 'node-match-path';
 import { createAPIClient } from '../client';
 import { IntegrationConfig, ArtifactoryPermission } from '../types';
 import { getUserKey, getGroupKey } from './access';
-import { entities, relationships, Steps } from '../constants';
+import { entities, IngestionSources, relationships, Steps } from '../constants';
 import { getRepositoryGroupKey } from './repositories';
 
 /** Relationships cannot have array or object properties, so permissions are stored as primitives.
@@ -266,6 +266,7 @@ export const permissionsSteps: IntegrationStep<IntegrationConfig>[] = [
       Steps.REPOSITORIES,
       Steps.BUILDS,
     ],
+    ingestionSourceId: IngestionSources.PERMISSIONS,
     executionHandler: fetchPermissions,
   },
 ];

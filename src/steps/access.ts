@@ -8,7 +8,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
-import { Steps } from '../constants';
+import { IngestionSources, Steps } from '../constants';
 import { ACCOUNT_ENTITY_DATA_KEY, entities, relationships } from '../constants';
 import { IntegrationConfig } from '../types';
 
@@ -195,6 +195,7 @@ export const accessSteps: IntegrationStep<IntegrationConfig>[] = [
     entities: [entities.GROUP],
     relationships: [relationships.ACCOUNT_HAS_GROUP],
     dependsOn: [Steps.ACCOUNT],
+    ingestionSourceId: IngestionSources.GROUPS,
     executionHandler: fetchGroups,
   },
   {
@@ -206,6 +207,7 @@ export const accessSteps: IntegrationStep<IntegrationConfig>[] = [
       relationships.ACCESS_TOKEN_ASSIGNED_USER,
     ],
     dependsOn: [Steps.ACCOUNT, Steps.USERS],
+    ingestionSourceId: IngestionSources.ACCESS_TOKENS,
     executionHandler: fetchAccessTokens,
   },
   {
@@ -217,6 +219,7 @@ export const accessSteps: IntegrationStep<IntegrationConfig>[] = [
       relationships.GROUP_HAS_USER,
     ],
     dependsOn: [Steps.ACCOUNT, Steps.GROUPS],
+    ingestionSourceId: IngestionSources.USERS,
     executionHandler: fetchUsers,
   },
 ];

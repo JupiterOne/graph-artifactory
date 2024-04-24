@@ -58,30 +58,4 @@ describe('JFrog Arrifactory', () => {
       IntegrationProviderAuthenticationError,
     );
   });
-
-  test('invalid client admin name - 404', async () => {
-    recording = setupArtifactoryRecording({
-      directory: __dirname,
-      name: 'invalidClientAdminName404',
-      options: {
-        matchRequestsBy: {
-          url: {
-            hostname: false,
-          },
-        },
-        recordFailedRequests: true,
-      },
-    });
-
-    const executionContext = createMockExecutionContext({
-      instanceConfig: {
-        ...integrationConfig,
-        clientAdminName: 'wrongname@wrong.com',
-      },
-    });
-
-    await expect(validateInvocation(executionContext)).rejects.toThrow(
-      IntegrationValidationError,
-    );
-  });
 });

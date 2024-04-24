@@ -34,10 +34,11 @@ export const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
   clientPipelineAccessToken: {
     type: 'string',
     mask: true,
-    optional: true
+    optional: true,
   },
   clientAdminName: {
     type: 'string',
+    optional: true,
   },
   baseUrl: {
     type: 'string',
@@ -49,9 +50,9 @@ export async function validateInvocation(
 ) {
   const { config } = context.instance;
 
-  if (!config.baseUrl || !config.clientAccessToken || !config.clientAdminName) {
+  if (!config.baseUrl || !config.clientAccessToken) {
     throw new IntegrationValidationError(
-      'Config requires all of {baseUrl, clientAccessToken, clientAdminName}',
+      'Config requires all of {baseUrl, clientAccessToken}',
     );
   }
 
