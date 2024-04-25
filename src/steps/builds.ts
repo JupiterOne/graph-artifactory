@@ -11,7 +11,7 @@ import {
 import { IntegrationConfig, ArtifactoryBuild } from '../types';
 import { createAPIClient } from '../client';
 import { getArtifactKey } from './repositories/converters';
-import { entities, relationships, Steps } from '../constants';
+import { entities, IngestionSources, relationships, Steps } from '../constants';
 
 export function getBuildKey(name: string): string {
   return `artifactory_build:${name}`;
@@ -44,27 +44,35 @@ export async function fetchBuilds({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(logger, instance.config);
 
-  await apiClient.iterateBuilds(async (build) => {
-    const buildEntity =
-      (await jobState.findEntity(getBuildKey(build.name))) ||
-      (await createBuildEntity(jobState, build));
+  try {
+    await apiClient.iterateBuilds(async (build) => {
+      const buildEntity =
+        (await jobState.findEntity(getBuildKey(build.name))) ||
+        (await createBuildEntity(jobState, build));
 
-    for (const artifactUri of build.artifacts) {
-      const artifactEntity = await jobState.findEntity(
-        getArtifactKey(artifactUri),
-      );
-
-      if (artifactEntity) {
-        await jobState.addRelationship(
-          createDirectRelationship({
-            _class: RelationshipClass.CREATED,
-            from: buildEntity,
-            to: artifactEntity,
-          }),
+      for (const artifactUri of build.artifacts) {
+        const artifactEntity = await jobState.findEntity(
+          getArtifactKey(artifactUri),
         );
+
+        if (artifactEntity) {
+          await jobState.addRelationship(
+            createDirectRelationship({
+              _class: RelationshipClass.CREATED,
+              from: buildEntity,
+              to: artifactEntity,
+            }),
+          );
+        }
       }
+    });
+  } catch (error) {
+    if (error.status === 404) {
+      logger.warn('No builds found');
+    } else {
+      throw error;
     }
-  });
+  }
 }
 
 export const buildSteps: IntegrationStep<IntegrationConfig>[] = [
@@ -74,6 +82,7 @@ export const buildSteps: IntegrationStep<IntegrationConfig>[] = [
     entities: [entities.BUILD],
     relationships: [relationships.BUILD_CREATED_ARTIFACT_CODEMODULE],
     dependsOn: [Steps.ARTIFACTS],
+    ingestionSourceId: IngestionSources.BUILDS,
     executionHandler: fetchBuilds,
   },
 ];

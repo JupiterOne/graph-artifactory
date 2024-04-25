@@ -4,6 +4,18 @@ import {
   StepRelationshipMetadata,
 } from '@jupiterone/integration-sdk-core';
 
+export const IngestionSources = {
+  USERS: 'users',
+  ACCESS_TOKENS: 'access_tokens',
+  GROUPS: 'groups',
+  REPOSITORIES: 'repositories',
+  REPOSITORY_GROUPS: 'repository_groups',
+  ARTIFACTS: 'artifacts',
+  PERMISSIONS: 'permissions',
+  BUILDS: 'builds',
+  PIPELINE_SOURCES: 'pipeline_sources',
+};
+
 export const ACCOUNT_ENTITY_DATA_KEY = 'entity:account';
 
 type EntityConstantKeys =

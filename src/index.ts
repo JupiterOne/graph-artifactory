@@ -7,6 +7,7 @@ import {
 } from './config';
 import { integrationSteps } from './steps';
 import { IntegrationConfig } from './types';
+import { ingestionConfig } from './ingestionConfig';
 
 export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> =
   {
@@ -14,4 +15,5 @@ export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> =
     validateInvocation,
     getStepStartStates,
     integrationSteps,
+    ingestionConfig,
   };

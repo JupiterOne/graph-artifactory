@@ -7,6 +7,7 @@ import { createMockIntegrationLogger } from '@jupiterone/integration-sdk-testing
 import { APIClient } from './client';
 import { ArtifactoryArtifactRef, ArtifactoryArtifactResponse } from './types';
 import { integrationConfig } from '../test/config';
+import { Response } from 'node-fetch';
 
 jest.mock('node-fetch', () => require('fetch-mock-jest').sandbox());
 
@@ -112,7 +113,11 @@ describe('iterateRepositoryArtifacts', () => {
     };
 
     fetchMock
-      .post(`${baseUrl}/artifactory/api/search/aql`, 408, { repeat: 1 })
+      .post(
+        `${baseUrl}/artifactory/api/search/aql`,
+        new Response('', { status: 408 }),
+        { repeat: 1 },
+      )
       .post(`${baseUrl}/artifactory/api/search/aql`, response, { repeat: 1 })
       .post(
         `${baseUrl}/artifactory/api/search/aql`,
@@ -133,7 +138,10 @@ describe('iterateRepositoryArtifacts', () => {
   });
 
   it('throws on unrecoverable error', async () => {
-    fetchMock.post(`${baseUrl}/artifactory/api/search/aql`, 404);
+    fetchMock.post(
+      `${baseUrl}/artifactory/api/search/aql`,
+      new Response('', { status: 404 }),
+    );
 
     const iteratee = jest.fn();
     await expect(
