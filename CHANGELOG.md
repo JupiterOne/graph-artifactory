@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 3.1.0 - 2024-04-25
+
+### Changed
+
+- change verify authentication to not use admin endpoint
+
 ## 3.0.0 - 2024-02-06
 
 ### Added
