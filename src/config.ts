@@ -30,6 +30,7 @@ export const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
   },
   enablePipelineIngestion: {
     type: 'boolean',
+    optional: true,
   },
   clientPipelineAccessToken: {
     type: 'string',

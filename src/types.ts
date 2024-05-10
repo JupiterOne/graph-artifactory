@@ -19,7 +19,7 @@ export interface IntegrationConfig extends IntegrationInstanceConfig {
   /**
    * The provider API client access token used to authenticate requests.
    */
-  enablePipelineIngestion: boolean;
+  enablePipelineIngestion?: boolean;
 
   /**
    * The JFrog Pipeline API client access token used to authenticate requests.
