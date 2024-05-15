@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 3.2.0 - 2024-05-15
+
+### Added
+
+- added disableTlsVerification config field
+
 ## 3.1.0 - 2024-04-25
 
 ### Changed
