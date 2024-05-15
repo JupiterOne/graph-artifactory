@@ -1,5 +1,6 @@
 import {
   IntegrationExecutionContext,
+  IntegrationInfoEventName,
   IntegrationInstanceConfigFieldMap,
   IntegrationValidationError,
   StepStartStates,
@@ -44,6 +45,10 @@ export const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
   baseUrl: {
     type: 'string',
   },
+  disableTlsVerification: {
+    type: 'boolean',
+    optional: true,
+  },
 };
 
 export async function validateInvocation(
@@ -55,6 +60,15 @@ export async function validateInvocation(
     throw new IntegrationValidationError(
       'Config requires all of {baseUrl, clientAccessToken}',
     );
+  }
+
+  if (config.disableTlsVerification) {
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    context.logger.publishInfoEvent({
+      name: IntegrationInfoEventName.Info,
+      description:
+        'Disabling TLS certificate verification. NOT RECOMMENDED: Please install valid TLS certificates into JFrog Artifactory server.',
+    });
   }
 
   if (
