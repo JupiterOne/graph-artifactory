@@ -30,6 +30,11 @@ export interface IntegrationConfig extends IntegrationInstanceConfig {
    * The provider API client admin name used for root account in the graph.
    */
   clientAdminName: string;
+
+  /**
+   * Disable TLS certificate verification for hosts that cannot install certificates.
+   */
+  disableTlsVerification?: boolean;
 }
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
