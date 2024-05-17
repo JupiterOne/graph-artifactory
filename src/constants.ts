@@ -122,89 +122,134 @@ export const relationships: Record<
     _class: RelationshipClass.HAS,
     sourceType: entities.ACCOUNT._type,
     targetType: entities.GROUP._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   ACCOUNT_HAS_REPOSITORY: {
     _type: 'artifactory_account_has_repository',
     _class: RelationshipClass.HAS,
     sourceType: entities.ACCOUNT._type,
     targetType: entities.REPOSITORY._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   ACCOUNT_HAS_REPOSITORY_GROUP: {
     _type: 'artifactory_account_has_repository_group',
     _class: RelationshipClass.HAS,
     sourceType: entities.ACCOUNT._type,
     targetType: entities.REPOSITORY_GROUP._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   ACCOUNT_HAS_USER: {
     _type: 'artifactory_account_has_user',
     _class: RelationshipClass.HAS,
     sourceType: entities.ACCOUNT._type,
     targetType: entities.USER._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   ACCOUNT_HAS_ACCESS_TOKEN: {
     _type: 'artifactory_account_has_access_token',
     _class: RelationshipClass.HAS,
     sourceType: entities.ACCOUNT._type,
     targetType: entities.ACCESS_TOKEN._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   ACCESS_TOKEN_ASSIGNED_USER: {
     _type: 'artifactory_access_token_assigned_user',
     _class: RelationshipClass.ASSIGNED,
     sourceType: entities.ACCESS_TOKEN._type,
     targetType: entities.USER._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   ACCOUNT_HAS_PIPELINE_SOURCE: {
     _type: 'artifactory_account_has_pipeline_source',
     _class: RelationshipClass.HAS,
     sourceType: entities.ACCOUNT._type,
     targetType: entities.PIPELINE_SOURCE._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   GROUP_HAS_USER: {
     _type: 'artifactory_group_has_user',
     _class: RelationshipClass.HAS,
     sourceType: entities.GROUP._type,
     targetType: entities.USER._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   REPOSITORY_HAS_ARTIFACT_CODEMODULE: {
     _type: 'artifactory_repository_has_artifact_codemodule',
     _class: RelationshipClass.HAS,
     sourceType: entities.REPOSITORY._type,
     targetType: entities.ARTIFACT_CODEMODULE._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   BUILD_CREATED_ARTIFACT_CODEMODULE: {
     _type: 'artifactory_build_created_artifact_codemodule',
     _class: RelationshipClass.CREATED,
     sourceType: entities.BUILD._type,
     targetType: entities.ARTIFACT_CODEMODULE._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   PERMISSION_ASSIGNED_USER: {
     _type: 'artifactory_permission_assigned_user',
     _class: RelationshipClass.ASSIGNED,
     sourceType: entities.PERMISSION._type,
     targetType: entities.USER._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   PERMISSION_ASSIGNED_GROUP: {
     _type: 'artifactory_permission_assigned_group',
     _class: RelationshipClass.ASSIGNED,
     sourceType: entities.PERMISSION._type,
     targetType: entities.GROUP._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   PERMISSION_ALLOWS_REPOSITORY: {
     _type: 'artifactory_permission_allows_repository',
     _class: RelationshipClass.ALLOWS,
     sourceType: entities.PERMISSION._type,
     targetType: entities.REPOSITORY._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   PERMISSION_ALLOWS_BUILD: {
     _type: 'artifactory_permission_allows_build',
     _class: RelationshipClass.ALLOWS,
     sourceType: entities.PERMISSION._type,
     targetType: entities.BUILD._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   PERMISSION_ALLOWS_REPOSITORY_GROUP: {
     _type: 'artifactory_permission_allows_repository_group',
     _class: RelationshipClass.ALLOWS,
     sourceType: entities.PERMISSION._type,
     targetType: entities.REPOSITORY_GROUP._type,
+    indexMetadata: {
+      enabled: false,
+    },
   },
 };

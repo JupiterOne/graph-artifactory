@@ -31,19 +31,19 @@
     "prepush": "yarn lint && yarn type-check && jest --changedSince main"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^12.6.0"
+    "@jupiterone/integration-sdk-core": "^12.8.1"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^12.6.0",
-    "@jupiterone/integration-sdk-dev-tools": "^12.6.0",
-    "@jupiterone/integration-sdk-testing": "^12.6.0",
+    "@jupiterone/integration-sdk-core": "^12.8.1",
+    "@jupiterone/integration-sdk-dev-tools": "^12.8.1",
+    "@jupiterone/integration-sdk-testing": "^12.8.1",
     "@types/node": "^18.0.0",
     "@types/node-fetch": "^2.5.7",
     "fetch-mock-jest": "^1.5.1",
     "type-fest": "^0.16.0"
   },
   "dependencies": {
-    "@jupiterone/integration-sdk-http-client": "^12.6.0",
+    "@jupiterone/integration-sdk-http-client": "^12.8.1",
     "node-fetch": "^2.7.0",
     "node-match-path": "^0.4.4"
   }
