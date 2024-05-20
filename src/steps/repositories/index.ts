@@ -16,8 +16,7 @@ import {
   Steps,
 } from '../../constants';
 import { IntegrationConfig } from '../../types';
-import { compareEntities } from '../../utils';
-import { createArtifactEntity, getArtifactKey } from './converters';
+import { createArtifactEntity } from './converters';
 
 export function getRepositoryKey(name: string): string {
   return `artifactory_repository:${name}`;
@@ -139,28 +138,18 @@ export async function fetchArtifacts({
         await apiClient.iterateRepositoryArtifacts(
           repoKey,
           async (artifact) => {
-            const artifactKey = getArtifactKey(artifact.uri);
-            let artifactEntity = await jobState.findEntity(artifactKey);
+            const artifactEntity = createArtifactEntity(artifact, packageType);
 
-            if (!artifactEntity) {
-              artifactEntity = createArtifactEntity(artifact, packageType);
+            if (!jobState.hasKey(artifactEntity._key)) {
               await jobState.addEntity(artifactEntity);
-            } else {
-              const duplicatedArtifact = createArtifactEntity(
-                artifact,
-                packageType,
-              );
-              const duplicateEntityReport = compareEntities(
-                artifactEntity,
-                duplicatedArtifact,
-              );
-              logger.debug(duplicateEntityReport, 'Duplicate entity report.');
             }
 
             const repoArtifactRelationship = createDirectRelationship({
               _class: RelationshipClass.HAS,
-              from: repositoryEntity,
-              to: artifactEntity,
+              fromKey: repositoryEntity._key,
+              fromType: entities.REPOSITORY._type,
+              toKey: artifactEntity._key,
+              toType: entities.ARTIFACT_CODEMODULE._type,
             });
 
             if (!jobState.hasKey(repoArtifactRelationship._key)) {

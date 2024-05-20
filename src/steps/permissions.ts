@@ -130,19 +130,19 @@ async function createPermissionAllowsRepositoryGroupRelationships(
       continue;
     }
 
-    const group = await jobState.findEntity(
-      getRepositoryGroupKey(repositoryName),
-    );
+    const groupKey = getRepositoryGroupKey(repositoryName);
 
-    if (group) {
+    if (jobState.hasKey(groupKey)) {
       await jobState.addRelationship(
         createDirectRelationship({
           _class: RelationshipClass.ALLOWS,
-          from: permissionEntity,
-          to: group,
+          fromKey: permissionEntity._key,
+          fromType: entities.PERMISSION._type,
+          toKey: groupKey,
+          toType: entities.REPOSITORY_GROUP._type,
           properties: {
             _type: relationships.PERMISSION_ALLOWS_REPOSITORY_GROUP._type,
-            _key: `${permissionEntity._key}|allows|${group._key}`,
+            _key: `${permissionEntity._key}|allows|${groupKey}`,
           },
         }),
       );
@@ -195,14 +195,16 @@ export async function fetchPermissions({
     for (const [groupName, permissions] of Object.entries(
       constructPermissionsMap(permission, 'groups'),
     )) {
-      const groupEntity = await jobState.findEntity(getGroupKey(groupName));
+      const groupKey = getGroupKey(groupName);
 
-      if (groupEntity) {
+      if (jobState.hasKey(groupKey)) {
         await jobState.addRelationship(
           createDirectRelationship({
             _class: RelationshipClass.ASSIGNED,
-            from: permissionEntity,
-            to: groupEntity,
+            fromKey: permissionEntity._key,
+            fromType: entities.PERMISSION._type,
+            toKey: groupKey,
+            toType: entities.GROUP._type,
             properties: permissions,
           }),
         );
@@ -213,14 +215,16 @@ export async function fetchPermissions({
     for (const [username, permissions] of Object.entries(
       constructPermissionsMap(permission, 'users'),
     )) {
-      const userEntity = await jobState.findEntity(getUserKey(username));
+      const userKey = getUserKey(username);
 
-      if (userEntity) {
+      if (jobState.hasKey(userKey)) {
         await jobState.addRelationship(
           createDirectRelationship({
             _class: RelationshipClass.ASSIGNED,
-            from: permissionEntity,
-            to: userEntity,
+            fromKey: permissionEntity._key,
+            fromType: entities.PERMISSION._type,
+            toKey: userKey,
+            toType: entities.USER._type,
             properties: permissions,
           }),
         );

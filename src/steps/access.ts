@@ -61,13 +61,15 @@ export async function fetchUsers({
 
     if (user.groups) {
       for (const groupName of user.groups) {
-        const groupEntity = await jobState.findEntity(getGroupKey(groupName));
-        if (groupEntity) {
+        const groupKey = getGroupKey(groupName);
+        if (jobState.hasKey(groupKey)) {
           await jobState.addRelationship(
             createDirectRelationship({
               _class: RelationshipClass.HAS,
-              from: groupEntity,
-              to: userEntity,
+              fromKey: groupKey,
+              fromType: entities.GROUP._type,
+              toKey: userEntity._key,
+              toType: entities.USER._type,
             }),
           );
         }
@@ -160,16 +162,18 @@ export async function fetchAccessTokens({
 
     const [, , username] = token.subject.split('/');
 
-    const userEntity = await jobState.findEntity(getUserKey(username));
+    const userKey = getUserKey(username);
 
-    if (userEntity) {
+    if (jobState.hasKey(userKey)) {
       await Promise.all([
         jobState.addEntity(tokenEntity),
         jobState.addRelationship(
           createDirectRelationship({
             _class: RelationshipClass.ASSIGNED,
-            from: tokenEntity,
-            to: userEntity,
+            fromKey: tokenEntity._key,
+            fromType: entities.ACCESS_TOKEN._type,
+            toKey: userKey,
+            toType: entities.USER._type,
           }),
         ),
       ]);
