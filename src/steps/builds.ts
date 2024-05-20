@@ -3,8 +3,6 @@ import {
   createIntegrationEntity,
   IntegrationStep,
   createDirectRelationship,
-  JobState,
-  Entity,
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
@@ -17,11 +15,8 @@ export function getBuildKey(name: string): string {
   return `artifactory_build:${name}`;
 }
 
-async function createBuildEntity(
-  jobState: JobState,
-  build: ArtifactoryBuild,
-): Promise<Entity> {
-  const buildEntity = createIntegrationEntity({
+function createBuildEntity(build: ArtifactoryBuild) {
+  return createIntegrationEntity({
     entityData: {
       source: build,
       assign: {
@@ -33,8 +28,6 @@ async function createBuildEntity(
       },
     },
   });
-
-  return jobState.addEntity(buildEntity);
 }
 
 export async function fetchBuilds({
@@ -46,21 +39,22 @@ export async function fetchBuilds({
 
   try {
     await apiClient.iterateBuilds(async (build) => {
-      const buildEntity =
-        (await jobState.findEntity(getBuildKey(build.name))) ||
-        (await createBuildEntity(jobState, build));
+      const buildEntity = createBuildEntity(build);
+      if (!jobState.hasKey(buildEntity._key)) {
+        await jobState.addEntity(buildEntity);
+      }
 
       for (const artifactUri of build.artifacts) {
-        const artifactEntity = await jobState.findEntity(
-          getArtifactKey(artifactUri),
-        );
+        const artifactKey = getArtifactKey(artifactUri);
 
-        if (artifactEntity) {
+        if (jobState.hasKey(artifactKey)) {
           await jobState.addRelationship(
             createDirectRelationship({
               _class: RelationshipClass.CREATED,
-              from: buildEntity,
-              to: artifactEntity,
+              fromKey: buildEntity._key,
+              fromType: entities.BUILD._type,
+              toKey: artifactKey,
+              toType: entities.ARTIFACT_CODEMODULE._type,
             }),
           );
         }

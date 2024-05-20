@@ -70,6 +70,9 @@ export const entities: Record<EntityConstantKeys, StepEntityMetadata> = {
     resourceName: 'ArtifactCodeModule',
     _type: 'artifactory_artifact_codemodule',
     _class: ['CodeModule'],
+    indexMetadata: {
+      enabled: false,
+    },
   },
   BUILD: {
     resourceName: 'Build',

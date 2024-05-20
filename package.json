@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@jupiterone/integration-sdk-http-client": "^12.8.1",
+    "lmdb": "^3.0.8",
     "node-fetch": "^2.7.0",
     "node-match-path": "^0.4.4"
   }
