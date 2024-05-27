@@ -69,7 +69,7 @@ describe('iterateRepositoryArtifacts', () => {
     );
 
     const iteratee = jest.fn();
-    await client.iterateRepositoryArtifacts('test-repo', iteratee);
+    await client.iterateRepositoryArtifacts(['test-repo'], iteratee);
 
     expect(iteratee).toHaveBeenCalledTimes(4);
     expect(iteratee.mock.calls[0][0]).toEqual(
@@ -100,7 +100,7 @@ describe('iterateRepositoryArtifacts', () => {
 
     const iteratee = jest.fn();
     await expect(
-      client.iterateRepositoryArtifacts('test-repo', iteratee),
+      client.iterateRepositoryArtifacts(['test-repo'], iteratee),
     ).resolves.toBeUndefined();
 
     expect(iteratee).not.toHaveBeenCalled();
@@ -126,7 +126,7 @@ describe('iterateRepositoryArtifacts', () => {
       );
 
     const iteratee = jest.fn();
-    await client.iterateRepositoryArtifacts('test-repo', iteratee);
+    await client.iterateRepositoryArtifacts(['test-repo'], iteratee);
 
     expect(iteratee).toHaveBeenCalledTimes(1);
     expect(iteratee.mock.calls[0][0]).toEqual(
@@ -145,7 +145,7 @@ describe('iterateRepositoryArtifacts', () => {
 
     const iteratee = jest.fn();
     await expect(
-      client.iterateRepositoryArtifacts('my-repo', iteratee),
+      client.iterateRepositoryArtifacts(['my-repo'], iteratee),
     ).rejects.toThrow(IntegrationProviderAPIError);
 
     expect(iteratee).toHaveBeenCalledTimes(0);

@@ -15,8 +15,10 @@ import {
   relationships,
   Steps,
 } from '../../constants';
-import { IntegrationConfig } from '../../types';
+import { ArtifactEntity, IntegrationConfig } from '../../types';
 import { createArtifactEntity } from './converters';
+
+const REPO_KEYS_BATCH_SIZE = 100;
 
 export function getRepositoryKey(name: string): string {
   return `artifactory_repository:${name}`;
@@ -123,6 +125,52 @@ export async function fetchArtifacts({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(logger, instance.config);
 
+  const processArtifact = async (
+    artifact: ArtifactEntity,
+    repoEntityKey: string,
+    packageType: string,
+  ) => {
+    const artifactEntity = createArtifactEntity(artifact, packageType);
+
+    if (!jobState.hasKey(artifactEntity._key)) {
+      await jobState.addEntity(artifactEntity);
+    }
+
+    const repoArtifactRelationship = createDirectRelationship({
+      _class: RelationshipClass.HAS,
+      fromKey: repoEntityKey,
+      fromType: entities.REPOSITORY._type,
+      toKey: artifactEntity._key,
+      toType: entities.ARTIFACT_CODEMODULE._type,
+    });
+
+    if (!jobState.hasKey(repoArtifactRelationship._key)) {
+      await jobState.addRelationship(repoArtifactRelationship);
+    }
+  };
+
+  const processRepoKeysBatch = async (
+    repoKeysMap: Map<string, { repoEntityKey: string; packageType: string }>,
+  ) => {
+    await apiClient.iterateRepositoryArtifacts(
+      Array.from(repoKeysMap.keys()),
+      async (artifact) => {
+        const repoKey = artifact.repo;
+        const repoKeyData = repoKeysMap.get(repoKey);
+        if (!repoKeyData) {
+          return;
+        }
+        const { repoEntityKey, packageType } = repoKeyData;
+        await processArtifact(artifact, repoEntityKey, packageType);
+      },
+    );
+  };
+
+  const repoKeysMap = new Map<
+    string,
+    { repoEntityKey: string; packageType: string }
+  >();
+
   await jobState.iterateEntities(
     { _type: entities.REPOSITORY._type },
     async (repositoryEntity) => {
@@ -133,33 +181,38 @@ export async function fetchArtifacts({
         repoType === 'REMOTE'
           ? [repositoryEntityKey, `${repositoryEntityKey}-cache`]
           : [repositoryEntityKey];
+      const repoData = {
+        packageType,
+        repoEntityKey: repositoryEntity._key,
+      };
 
       for (const repoKey of repositoryKeys) {
-        await apiClient.iterateRepositoryArtifacts(
-          repoKey,
-          async (artifact) => {
-            const artifactEntity = createArtifactEntity(artifact, packageType);
-
-            if (!jobState.hasKey(artifactEntity._key)) {
-              await jobState.addEntity(artifactEntity);
-            }
-
-            const repoArtifactRelationship = createDirectRelationship({
-              _class: RelationshipClass.HAS,
-              fromKey: repositoryEntity._key,
-              fromType: entities.REPOSITORY._type,
-              toKey: artifactEntity._key,
-              toType: entities.ARTIFACT_CODEMODULE._type,
-            });
-
-            if (!jobState.hasKey(repoArtifactRelationship._key)) {
-              await jobState.addRelationship(repoArtifactRelationship);
-            }
-          },
-        );
+        if (repoType === 'VIRTUAL') {
+          await apiClient.iterateRepositoryArtifacts(
+            [repoKey],
+            async (artifact) => {
+              await processArtifact(
+                artifact,
+                repoData.repoEntityKey,
+                repoData.packageType,
+              );
+            },
+          );
+        } else {
+          repoKeysMap.set(repoKey, repoData);
+          if (repoKeysMap.size >= REPO_KEYS_BATCH_SIZE) {
+            await processRepoKeysBatch(repoKeysMap);
+            repoKeysMap.clear();
+          }
+        }
       }
     },
   );
+
+  if (repoKeysMap.size) {
+    await processRepoKeysBatch(repoKeysMap);
+    repoKeysMap.clear();
+  }
 }
 
 export const repositoriesSteps: IntegrationStep<IntegrationConfig>[] = [
