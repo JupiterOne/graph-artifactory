@@ -8,11 +8,10 @@ import { APIClient } from './client';
 import { ArtifactoryArtifactRef, ArtifactoryArtifactResponse } from './types';
 import { integrationConfig } from '../test/config';
 import { Response } from 'node-fetch';
-import fetchMockJest from 'fetch-mock-jest';
 
 jest.mock('node-fetch', () => require('fetch-mock-jest').sandbox());
 
-const fetchMock: typeof fetchMockJest = require('node-fetch');
+const fetchMock = require('node-fetch');
 fetchMock.config.overwriteRoutes = false;
 
 function getIntegrationLogger(): IntegrationLogger {
