@@ -4,10 +4,11 @@ import {
   Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
+  JobState,
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
-import { createAPIClient } from '../../client';
+import { APIClient, createAPIClient } from '../../client';
 import {
   ACCOUNT_ENTITY_DATA_KEY,
   entities,
@@ -17,6 +18,11 @@ import {
 } from '../../constants';
 import { ArtifactEntity, IntegrationConfig } from '../../types';
 import { createArtifactEntity } from './converters';
+
+type RepositoryKeysMap = Map<
+  string,
+  { repoEntityKey: string; packageType: string }
+>;
 
 const REPO_KEYS_BATCH_SIZE = 100;
 
@@ -118,14 +124,8 @@ export async function fetchRepositories({
   });
 }
 
-export async function fetchArtifacts({
-  instance,
-  jobState,
-  logger,
-}: IntegrationStepExecutionContext<IntegrationConfig>) {
-  const apiClient = createAPIClient(logger, instance.config);
-
-  const processArtifact = async (
+function getArtifactProcessor(jobState: JobState) {
+  return async (
     artifact: ArtifactEntity,
     repoEntityKey: string,
     packageType: string,
@@ -148,10 +148,14 @@ export async function fetchArtifacts({
       await jobState.addRelationship(repoArtifactRelationship);
     }
   };
+}
 
-  const processRepoKeysBatch = async (
-    repoKeysMap: Map<string, { repoEntityKey: string; packageType: string }>,
-  ) => {
+function getRepositoryKeysBatchProcessor(
+  apiClient: APIClient,
+  jobState: JobState,
+) {
+  const processArtifact = getArtifactProcessor(jobState);
+  return async (repoKeysMap: RepositoryKeysMap) => {
     await apiClient.iterateRepositoryArtifacts(
       Array.from(repoKeysMap.keys()),
       async (artifact) => {
@@ -165,11 +169,22 @@ export async function fetchArtifacts({
       },
     );
   };
+}
 
-  const repoKeysMap = new Map<
-    string,
-    { repoEntityKey: string; packageType: string }
-  >();
+export async function fetchArtifacts({
+  instance,
+  jobState,
+  logger,
+}: IntegrationStepExecutionContext<IntegrationConfig>) {
+  const apiClient = createAPIClient(logger, instance.config);
+
+  const processArtifact = getArtifactProcessor(jobState);
+  const processRepoKeysBatch = getRepositoryKeysBatchProcessor(
+    apiClient,
+    jobState,
+  );
+
+  const repoKeysMap: RepositoryKeysMap = new Map();
 
   await jobState.iterateEntities(
     { _type: entities.REPOSITORY._type },
