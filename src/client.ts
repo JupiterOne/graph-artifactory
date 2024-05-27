@@ -283,9 +283,10 @@ export class APIClient extends BaseAPIClient {
     let offset = 0;
     const url = 'artifactory/api/search/aql';
     const getQuery = (repoKeys: string[], offset: number) => {
-      return `items.find({"$or": [${repoKeys
-        .map((repoKey) => `{"repo":"${repoKey}"}`)
-        .join(',')}]}).offset(${offset}).limit(${ARTIFACTS_PAGE_LIMIT})`;
+      const reposQuery = JSON.stringify(
+        repoKeys.map((repoKey) => ({ repo: repoKey })),
+      );
+      return `items.find({"$or": ${reposQuery}}).offset(${offset}).limit(${ARTIFACTS_PAGE_LIMIT})`;
     };
     let artifacts: ArtifactoryArtifactRef[];
     do {

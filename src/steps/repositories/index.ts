@@ -188,6 +188,12 @@ export async function fetchArtifacts({
 
       for (const repoKey of repositoryKeys) {
         if (repoType === 'VIRTUAL') {
+          // Virtual repositories aggregate artifacts from local and remote repositories, meaning they don't store artifacts directly.
+          // Instead, they reference artifacts from the underlying repositories.
+          //
+          // If we were to process virtual repositories alongside the underlying local and remote repositories,
+          // we wouldn't have a way to relate the artifacts to the virtual repositories.
+          // This is because the artifacts' "repo" property will be set to the underlying repository key.
           await apiClient.iterateRepositoryArtifacts(
             [repoKey],
             async (artifact) => {

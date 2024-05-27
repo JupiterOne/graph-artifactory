@@ -8,10 +8,11 @@ import { APIClient } from './client';
 import { ArtifactoryArtifactRef, ArtifactoryArtifactResponse } from './types';
 import { integrationConfig } from '../test/config';
 import { Response } from 'node-fetch';
+import fetchMockJest from 'fetch-mock-jest';
 
 jest.mock('node-fetch', () => require('fetch-mock-jest').sandbox());
 
-const fetchMock = require('node-fetch');
+const fetchMock: typeof fetchMockJest = require('node-fetch');
 fetchMock.config.overwriteRoutes = false;
 
 function getIntegrationLogger(): IntegrationLogger {
@@ -69,8 +70,18 @@ describe('iterateRepositoryArtifacts', () => {
     );
 
     const iteratee = jest.fn();
-    await client.iterateRepositoryArtifacts(['test-repo'], iteratee);
+    await client.iterateRepositoryArtifacts(
+      ['test-repo', 'test-repo-2'],
+      iteratee,
+    );
 
+    const calls = fetchMock.calls();
+    expect(calls).toHaveLength(3);
+    expect(calls[0][0]).toEqual(`${baseUrl}/artifactory/api/search/aql`);
+    expect(calls[0][1]).toMatchObject({
+      body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"}]}).offset(0).limit(1000)',
+      method: 'POST',
+    });
     expect(iteratee).toHaveBeenCalledTimes(4);
     expect(iteratee.mock.calls[0][0]).toEqual(
       expect.objectContaining({
