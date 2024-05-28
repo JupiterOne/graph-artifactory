@@ -69,8 +69,18 @@ describe('iterateRepositoryArtifacts', () => {
     );
 
     const iteratee = jest.fn();
-    await client.iterateRepositoryArtifacts('test-repo', iteratee);
+    await client.iterateRepositoryArtifacts(
+      ['test-repo', 'test-repo-2'],
+      iteratee,
+    );
 
+    const calls = fetchMock.calls();
+    expect(calls).toHaveLength(3);
+    expect(calls[0][0]).toEqual(`${baseUrl}/artifactory/api/search/aql`);
+    expect(calls[0][1]).toMatchObject({
+      body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"}]}).offset(0).limit(1000)',
+      method: 'POST',
+    });
     expect(iteratee).toHaveBeenCalledTimes(4);
     expect(iteratee.mock.calls[0][0]).toEqual(
       expect.objectContaining({
@@ -100,7 +110,7 @@ describe('iterateRepositoryArtifacts', () => {
 
     const iteratee = jest.fn();
     await expect(
-      client.iterateRepositoryArtifacts('test-repo', iteratee),
+      client.iterateRepositoryArtifacts(['test-repo'], iteratee),
     ).resolves.toBeUndefined();
 
     expect(iteratee).not.toHaveBeenCalled();
@@ -126,7 +136,7 @@ describe('iterateRepositoryArtifacts', () => {
       );
 
     const iteratee = jest.fn();
-    await client.iterateRepositoryArtifacts('test-repo', iteratee);
+    await client.iterateRepositoryArtifacts(['test-repo'], iteratee);
 
     expect(iteratee).toHaveBeenCalledTimes(1);
     expect(iteratee.mock.calls[0][0]).toEqual(
@@ -145,7 +155,7 @@ describe('iterateRepositoryArtifacts', () => {
 
     const iteratee = jest.fn();
     await expect(
-      client.iterateRepositoryArtifacts('my-repo', iteratee),
+      client.iterateRepositoryArtifacts(['my-repo'], iteratee),
     ).rejects.toThrow(IntegrationProviderAPIError);
 
     expect(iteratee).toHaveBeenCalledTimes(0);

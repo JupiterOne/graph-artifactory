@@ -277,20 +277,22 @@ export class APIClient extends BaseAPIClient {
    * @param iteratee receives each resource to produce entities/relationships
    */
   public async iterateRepositoryArtifacts(
-    key: string,
+    keys: string[],
     iteratee: ResourceIteratee<ArtifactEntity>,
   ): Promise<void> {
     let offset = 0;
     const url = 'artifactory/api/search/aql';
-    const getQuery = (repoKey: string, offset: number) => {
-      return `items.find({"repo":"${repoKey}"}).offset(${offset}).limit(${ARTIFACTS_PAGE_LIMIT})`;
+    const getQuery = (repoKeys: string[], offset: number) => {
+      const reposQuery = JSON.stringify(
+        repoKeys.map((repoKey) => ({ repo: repoKey })),
+      );
+      return `items.find({"$or": ${reposQuery}}).offset(${offset}).limit(${ARTIFACTS_PAGE_LIMIT})`;
     };
-
-    let artifacts: ArtifactoryArtifactRef[] = [];
+    let artifacts: ArtifactoryArtifactRef[];
     do {
       const response = await this.retryableRequest(url, {
         method: 'POST',
-        body: getQuery(key, offset),
+        body: getQuery(keys, offset),
         bodyType: 'text',
         headers: { 'Content-Type': 'text/plain' },
       });

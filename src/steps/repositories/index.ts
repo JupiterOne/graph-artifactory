@@ -4,10 +4,11 @@ import {
   Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
+  JobState,
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
-import { createAPIClient } from '../../client';
+import { APIClient, createAPIClient } from '../../client';
 import {
   ACCOUNT_ENTITY_DATA_KEY,
   entities,
@@ -15,8 +16,15 @@ import {
   relationships,
   Steps,
 } from '../../constants';
-import { IntegrationConfig } from '../../types';
+import { ArtifactEntity, IntegrationConfig } from '../../types';
 import { createArtifactEntity } from './converters';
+
+type RepositoryKeysMap = Map<
+  string,
+  { repoEntityKey: string; packageType: string }
+>;
+
+const REPO_KEYS_BATCH_SIZE = 100;
 
 export function getRepositoryKey(name: string): string {
   return `artifactory_repository:${name}`;
@@ -116,12 +124,67 @@ export async function fetchRepositories({
   });
 }
 
+function getArtifactProcessor(jobState: JobState) {
+  return async (
+    artifact: ArtifactEntity,
+    repoEntityKey: string,
+    packageType: string,
+  ) => {
+    const artifactEntity = createArtifactEntity(artifact, packageType);
+
+    if (!jobState.hasKey(artifactEntity._key)) {
+      await jobState.addEntity(artifactEntity);
+    }
+
+    const repoArtifactRelationship = createDirectRelationship({
+      _class: RelationshipClass.HAS,
+      fromKey: repoEntityKey,
+      fromType: entities.REPOSITORY._type,
+      toKey: artifactEntity._key,
+      toType: entities.ARTIFACT_CODEMODULE._type,
+    });
+
+    if (!jobState.hasKey(repoArtifactRelationship._key)) {
+      await jobState.addRelationship(repoArtifactRelationship);
+    }
+  };
+}
+
+function getRepositoryKeysBatchProcessor(
+  apiClient: APIClient,
+  jobState: JobState,
+) {
+  const processArtifact = getArtifactProcessor(jobState);
+  return async (repoKeysMap: RepositoryKeysMap) => {
+    await apiClient.iterateRepositoryArtifacts(
+      Array.from(repoKeysMap.keys()),
+      async (artifact) => {
+        const repoKey = artifact.repo;
+        const repoKeyData = repoKeysMap.get(repoKey);
+        if (!repoKeyData) {
+          return;
+        }
+        const { repoEntityKey, packageType } = repoKeyData;
+        await processArtifact(artifact, repoEntityKey, packageType);
+      },
+    );
+  };
+}
+
 export async function fetchArtifacts({
   instance,
   jobState,
   logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(logger, instance.config);
+
+  const processArtifact = getArtifactProcessor(jobState);
+  const processRepoKeysBatch = getRepositoryKeysBatchProcessor(
+    apiClient,
+    jobState,
+  );
+
+  const repoKeysMap: RepositoryKeysMap = new Map();
 
   await jobState.iterateEntities(
     { _type: entities.REPOSITORY._type },
@@ -133,33 +196,44 @@ export async function fetchArtifacts({
         repoType === 'REMOTE'
           ? [repositoryEntityKey, `${repositoryEntityKey}-cache`]
           : [repositoryEntityKey];
+      const repoData = {
+        packageType,
+        repoEntityKey: repositoryEntity._key,
+      };
 
       for (const repoKey of repositoryKeys) {
-        await apiClient.iterateRepositoryArtifacts(
-          repoKey,
-          async (artifact) => {
-            const artifactEntity = createArtifactEntity(artifact, packageType);
-
-            if (!jobState.hasKey(artifactEntity._key)) {
-              await jobState.addEntity(artifactEntity);
-            }
-
-            const repoArtifactRelationship = createDirectRelationship({
-              _class: RelationshipClass.HAS,
-              fromKey: repositoryEntity._key,
-              fromType: entities.REPOSITORY._type,
-              toKey: artifactEntity._key,
-              toType: entities.ARTIFACT_CODEMODULE._type,
-            });
-
-            if (!jobState.hasKey(repoArtifactRelationship._key)) {
-              await jobState.addRelationship(repoArtifactRelationship);
-            }
-          },
-        );
+        if (repoType === 'VIRTUAL') {
+          // Virtual repositories aggregate artifacts from local and remote repositories, meaning they don't store artifacts directly.
+          // Instead, they reference artifacts from the underlying repositories.
+          //
+          // If we were to process virtual repositories alongside the underlying local and remote repositories,
+          // we wouldn't have a way to relate the artifacts to the virtual repositories.
+          // This is because the artifacts' "repo" property will be set to the underlying repository key.
+          await apiClient.iterateRepositoryArtifacts(
+            [repoKey],
+            async (artifact) => {
+              await processArtifact(
+                artifact,
+                repoData.repoEntityKey,
+                repoData.packageType,
+              );
+            },
+          );
+        } else {
+          repoKeysMap.set(repoKey, repoData);
+          if (repoKeysMap.size >= REPO_KEYS_BATCH_SIZE) {
+            await processRepoKeysBatch(repoKeysMap);
+            repoKeysMap.clear();
+          }
+        }
       }
     },
   );
+
+  if (repoKeysMap.size) {
+    await processRepoKeysBatch(repoKeysMap);
+    repoKeysMap.clear();
+  }
 }
 
 export const repositoriesSteps: IntegrationStep<IntegrationConfig>[] = [
