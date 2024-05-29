@@ -290,7 +290,6 @@ export class APIClient extends BaseAPIClient {
       const reposQuery = JSON.stringify(
         repoKeys.map((repoKey) => ({ repo: repoKey })),
       );
-      console.log('currentLimit :>> ', currentLimit);
       return `items.find({"$or": ${reposQuery}}).offset(${offset}).limit(${currentLimit})`;
     };
     let continuePaginating = false;
