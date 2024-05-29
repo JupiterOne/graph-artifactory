@@ -8,7 +8,6 @@ import {
   ArtifactEntity,
   ArtifactoryAccessToken,
   ArtifactoryAccessTokenResponse,
-  ArtifactoryArtifactRef,
   ArtifactoryArtifactResponse,
   ArtifactoryBuild,
   ArtifactoryBuildArtifactsResponse,
