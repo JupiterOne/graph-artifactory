@@ -8,7 +8,6 @@ import {
   ArtifactEntity,
   ArtifactoryAccessToken,
   ArtifactoryAccessTokenResponse,
-  ArtifactoryArtifactRef,
   ArtifactoryArtifactResponse,
   ArtifactoryBuild,
   ArtifactoryBuildArtifactsResponse,
@@ -55,6 +54,7 @@ export class APIClient extends BaseAPIClient {
     super({
       baseUrl: config.baseUrl,
       logger,
+      logErrorBody: true,
       retryOptions: {
         maxAttempts: MAX_ATTEMPTS,
         delay: RETRY_DELAY,
@@ -279,36 +279,56 @@ export class APIClient extends BaseAPIClient {
   public async iterateRepositoryArtifacts(
     keys: string[],
     iteratee: ResourceIteratee<ArtifactEntity>,
+    initialLimit = ARTIFACTS_PAGE_LIMIT,
   ): Promise<void> {
     let offset = 0;
+    let currentLimit = initialLimit;
+    // 2 ** 3 means we'll try to reduce the page size 3 times before giving up.
+    // E.g. 1000 / 2 = 500 / 2 = 250 / 2 = 125
+    const minLimit = Math.max(initialLimit / 2 ** 3, 1);
     const url = 'artifactory/api/search/aql';
     const getQuery = (repoKeys: string[], offset: number) => {
       const reposQuery = JSON.stringify(
         repoKeys.map((repoKey) => ({ repo: repoKey })),
       );
-      return `items.find({"$or": ${reposQuery}}).offset(${offset}).limit(${ARTIFACTS_PAGE_LIMIT})`;
+      return `items.find({"$or": ${reposQuery}}).offset(${offset}).limit(${currentLimit})`;
     };
-    let artifacts: ArtifactoryArtifactRef[];
+    let continuePaginating = false;
     do {
-      const response = await this.retryableRequest(url, {
-        method: 'POST',
-        body: getQuery(keys, offset),
-        bodyType: 'text',
-        headers: { 'Content-Type': 'text/plain' },
-      });
-      const data = (await response.json()) as ArtifactoryArtifactResponse;
-      artifacts = data.results || [];
-      for (const artifact of artifacts) {
-        const uri = this.withBaseUrl(
-          `artifactory/${artifact.repo}/${artifact.path}/${artifact.name}`,
-        );
-        await iteratee({
-          ...artifact,
-          uri,
+      try {
+        const response = await this.retryableRequest(url, {
+          method: 'POST',
+          body: getQuery(keys, offset),
+          bodyType: 'text',
+          headers: { 'Content-Type': 'text/plain' },
         });
+        const data = (await response.json()) as ArtifactoryArtifactResponse;
+        for (const artifact of data.results || []) {
+          const uri = this.withBaseUrl(
+            `artifactory/${artifact.repo}/${artifact.path}/${artifact.name}`,
+          );
+          await iteratee({
+            ...artifact,
+            uri,
+          });
+        }
+        continuePaginating = Boolean(data.results?.length);
+        offset += currentLimit;
+      } catch (err) {
+        if (err.code === 'ATTEMPT_TIMEOUT') {
+          // We'll stop trying to reduce the page size when we reach 125. Starting from 1000 that gives us 3 retries.
+          const newLimit = Math.max(Math.floor(currentLimit / 2), minLimit);
+          if (newLimit === currentLimit) {
+            // We can't reduce the page size any further, throw error.
+            throw err;
+          }
+          currentLimit = newLimit;
+          continuePaginating = true;
+        } else {
+          throw err;
+        }
       }
-      offset += ARTIFACTS_PAGE_LIMIT;
-    } while (artifacts.length > 0);
+    } while (continuePaginating);
   }
 
   /**

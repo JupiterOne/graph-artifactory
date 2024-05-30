@@ -161,4 +161,61 @@ describe('iterateRepositoryArtifacts', () => {
     expect(iteratee).toHaveBeenCalledTimes(0);
     expect(fetchMock.done()).toBe(true);
   });
+
+  it('should retry with half limit when timeout error encountered', async () => {
+    const timeoutError = new Error();
+    (timeoutError as any).code = 'ATTEMPT_TIMEOUT';
+    const mockRetryableRequest = jest.spyOn(client as any, 'retryableRequest');
+    mockRetryableRequest
+      .mockImplementationOnce(() => {
+        throw timeoutError;
+      })
+      .mockImplementationOnce(() => {
+        return {
+          json: () =>
+            Promise.resolve({ results: [mockArtifact('artifact-1')] }),
+        };
+      })
+      .mockImplementationOnce(() => {
+        return {
+          json: () => Promise.resolve({ results: [] }),
+        };
+      });
+
+    const iteratee = jest.fn();
+    await client.iterateRepositoryArtifacts(
+      ['test-repo', 'test-repo-2'],
+      iteratee,
+    );
+
+    expect(mockRetryableRequest).toHaveBeenCalledTimes(3);
+    expect(mockRetryableRequest).toHaveBeenNthCalledWith(
+      1,
+      'artifactory/api/search/aql',
+      expect.objectContaining({
+        body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"}]}).offset(0).limit(1000)',
+      }),
+    );
+    expect(mockRetryableRequest).toHaveBeenNthCalledWith(
+      2,
+      'artifactory/api/search/aql',
+      expect.objectContaining({
+        body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"}]}).offset(0).limit(500)',
+      }),
+    );
+    expect(mockRetryableRequest).toHaveBeenNthCalledWith(
+      3,
+      'artifactory/api/search/aql',
+      expect.objectContaining({
+        body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"}]}).offset(500).limit(500)',
+      }),
+    );
+
+    expect(iteratee).toHaveBeenCalledTimes(1);
+    expect(iteratee.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-1`,
+      }),
+    );
+  });
 });
