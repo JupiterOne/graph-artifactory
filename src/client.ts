@@ -283,6 +283,8 @@ export class APIClient extends BaseAPIClient {
   ): Promise<void> {
     let offset = 0;
     let currentLimit = initialLimit;
+    // 2 ** 3 means we'll try to reduce the page size 3 times before giving up.
+    // E.g. 1000 / 2 = 500 / 2 = 250 / 2 = 125
     const minLimit = Math.max(initialLimit / 2 ** 3, 1);
     const url = 'artifactory/api/search/aql';
     const getQuery = (repoKeys: string[], offset: number) => {
