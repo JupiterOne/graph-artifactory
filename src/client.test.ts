@@ -5,14 +5,8 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { createMockIntegrationLogger } from '@jupiterone/integration-sdk-testing';
 import { APIClient } from './client';
-import { ArtifactoryArtifactRef, ArtifactoryArtifactResponse } from './types';
+import { ArtifactoryArtifactRef } from './types';
 import { integrationConfig } from '../test/config';
-import { Response } from 'node-fetch';
-
-jest.mock('node-fetch', () => require('fetch-mock-jest').sandbox());
-
-const fetchMock = require('node-fetch');
-fetchMock.config.overwriteRoutes = false;
 
 function getIntegrationLogger(): IntegrationLogger {
   return createMockIntegrationLogger();
@@ -27,7 +21,7 @@ describe('iterateRepositoryArtifacts', () => {
   });
 
   afterEach(() => {
-    fetchMock.reset();
+    jest.restoreAllMocks();
   });
 
   const mockArtifact = (name: string): ArtifactoryArtifactRef => ({
@@ -44,29 +38,20 @@ describe('iterateRepositoryArtifacts', () => {
   });
 
   it('should call iteratee for each artifact returned by page', async () => {
-    const firstResponse: ArtifactoryArtifactResponse = {
-      results: [mockArtifact('artifact-1'), mockArtifact('artifact-2')],
-    };
-    fetchMock.post(`${baseUrl}/artifactory/api/search/aql`, firstResponse, {
-      repeat: 1,
+    const responses = [
+      { results: [mockArtifact('artifact-1'), mockArtifact('artifact-2')] },
+      { results: [mockArtifact('artifact-3'), mockArtifact('artifact-4')] },
+      { results: [] }, // Indirectly tests that it should stop pagination when an empty page is encountered
+    ];
+    const mockRetryableRequest = jest.spyOn(client as any, 'retryableRequest');
+    let i = 0;
+    mockRetryableRequest.mockImplementation(() => {
+      const response = responses[i];
+      i++;
+      return {
+        json: () => Promise.resolve(response),
+      };
     });
-
-    const secondResponse: ArtifactoryArtifactResponse = {
-      results: [mockArtifact('artifact-3'), mockArtifact('artifact-4')],
-    };
-
-    fetchMock.post(`${baseUrl}/artifactory/api/search/aql`, secondResponse, {
-      repeat: 1,
-    });
-
-    // Indirectly tests that it should stop pagination when an empty page is encountered
-    fetchMock.post(
-      `${baseUrl}/artifactory/api/search/aql`,
-      { results: [] },
-      {
-        repeat: 1,
-      },
-    );
 
     const iteratee = jest.fn();
     await client.iterateRepositoryArtifacts(
@@ -74,39 +59,31 @@ describe('iterateRepositoryArtifacts', () => {
       iteratee,
     );
 
-    const calls = fetchMock.calls();
-    expect(calls).toHaveLength(3);
-    expect(calls[0][0]).toEqual(`${baseUrl}/artifactory/api/search/aql`);
-    expect(calls[0][1]).toMatchObject({
+    expect(mockRetryableRequest).toHaveBeenCalledTimes(3);
+    expect(mockRetryableRequest.mock.calls[0][0]).toEqual(
+      'artifactory/api/search/aql',
+    );
+    expect(mockRetryableRequest.mock.calls[0][1]).toMatchObject({
       body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"}]}).offset(0).limit(1000)',
       method: 'POST',
     });
     expect(iteratee).toHaveBeenCalledTimes(4);
-    expect(iteratee.mock.calls[0][0]).toEqual(
-      expect.objectContaining({
-        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-1`,
-      }),
-    );
-    expect(iteratee.mock.calls[1][0]).toEqual(
-      expect.objectContaining({
-        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-2`,
-      }),
-    );
-    expect(iteratee.mock.calls[2][0]).toEqual(
-      expect.objectContaining({
-        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-3`,
-      }),
-    );
-    expect(iteratee.mock.calls[3][0]).toEqual(
-      expect.objectContaining({
-        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-4`,
-      }),
-    );
-    expect(fetchMock.done()).toBe(true);
+    for (let i = 1; i <= 4; i++) {
+      expect(iteratee.mock.calls[i - 1][0]).toEqual(
+        expect.objectContaining({
+          uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-${i}`,
+        }),
+      );
+    }
   });
 
   it('should not call iteratee when there are no files in the repository', async () => {
-    fetchMock.post(`${baseUrl}/artifactory/api/search/aql`, { results: [] });
+    const mockRetryableRequest = jest.spyOn(client as any, 'retryableRequest');
+    mockRetryableRequest.mockImplementationOnce(() => {
+      return {
+        json: () => Promise.resolve({ results: [] }),
+      };
+    });
 
     const iteratee = jest.fn();
     await expect(
@@ -114,44 +91,18 @@ describe('iterateRepositoryArtifacts', () => {
     ).resolves.toBeUndefined();
 
     expect(iteratee).not.toHaveBeenCalled();
-    expect(fetchMock.done()).toBe(true);
   });
 
-  it('retries on recoverable error', async () => {
-    const response: ArtifactoryArtifactResponse = {
-      results: [mockArtifact('artifact-1')],
-    };
-
-    fetchMock
-      .post(
-        `${baseUrl}/artifactory/api/search/aql`,
-        new Response('', { status: 408 }),
-        { repeat: 1 },
-      )
-      .post(`${baseUrl}/artifactory/api/search/aql`, response, { repeat: 1 })
-      .post(
-        `${baseUrl}/artifactory/api/search/aql`,
-        { results: [] },
-        { repeat: 1 },
-      );
-
-    const iteratee = jest.fn();
-    await client.iterateRepositoryArtifacts(['test-repo'], iteratee);
-
-    expect(iteratee).toHaveBeenCalledTimes(1);
-    expect(iteratee.mock.calls[0][0]).toEqual(
-      expect.objectContaining({
-        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-1`,
-      }),
-    );
-    expect(fetchMock.done()).toBe(true);
-  });
-
-  it('throws on unrecoverable error', async () => {
-    fetchMock.post(
-      `${baseUrl}/artifactory/api/search/aql`,
-      new Response('', { status: 404 }),
-    );
+  it('throws any other error', async () => {
+    const notFoundError = new IntegrationProviderAPIError({
+      endpoint: '',
+      status: 404,
+      statusText: 'Not Found',
+    });
+    const mockRetryableRequest = jest.spyOn(client as any, 'retryableRequest');
+    mockRetryableRequest.mockImplementationOnce(() => {
+      throw notFoundError;
+    });
 
     const iteratee = jest.fn();
     await expect(
@@ -159,21 +110,45 @@ describe('iterateRepositoryArtifacts', () => {
     ).rejects.toThrow(IntegrationProviderAPIError);
 
     expect(iteratee).toHaveBeenCalledTimes(0);
-    expect(fetchMock.done()).toBe(true);
   });
 
-  it('should retry with half limit when timeout error encountered', async () => {
+  it('should retry with half repo keys when timeout error encountered', async () => {
     const timeoutError = new Error();
-    (timeoutError as any).code = 'ATTEMPT_TIMEOUT';
+    (timeoutError as any).code = 'ETIMEDOUT';
     const mockRetryableRequest = jest.spyOn(client as any, 'retryableRequest');
     mockRetryableRequest
       .mockImplementationOnce(() => {
-        throw timeoutError;
+        return Promise.reject(timeoutError);
       })
       .mockImplementationOnce(() => {
         return {
           json: () =>
-            Promise.resolve({ results: [mockArtifact('artifact-1')] }),
+            Promise.resolve({
+              results: [
+                mockArtifact('artifact-1'),
+                mockArtifact('artifact-2'),
+                mockArtifact('artifact-3'),
+                mockArtifact('artifact-4'),
+              ],
+            }),
+        };
+      })
+      .mockImplementationOnce(() => {
+        return {
+          json: () => Promise.resolve({ results: [] }),
+        };
+      })
+      .mockImplementationOnce(() => {
+        return {
+          json: () =>
+            Promise.resolve({
+              results: [
+                mockArtifact('artifact-5'),
+                mockArtifact('artifact-6'),
+                mockArtifact('artifact-7'),
+                mockArtifact('artifact-8'),
+              ],
+            }),
         };
       })
       .mockImplementationOnce(() => {
@@ -184,38 +159,55 @@ describe('iterateRepositoryArtifacts', () => {
 
     const iteratee = jest.fn();
     await client.iterateRepositoryArtifacts(
-      ['test-repo', 'test-repo-2'],
+      ['test-repo', 'test-repo-2', 'test-repo-3', 'test-repo-4'],
       iteratee,
+      4, // initialChunkSize for tests
     );
 
-    expect(mockRetryableRequest).toHaveBeenCalledTimes(3);
+    expect(mockRetryableRequest).toHaveBeenCalledTimes(5);
     expect(mockRetryableRequest).toHaveBeenNthCalledWith(
       1,
       'artifactory/api/search/aql',
       expect.objectContaining({
-        body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"}]}).offset(0).limit(1000)',
+        body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"},{"repo":"test-repo-3"},{"repo":"test-repo-4"}]}).offset(0).limit(1000)',
       }),
     );
     expect(mockRetryableRequest).toHaveBeenNthCalledWith(
       2,
       'artifactory/api/search/aql',
       expect.objectContaining({
-        body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"}]}).offset(0).limit(500)',
+        body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"}]}).offset(0).limit(1000)',
       }),
     );
     expect(mockRetryableRequest).toHaveBeenNthCalledWith(
       3,
       'artifactory/api/search/aql',
       expect.objectContaining({
-        body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"}]}).offset(500).limit(500)',
+        body: 'items.find({"$or": [{"repo":"test-repo"},{"repo":"test-repo-2"}]}).offset(1000).limit(1000)',
+      }),
+    );
+    expect(mockRetryableRequest).toHaveBeenNthCalledWith(
+      4,
+      'artifactory/api/search/aql',
+      expect.objectContaining({
+        body: 'items.find({"$or": [{"repo":"test-repo-3"},{"repo":"test-repo-4"}]}).offset(0).limit(1000)',
+      }),
+    );
+    expect(mockRetryableRequest).toHaveBeenNthCalledWith(
+      5,
+      'artifactory/api/search/aql',
+      expect.objectContaining({
+        body: 'items.find({"$or": [{"repo":"test-repo-3"},{"repo":"test-repo-4"}]}).offset(1000).limit(1000)',
       }),
     );
 
-    expect(iteratee).toHaveBeenCalledTimes(1);
-    expect(iteratee.mock.calls[0][0]).toEqual(
-      expect.objectContaining({
-        uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-1`,
-      }),
-    );
+    expect(iteratee).toHaveBeenCalledTimes(8);
+    for (let i = 1; i <= 8; i++) {
+      expect(iteratee.mock.calls[i - 1][0]).toEqual(
+        expect.objectContaining({
+          uri: `${baseUrl}/artifactory/test-repo/path/to/artifact/artifact-${i}`,
+        }),
+      );
+    }
   });
 });
