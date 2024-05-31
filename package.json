@@ -37,6 +37,7 @@
     "@jupiterone/integration-sdk-core": "^12.8.1",
     "@jupiterone/integration-sdk-dev-tools": "^12.8.1",
     "@jupiterone/integration-sdk-testing": "^12.8.1",
+    "@types/lodash": "^4.17.4",
     "@types/node": "^18.0.0",
     "@types/node-fetch": "^2.5.7",
     "fetch-mock-jest": "^1.5.1",
@@ -45,6 +46,7 @@
   "dependencies": {
     "@jupiterone/integration-sdk-http-client": "^12.8.1",
     "lmdb": "^3.0.8",
+    "lodash": "^4.17.21",
     "node-fetch": "^2.7.0",
     "node-match-path": "^0.4.4"
   }

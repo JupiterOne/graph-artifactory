@@ -2,7 +2,6 @@ import {
   IntegrationProviderAuthenticationError,
   IntegrationValidationError,
   IntegrationLogger,
-  IntegrationProviderAPIError,
 } from '@jupiterone/integration-sdk-core';
 import {
   ArtifactEntity,
@@ -27,10 +26,10 @@ import {
 } from './types';
 import { BaseAPIClient } from '@jupiterone/integration-sdk-http-client';
 import fetch from 'node-fetch';
+import chunk from 'lodash/chunk';
 
 const MAX_ATTEMPTS = 3;
 const RETRY_DELAY = 3_000; // 3 seconds to start
-const TIMEOUT = 60_000; // 3 min timeout. We need this in case Node hangs with ETIMEDOUT
 const RETRY_FACTOR = 2;
 const ARTIFACTS_PAGE_LIMIT = 1000;
 
@@ -58,29 +57,8 @@ export class APIClient extends BaseAPIClient {
       retryOptions: {
         maxAttempts: MAX_ATTEMPTS,
         delay: RETRY_DELAY,
-        timeout: TIMEOUT,
+        timeout: 0, // disable timeout handling
         factor: RETRY_FACTOR,
-        handleError: (err, context, logger) => {
-          if (
-            err instanceof IntegrationProviderAPIError &&
-            ![408, 429, 500, 502, 503, 504].includes(err.status as number)
-          ) {
-            logger.info(
-              { context, err },
-              `Hit an unrecoverable error when attempting fetch. Aborting.`,
-            );
-            context.abort();
-          } else {
-            logger.info(
-              {
-                err,
-                attemptNum: context.attemptNum,
-                attemptsRemaining: context.attemptsRemaining,
-              },
-              `Hit a possibly recoverable error when attempting fetch. Retrying in a moment.`,
-            );
-          }
-        },
       },
     });
 
@@ -279,56 +257,74 @@ export class APIClient extends BaseAPIClient {
   public async iterateRepositoryArtifacts(
     keys: string[],
     iteratee: ResourceIteratee<ArtifactEntity>,
-    initialLimit = ARTIFACTS_PAGE_LIMIT,
+    initialChunkSize = 100,
   ): Promise<void> {
-    let offset = 0;
-    let currentLimit = initialLimit;
-    // 2 ** 3 means we'll try to reduce the page size 3 times before giving up.
-    // E.g. 1000 / 2 = 500 / 2 = 250 / 2 = 125
-    const minLimit = Math.max(initialLimit / 2 ** 3, 1);
+    let chunkSize = initialChunkSize;
+    let keyChunks = chunk(keys, chunkSize);
+
     const url = 'artifactory/api/search/aql';
     const getQuery = (repoKeys: string[], offset: number) => {
       const reposQuery = JSON.stringify(
         repoKeys.map((repoKey) => ({ repo: repoKey })),
       );
-      return `items.find({"$or": ${reposQuery}}).offset(${offset}).limit(${currentLimit})`;
+      return `items.find({"$or": ${reposQuery}}).offset(${offset}).limit(${ARTIFACTS_PAGE_LIMIT})`;
     };
-    let continuePaginating = false;
-    do {
-      try {
-        const response = await this.retryableRequest(url, {
-          method: 'POST',
-          body: getQuery(keys, offset),
-          bodyType: 'text',
-          headers: { 'Content-Type': 'text/plain' },
-        });
-        const data = (await response.json()) as ArtifactoryArtifactResponse;
-        for (const artifact of data.results || []) {
-          const uri = this.withBaseUrl(
-            `artifactory/${artifact.repo}/${artifact.path}/${artifact.name}`,
-          );
-          await iteratee({
-            ...artifact,
-            uri,
+
+    let currentChunk = 0;
+    while (currentChunk < keyChunks.length) {
+      let continuePaginating = false;
+      let offset = 0;
+      do {
+        try {
+          const response = await this.retryableRequest(url, {
+            method: 'POST',
+            body: getQuery(keyChunks[currentChunk], offset),
+            bodyType: 'text',
+            headers: { 'Content-Type': 'text/plain' },
           });
-        }
-        continuePaginating = Boolean(data.results?.length);
-        offset += currentLimit;
-      } catch (err) {
-        if (err.code === 'ATTEMPT_TIMEOUT') {
-          // We'll stop trying to reduce the page size when we reach 125. Starting from 1000 that gives us 3 retries.
-          const newLimit = Math.max(Math.floor(currentLimit / 2), minLimit);
-          if (newLimit === currentLimit) {
-            // We can't reduce the page size any further, throw error.
+          const data = (await response.json()) as ArtifactoryArtifactResponse;
+          for (const artifact of data.results || []) {
+            const uri = this.withBaseUrl(
+              `artifactory/${artifact.repo}/${artifact.path}/${artifact.name}`,
+            );
+            await iteratee({
+              ...artifact,
+              uri,
+            });
+          }
+          continuePaginating = Boolean(data.results?.length);
+          if (!continuePaginating) {
+            currentChunk++;
+          }
+          offset += ARTIFACTS_PAGE_LIMIT;
+        } catch (err) {
+          if (
+            ['ECONNRESET', 'ETIMEDOUT'].some(
+              (code) => err.code === code || err.message.includes(code),
+            )
+          ) {
+            // Try to reduce the chunk size by half
+            const newChunkSize = Math.max(Math.floor(chunkSize / 2), 1);
+            if (chunkSize === newChunkSize) {
+              // We can't reduce the chunk size any further, so just throw the error
+              throw err;
+            }
+            keyChunks = chunk(
+              keyChunks.slice(currentChunk).flat(),
+              newChunkSize,
+            );
+            chunkSize = newChunkSize;
+            currentChunk = 0;
+            this.logger.warn(
+              { chunkSize },
+              'Reducing chunk size and retrying.',
+            );
+          } else {
             throw err;
           }
-          currentLimit = newLimit;
-          continuePaginating = true;
-        } else {
-          throw err;
         }
-      }
-    } while (continuePaginating);
+      } while (continuePaginating);
+    }
   }
 
   /**
