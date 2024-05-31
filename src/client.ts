@@ -332,9 +332,8 @@ export class APIClient extends BaseAPIClient {
    *
    * @param iteratee receives each resource to produce entities/relationships
    */
-  public async iterateBuilds(
-    iteratee: ResourceIteratee<ArtifactoryBuild>,
-  ): Promise<void> {
+  public async iterateBuilds(iteratee: ResourceIteratee<ArtifactoryBuild>) {
+    const missingBuildArtifacts: string[] = [];
     const response = await this.retryableRequest('artifactory/api/build');
 
     const jsonResponse: ArtifactoryBuildResponse = await response.json();
@@ -347,25 +346,37 @@ export class APIClient extends BaseAPIClient {
       for (const buildUri of buildList) {
         const name = build.uri.split('/')[1];
         const number = buildUri.split('/')[1];
-        const artifacts = await this.getBuildArtifacts(name, number);
+        try {
+          const artifacts = await this.getBuildArtifacts(name, number);
+          if (artifacts.length === 0) {
+            continue;
+          }
 
-        if (artifacts.length === 0) {
-          return;
+          const repository = artifacts[0]
+            .split(this.withBaseUrl('artifactory'))[1]
+            .split('/')[1];
+
+          await iteratee({
+            name,
+            number,
+            repository,
+            artifacts,
+            uri: this.withBaseUrl(`ui/builds${build.uri}`),
+          });
+        } catch (err) {
+          if (
+            (err.cause.bodyError as string).includes(
+              'Binary provider has no content for',
+            )
+          ) {
+            missingBuildArtifacts.push(name);
+          } else {
+            throw err;
+          }
         }
-
-        const repository = artifacts[0]
-          .split(this.withBaseUrl('artifactory'))[1]
-          .split('/')[1];
-
-        await iteratee({
-          name,
-          number,
-          repository,
-          artifacts,
-          uri: this.withBaseUrl(`ui/builds${build.uri}`),
-        });
       }
     }
+    return missingBuildArtifacts;
   }
 
   private async getBuildList(buildRef: ArtifactoryBuildRef): Promise<string[]> {

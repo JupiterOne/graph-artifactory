@@ -4,6 +4,7 @@ import {
   IntegrationStep,
   createDirectRelationship,
   RelationshipClass,
+  IntegrationWarnEventName,
 } from '@jupiterone/integration-sdk-core';
 
 import { IntegrationConfig, ArtifactoryBuild } from '../types';
@@ -38,7 +39,7 @@ export async function fetchBuilds({
   const apiClient = createAPIClient(logger, instance.config);
 
   try {
-    await apiClient.iterateBuilds(async (build) => {
+    const missingBuilds = await apiClient.iterateBuilds(async (build) => {
       const buildEntity = createBuildEntity(build);
       if (!jobState.hasKey(buildEntity._key)) {
         await jobState.addEntity(buildEntity);
@@ -60,6 +61,14 @@ export async function fetchBuilds({
         }
       }
     });
+    if (missingBuilds.length) {
+      logger.publishWarnEvent({
+        name: IntegrationWarnEventName.IncompleteData,
+        description: `There are missing artifacts for builds: ${missingBuilds.join(
+          ', ',
+        )}. Due to error "Binary provider has no content for", more details regarding said error message can be found at https://jfrog.com/help/r/artifactory-what-to-do-when-you-get-a-binary-provider-has-no-content-for-error-message`,
+      });
+    }
   } catch (error) {
     if (error.status === 404) {
       logger.warn('No builds found');
