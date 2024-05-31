@@ -40,7 +40,6 @@
     "@types/lodash": "^4.17.4",
     "@types/node": "^18.0.0",
     "@types/node-fetch": "^2.5.7",
-    "fetch-mock-jest": "^1.5.1",
     "type-fest": "^0.16.0"
   },
   "dependencies": {
